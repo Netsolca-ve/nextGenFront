@@ -1,17 +1,416 @@
 ---
-
+import MainLayout from "../layouts/MainLayout.astro";
+import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout>
+  <section class="scoreboard" aria-label="Partidos">
+    <ul>
+      <li class="match">
+        <div class="matchTop">
+          <span class="mark">HOY 8:00PM</span>
+        </div>
+
+        <div class="matchBot">
+          <span>TEAM 1</span>
+          <strong>1 - 1</strong>
+          <span>TEAM 2</span>
+        </div>
+      </li>
+
+      <li class="match live">
+        <div class="matchTop">
+          <span class="mark liveMark"
+            ><span class="live-dot"></span>LIVE 65'</span
+          >
+        </div>
+
+        <div class="matchBot">
+          <span>TEAM 1</span>
+          <strong>vs</strong>
+          <span>TEAM 2</span>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="hero" ariar-labelledby="hero-heading">
+    <div class="heroContent">
+      <p class="season">TEMPORADA 2026</p>
+
+      <h1 id="heroTitle">EL DESTINO DE LOS <span>CAMPEONES</span></h1>
+
+      <div class="nextMatch">
+        <div class="matchInfo">
+          <span>PRÓXIMO GRAN ENCUENTRO</span>
+
+          <div class="teams">
+            <strong>TITANES</strong>
+            <span>VS</span>
+            <strong>RAYOS</strong>
+          </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="countdown">
+          <div class="time">
+            <strong>02</strong>
+            <span>DÍAS</span>
+          </div>
+
+          <div class="time">
+            <strong>14</strong>
+            <span>HRS</span>
+          </div>
+
+          <div class="time">
+            <strong>35</strong>
+            <span>MIN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="/tickets" class="primary-button"> BUY TICKETS </a>
+
+        <a href="/calendar" class="secondary-button"> VER CALENDARIO </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ecosystem">
+	<div class="ecosystemInfo">
+		<h2>El ECOSISTEMA <span>NEXTGEN</span></h2>
+		<p>Un camino completo para el desarrollo deportivo. Desde la formación inicial hasta el alto rendimiento competitivo, conectamos talento, tecnología y pasión.</p>
+	</div>
+
+	<div class="ecosystemCards">
+		<div class="ecosystemCard">
+      <GraduationCap size={48} color="#BEC6E0" />
+			<h3>Formación Inicial</h3>
+			<p>Desarrollamos habilidades fundamentales en los jóvenes atletas.</p>
+		</div>
+		<div class="ecosystemCard">
+      <Trophy size={48} color="#FACC15" />
+			<h3>Alto Rendimiento</h3>
+			<p>Preparamos a los atletas para competir a alto nivel.</p>
+		</div>
+		<div class="ecosystemCard">
+      <TrendingUp size={48} color="#BEC6E0" />
+			<h3>Desarrollo Técnico</h3>
+      <p>Mejoramos las habilidades técnicas y tácticas de los atletas.</p>
+		</div>
+	</div>
+  </section>
+</MainLayout>
+
+<style>
+  .scoreboard {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+    padding-left: 10px;
+  }
+
+  .match {
+    width: 20%;
+    background-color: #19212e;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #bec6e0;
+    border-left: 5px solid #bec6e0;
+    margin: 0px;
+  }
+
+  .matchTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .matchTop span {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .matchBot {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .matchBot span {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .match .mark {
+    color: #9d9ea7;
+    font-weight: bold;
+  }
+
+  .live {
+    border: #22c25d 1px solid;
+    border-left: #22c25d 5px solid;
+  }
+
+  .live .matchTop .liveMark {
+    color: #22c25d;
+    font-weight: bold;
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #22c25d;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+    animation: livePulse 1.5s infinite;
+    margin-right: 5px;
+  }
+
+  @keyframes livePulse {
+    0% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+    }
+
+    70% {
+      opacity: 1;
+      box-shadow: 0 0 0 6px rgba(0, 255, 136, 0);
+    }
+
+    100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+    }
+  }
+  .hero {
+    min-height: 75svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    background: #131315;
+  }
+
+  .heroContent {
+    width: min(1100px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .season {
+    display: inline-block;
+    margin: 0 0 25px;
+    padding: 3px 14px;
+    background: #bec6e0;
+    color: #131315;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 4px;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(3rem, 7vw, 7rem);
+	font-style: italic;
+    line-height: 0.95;
+    font-weight: 300;
+    color: white;
+  }
+
+  .hero h1 span {
+    display: block;
+    color: #bec6e0;
+  }
+
+  .nextMatch {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 35px;
+    gap: 28px;
+  }
+
+  .matchInfo {
+    text-align: left;
+  }
+
+  .matchInfo > span {
+    display: block;
+    margin-bottom: 8px;
+    color: #bec6e0;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .teams {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+  }
+
+  .teams strong {
+    font-size: 18px;
+  }
+
+  .teams span {
+    color: #bec6e0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .separator {
+    width: 1px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .countdown {
+    display: flex;
+    gap: 10px;
+  }
+
+  .time {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #1b1b1d;
+    border-radius: 3px;
+  }
+
+  .time strong {
+    color: #bec6e0;
+    font-size: 17px;
+  }
+
+  .time span {
+    margin-top: 2px;
+
+    color: #777;
+    font-size: 8px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+
+    margin-top: 40px;
+  }
+  .hero-actions a {
+    min-width: 170px;
+    padding: 14px 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+      transform 0.25s ease,
+      background 0.25s ease;
+  }
+
+  .primary-button {
+    background: #ffd21a;
+    color: #131315;
+    box-shadow: 0 0 25px rgba(255, 210, 26, 0.25);
+  }
+
+  .secondary-button {
+    background: #2b2b2d;
+    color: white;
+    border: 1px solid #555;
+  }
+
+  .hero-actions a:hover {
+    transform: translateY(-3px);
+  }
+
+  .ecosystem {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 70px;
+  }
+
+  .ecosystemInfo{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .ecosystemInfo > h2{
+    font-size: 40px;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .ecosystemInfo > h2 span{
+    color: #BEC6E0;
+  }
+
+  .ecosystemInfo > p{
+    max-width: 80%;
+    font-size: 20px;
+    color: #C2C2BA;
+  }
+
+  .ecosystemCards{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ecosystemCard{
+    width: 30%;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    border: 1px solid #BEC6E0;
+    border-top: 5px solid #BEC6E0;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: #1B232F;
+  }
+</style>

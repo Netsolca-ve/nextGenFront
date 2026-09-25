@@ -1,0 +1,27 @@
+---
+import { ClientRouter, slide } from 'astro:transitions';
+
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+---
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <ClientRouter />
+
+    <title>Document</title>
+</head>
+<body>
+    <Navbar transition:persist aria-label="Navegación principal" />
+    <main transition:animate={slide({ duration: "0.4s" })}>
+        <slot />
+    </main>
+    <Footer />
+</body>
+</html>

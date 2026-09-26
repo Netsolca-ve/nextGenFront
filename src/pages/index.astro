@@ -1,6 +1,6 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
+import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
 ---
 
 <MainLayout>
@@ -155,9 +155,17 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
 
   <section class="gallery">
     <div class="galleryTitle">
-      <h3>GALERIA DE LA <span>JORNADA</span> </h3>
-      <p>Revive los momentos más intentsos de los últimos partidos</p>
+        <div class="galleryTitleInfo">
+            <h3>GALERIA DE LA <span>JORNADA</span> </h3>
+            <p>Revive los momentos más intentsos de los últimos partidos</p>
+        </div>
+
+        <div class="galleryTitleMore">
+          <ArrowRight class="galleryTitleMoreIcon" />
+        </div>
     </div>
+
+
   </section>
 </MainLayout>
 
@@ -479,6 +487,7 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
     flex-direction: column;
     padding-left: 50px;
     gap: 50px;
+    padding-bottom: 100px;
   }
 
   .academiesTitle h3{
@@ -556,6 +565,46 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
   .academyCardInfo button:hover{
     cursor: pointer;
     opacity: 0.8;
+  }
+
+  .gallery{
+    width: 100%;
+    padding-left: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 50px;
+    padding-bottom: 100px;
+  }
+
+  .galleryTitle{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+  }
+
+.galleryTitle h3{
+    font-size: 40px;
+    font-style: italic;
+  }
+
+  .galleryTitle span{
+    color: #BEC6E0;
+  }
+
+  .galleryTitle p{
+    color: #9d9ea7;
+    font-size: 20px;
+  }
+
+  .galleryTitleMore{
+    margin-right: 70px;
+    padding: 10px;
+    background-color: #19212e;
+    border-radius: 20px;
   }
 
 </style>

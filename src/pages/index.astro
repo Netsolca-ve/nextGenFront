@@ -103,6 +103,62 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
 		</div>
 	</div>
   </section>
+
+  <section class="">
+
+  </section>
+
+  <section class="academies">
+    <div class="academiesTitle">
+      <h3>ACADEMIAS DE <span>ÉLITE</span></h3>
+      <p>Formación integral bajo la metodología NextGen </p>
+    </div>
+
+    <div class="academiesCards">
+      <div class="academyCard">
+        <div class="academyCardImg">
+          <img src="/images/futbol.webp" alt="foto academia">
+        </div>
+
+        <div class="academyCardInfo">
+          <h3>FUTBOL</h3>
+          <p>Escuela de futbol sala para todas las edades</p>
+          <button>Ver más</button>
+        </div>
+      </div>
+
+      <div class="academyCard">
+        <div class="academyCardImg">
+          <img src="/images/futbol.webp" alt="foto academia">
+        </div>
+
+        <div class="academyCardInfo">
+          <h3>FUTBOL</h3>
+          <p>Escuela de futbol sala para todas las edades</p>
+          <button>Ver más</button>
+        </div>
+      </div>
+
+      <div class="academyCard">
+        <div class="academyCardImg">
+          <img src="/images/futbol.webp" alt="foto academia">
+        </div>
+
+        <div class="academyCardInfo">
+          <h3>FUTBOL</h3>
+          <p>Escuela de futbol sala para todas las edades</p>
+          <button>Ver más</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery">
+    <div class="galleryTitle">
+      <h3>GALERIA DE LA <span>JORNADA</span> </h3>
+      <p>Revive los momentos más intentsos de los últimos partidos</p>
+    </div>
+  </section>
 </MainLayout>
 
 <style>
@@ -360,6 +416,7 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
     align-items: center;
     flex-direction: column;
     gap: 70px;
+    padding-bottom: 100px;
   }
 
   .ecosystemInfo{
@@ -413,4 +470,92 @@ import { Trophy, GraduationCap, TrendingUp } from "@lucide/astro"
     padding: 20px;
     background-color: #1B232F;
   }
+
+  .academies{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    padding-left: 50px;
+    gap: 50px;
+  }
+
+  .academiesTitle h3{
+    font-size: 40px;
+    font-style: italic;
+  }
+
+  .academiesTitle span{
+    color: #BEC6E0;
+  }
+
+  .academiesTitle p{
+    color: #9d9ea7;
+    font-size: 20px;
+  }
+
+  .academiesCards{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .academyCard{ 
+    width: 30%;
+    height: 400px;
+    border-radius: 20px;
+    border: 1px solid #BEC6E0;
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .academyCardImg{
+    height: 60%;
+    width: 100%;
+  }
+
+  .academyCardImg img{
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .academyCardInfo{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .academyCardInfo h3{
+    font-size: 25px;
+  }
+
+  .academyCardInfo p{
+    color: #9d9ea7;
+  }
+
+  .academyCardInfo button{
+    width: 90%;
+    height: 40%;
+    border: 1px solid #BEC6E0;
+    color: #BEC6E0;
+    background-color: transparent;
+  }
+
+  .academyCardInfo button:hover{
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
 </style>

@@ -10,7 +10,7 @@ const links: NavLink[] = [
     { name: "INICIO", href: "/" },
     { name: "ECOSISTEMA", href: "/ecosystem" },
     { name: "ACADEMIAS", href: "/teams" },
-    { name: "TORNEOS", href: "/tournaments" },
+    { name: "EVENTOS", href: "/events" },
     { name: "SOBRE NOSOTROS", href: "/about-us" },
 ];
 
@@ -24,7 +24,9 @@ const isActive = (href: string) => {
 <nav>
     <div class="container">
         <div class="logo">
-            <a href="/"><span>NEXTGEN</span></a>
+            <!-- <a href="/"><span>NEXTGEN</span></a> -->
+
+            <img src="/images/logo.png" alt="">
         </div>
 
         <div class="nav-links">
@@ -48,7 +50,8 @@ const isActive = (href: string) => {
 <style>
     nav{
         width: 100%;
-        background-color: #131315;
+        /* background-color: #131315; */ 
+        
         padding: 20px 0;
         position: sticky;
         top: 0;
@@ -76,11 +79,11 @@ const isActive = (href: string) => {
         width: 30%;
     }
 
-    .logo span{
-        color: #BEC6E0;
-        font-size: 32px;
-        font-weight: bold;
+    .logo img{
+        width: 60%;
+        height: auto;
     }
+
 
     .nav-links{
         width: 70%;
@@ -101,7 +104,7 @@ const isActive = (href: string) => {
     }
 
     .nav-links a.active {
-        color: #BEC6E0;
+        color: #0094DD;
         text-decoration: underline;
         text-underline-offset: 8px;
         text-decoration-thickness: 2px;

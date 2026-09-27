@@ -1,6 +1,6 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
+import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@lucide/astro"
 ---
 
 <MainLayout>
@@ -34,87 +34,94 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
     </ul>
   </section>
 
-  <section class="hero" ariar-labelledby="hero-heading">
-    <div class="heroContent">
-      <p class="season">TEMPORADA 2026</p>
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="heroContent">
+    <!-- <p class="season">TEMPORADA 2026</p> -->
 
-      <h1 id="heroTitle">EL DESTINO DE LOS <span>CAMPEONES</span></h1>
+    <h1 id="heroTitle">
+      IMPULSANDO EL TALENTO DEL <span>FUTURO</span>
+    </h1>
 
-      <div class="nextMatch">
-        <div class="matchInfo">
-          <span>PRÓXIMO GRAN ENCUENTRO</span>
+    <div class="nextMatch">
+      <div class="matchInfo">
+        <span>PRÓXIMO EVENTO</span>
 
-          <div class="teams">
-            <strong>TITANES</strong>
-            <span>VS</span>
-            <strong>RAYOS</strong>
-          </div>
-        </div>
-
-        <div class="separator"></div>
-
-        <div class="countdown">
-          <div class="time">
-            <strong>02</strong>
-            <span>DÍAS</span>
-          </div>
-
-          <div class="time">
-            <strong>14</strong>
-            <span>HRS</span>
-          </div>
-
-          <div class="time">
-            <strong>35</strong>
-            <span>MIN</span>
-          </div>
+        <div class="teams">
+          <!-- <strong>TITANES</strong>
+          <span>VS</span>
+          <strong>RAYOS</strong> -->
+          <strong>FUTSAL PROMISES LEAGUE</strong>
         </div>
       </div>
 
-      <div class="hero-actions">
-        <a href="/tickets" class="primary-button"> BUY TICKETS </a>
+      <div class="separator"></div>
 
-        <a href="/calendar" class="secondary-button"> VER CALENDARIO </a>
+      <div class="countdown">
+        <div class="time">
+          <strong>02</strong>
+          <span>DÍAS</span>
+        </div>
+
+        <div class="time">
+          <strong>14</strong>
+          <span>HRS</span>
+        </div>
+
+        <div class="time">
+          <strong>35</strong>
+          <span>MIN</span>
+        </div>
       </div>
     </div>
-  </section>
+
+    <div class="hero-actions">
+      <a href="/tickets" class="primary-button">IR A TORNEOS</a>
+      <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
+    </div>
+  </div>
+</section>
 
   <section class="ecosystem">
 	<div class="ecosystemInfo">
-		<h2>El ECOSISTEMA <span>NEXTGEN</span></h2>
-		<p>Un camino completo para el desarrollo deportivo. Desde la formación inicial hasta el alto rendimiento competitivo, conectamos talento, tecnología y pasión.</p>
+		<h2>EL ECOSISTEMA <span>NEXTGEN</span></h2>
+		<p>Nuestra plataforma integral centraliza todos los servicios que un atleta necesita en un solo lugar.</p>
 	</div>
 
 	<div class="ecosystemCards">
 		<div class="ecosystemCard">
-      <GraduationCap size={48} color="#BEC6E0" />
-			<h3>Formación Inicial</h3>
-			<p>Desarrollamos habilidades fundamentales en los jóvenes atletas.</p>
+      <Volleyball size={48} color="#0094DD" />
+			<h3>Gestión Deportiva</h3>
+			<p>Asesoramos y automatizamos semillarios deportivos.</p>
 		</div>
 		<div class="ecosystemCard">
-      <Trophy size={48} color="#FACC15" />
-			<h3>Alto Rendimiento</h3>
-			<p>Preparamos a los atletas para competir a alto nivel.</p>
+      <TrendingUp size={48} color="#0094DD" />
+			<h3>Desarrollo y Cuidado</h3>
+			<p>Servicios especializados para deportistas de todo nivel.</p>
 		</div>
 		<div class="ecosystemCard">
-      <TrendingUp size={48} color="#BEC6E0" />
-			<h3>Desarrollo Técnico</h3>
-      <p>Mejoramos las habilidades técnicas y tácticas de los atletas.</p>
+      <ShieldHalf size={48} color="#0094DD" />
+			<h3>Elite Squad</h3>
+      <p>Viaja con nosotros y vive experiencias internacionales.</p>
+		</div>
+    <div class="ecosystemCard">
+      <GraduationCap size={48} color="#0094DD" />
+			<h3>Academy Lab</h3>
+      <p>Formación especializada para profesionales del deporte.</p>
 		</div>
 	</div>
   </section>
 
-  <section class="">
+  <!-- <section class="">
 
-  </section>
+  </section> -->
 
   <section class="academies">
     <div class="academiesTitle">
-      <h3>ACADEMIAS DE <span>ÉLITE</span></h3>
-      <p>Formación integral bajo la metodología NextGen </p>
+      <h3>ACADEMIAS DE <span>FORMACIÓN</span></h3>
+      <p>Desarrollamos habilidades fundamentales en jóvenes atletas bajo la metodología NextGen.</p>
     </div>
 
-    <div class="academiesCards">
+    <!-- <div class="academiesCards">
       <div class="academyCard">
         <div class="academyCardImg">
           <img src="/images/futbol.webp" alt="foto academia">
@@ -149,24 +156,60 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
           <p>Escuela de futbol sala para todas las edades</p>
           <button>Ver más</button>
         </div>
+      </div>
+    </div> -->
+  
+    <div class="almirantes">
+      <div class="almirantesLogo">
+        <img src="/images/almirantes.png" alt="">
+        <div class="almirantesInfo">
+          <div class="almirantesInfoTxt">
+                <h3>academia <span>de futsal</span></h3>
+                <p>Formación integral para futuros campeones del fútbol. Haz que tu niño juegue mejor con nosotros.</p>
+          </div>
+        <button class="almirantesInfoBtn">¡Súbete al Barco!</button>
+      </div>
+      </div>
+
+
+      <div class="almirantesFoto">
+        <img class="almirantesFotoImg" src="/images/fotoAlmirantes.png" alt="">
       </div>
     </div>
   </section>
 
-  <section class="gallery">
+  <!-- <section class="gallery">
     <div class="galleryTitle">
         <div class="galleryTitleInfo">
-            <h3>GALERIA DE LA <span>JORNADA</span> </h3>
+            <h3>NOTICIAS <span>RECIENTES</span> </h3>
             <p>Revive los momentos más intentsos de los últimos partidos</p>
         </div>
+        
 
         <div class="galleryTitleMore">
           <ArrowRight class="galleryTitleMoreIcon" />
         </div>
     </div>
 
+    <div class="galleryGrid">
+   <img
+      src="/images/fut1.jpeg"
+      alt="Celebración de gol"
+      class="gallery-main"
+    />
 
-  </section>
+    <img
+      src="/images/fut2.jpg"
+      alt="Portero realizando una atajada"
+    />
+
+    <img
+      src="/images/fut3.jpg"
+      alt="Jugador disputando el balón"
+    />
+    </div>
+    
+  </section> -->
 </MainLayout>
 
 <style>
@@ -192,11 +235,11 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
 
   .match {
     width: 20%;
-    background-color: #19212e;
+    background-color:  #021027;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #bec6e0;
-    border-left: 5px solid #bec6e0;
+    border: 1px solid #083E76;
+    border-left: 5px solid #083E76;
     margin: 0px;
   }
 
@@ -268,22 +311,56 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
       box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
     }
   }
-  .hero {
-    min-height: 75svh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 80px 20px;
-    background: #131315;
-  }
+.hero {
+  position: relative;
+  min-height: 75svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+  overflow: hidden;
 
-  .heroContent {
-    width: min(1100px, 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+  background: #131315;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+
+  background-image: url("/images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(2px);
+
+  transform: scale(1.05);
+
+  z-index: 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(19, 19, 21, 0.72);
+
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+
+  width: min(1100px, 100%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
 
   .season {
     display: inline-block;
@@ -299,15 +376,17 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   .hero h1 {
     margin: 0;
     font-size: clamp(3rem, 7vw, 7rem);
-	font-style: italic;
+	  font-style: italic;
     line-height: 0.95;
     font-weight: 300;
     color: white;
+    font-size: 60px;
   }
 
   .hero h1 span {
     display: block;
-    color: #bec6e0;
+    color: #0094DD;
+    font-weight: bold;
   }
 
   .nextMatch {
@@ -325,7 +404,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   .matchInfo > span {
     display: block;
     margin-bottom: 8px;
-    color: #bec6e0;
+    color: #0094DD;
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 1px;
@@ -343,7 +422,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .teams span {
-    color: #bec6e0;
+    color: #0094DD;
     font-size: 13px;
     font-weight: 700;
   }
@@ -371,7 +450,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .time strong {
-    color: #bec6e0;
+    color: #0094DD;
     font-size: 17px;
   }
 
@@ -402,13 +481,13 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .primary-button {
-    background: #ffd21a;
+    background: #0094DD;
     color: #131315;
-    box-shadow: 0 0 25px rgba(255, 210, 26, 0.25);
+    box-shadow: 0 0 25px rgba(26, 163, 255, 0.25);
   }
 
   .secondary-button {
-    background: #2b2b2d;
+    background: #1b1b1d;
     color: white;
     border: 1px solid #555;
   }
@@ -424,6 +503,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
     align-items: center;
     flex-direction: column;
     gap: 70px;
+    padding-top: 100px;
     padding-bottom: 100px;
   }
 
@@ -444,7 +524,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .ecosystemInfo > h2 span{
-    color: #BEC6E0;
+    color: #0094DD;
   }
 
   .ecosystemInfo > p{
@@ -464,7 +544,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .ecosystemCard{
-    width: 30%;
+    width: 20%;
     height: 250px;
     display: flex;
     justify-content: center;
@@ -472,8 +552,8 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
     flex-direction: column;
     text-align: center;
     gap: 20px;
-    border: 1px solid #BEC6E0;
-    border-top: 5px solid #BEC6E0;
+    border: 1px solid #0094DD;
+    border-top: 5px solid #0094DD;
     border-radius: 20px;
     padding: 20px;
     background-color: #1B232F;
@@ -496,12 +576,105 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .academiesTitle span{
-    color: #BEC6E0;
+    color: #0094DD;
   }
 
   .academiesTitle p{
     color: #9d9ea7;
     font-size: 20px;
+  }
+
+  .almirantes{
+    width: 96%;
+    background-color: #0094DD;
+    height: auto;
+    background-image: url("/images/fondo.png");
+    background-size: cover;
+    background-position: center;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .almirantesLogo{
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+  }
+
+  .almirantesLogo img{
+    width: 25%;
+    height: auto;
+  }
+
+  .almirantesInfo{
+    width: 50%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    font-size: 40px;
+    flex-direction: column;
+    gap: 50px;
+  }
+
+ @font-face {
+    font-family: arialNova;
+    src: url('/fonts/ArialNova.ttf') format('truetype');
+ }
+
+  .almirantesInfo h3{
+    font-family: arialNova;
+    font-weight: normal;
+  }
+
+
+  .almirantesInfo span{
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+  }
+
+  .almirantesInfo p{
+    font-family: arialNova;
+    font-weight: normal;
+    color: #6DAFE7;
+    font-size: 19px;
+    text-align: center;
+  }
+
+  .almirantesInfoBtn{
+    background: #1b1b1d;
+    color: white;
+    border: 1px solid #555;
+    width: 40%;
+    padding: 12px;
+  }
+
+  .almirantesInfoBtn:hover{
+    cursor: pointer;
+    opacity: 0.9;
+  }
+
+  .almirantesFoto{
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+  }
+
+  .almirantesFoto img{
+    width: 60%;
+    height: auto;
+  }
+
+  .almirantesInfoTxt{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .academiesCards{
@@ -592,7 +765,7 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
   }
 
   .galleryTitle span{
-    color: #BEC6E0;
+    color: #0094DD;
   }
 
   .galleryTitle p{
@@ -606,5 +779,6 @@ import { Trophy, GraduationCap, TrendingUp, ArrowRight } from "@lucide/astro"
     background-color: #19212e;
     border-radius: 20px;
   }
+
 
 </style>

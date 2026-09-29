@@ -1,0 +1,51 @@
+---
+import "./Navbar.css"; 
+
+interface NavLink {
+    name: string;
+    href: string;
+}
+
+const currentPath = Astro.url.pathname;
+
+const links: NavLink[] = [
+    { name: "INICIO", href: "/" },
+    { name: "ECOSISTEMA", href: "/#ecosystem" },
+    { name: "ACADEMIAS", href: "/#academies" },
+    { name: "EVENTOS", href: "/events" },
+    { name: "SOBRE NOSOTROS", href: "/about-us" },
+];
+
+const isActive = (href: string) => {
+    return href === "/"
+        ? currentPath === "/"
+        : currentPath.startsWith(href);
+};
+---
+
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <!-- <a href="/"><span>NEXTGEN</span></a> -->
+
+            <img src="/images/logo.png" alt="">
+        </div>
+
+        <div class="nav-links">
+            {
+                links.map((link) => (
+                    <a
+                        href={link.href}
+                        class:list={{ active: isActive(link.href) }}
+                        aria-current={
+                            isActive(link.href) ? "page" : undefined
+                        }
+                    >
+                        {link.name}
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</nav>
+

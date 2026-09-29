@@ -1,6 +1,13 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
-import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@lucide/astro"
+import {
+  ShieldHalf,
+  GraduationCap,
+  TrendingUp,
+  ArrowRight,
+  Volleyball,
+} from "@lucide/astro";
+import "./index.css";
 ---
 
 <MainLayout>
@@ -20,9 +27,9 @@ import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@
 
       <li class="match live">
         <div class="matchTop">
-          <span class="mark liveMark"
-            ><span class="live-dot"></span>LIVE 65'</span
-          >
+          <span class="mark liveMark">
+            <span class="live-dot"></span>LIVE 65'
+          </span>
         </div>
 
         <div class="matchBot">
@@ -34,91 +41,97 @@ import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@
     </ul>
   </section>
 
-<section class="hero" aria-labelledby="heroTitle">
-  <div class="heroContent">
-    <!-- <p class="season">TEMPORADA 2026</p> -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="heroContent">
+      <!-- <p class="season">TEMPORADA 2026</p> -->
 
-    <h1 id="heroTitle">
-      IMPULSANDO EL TALENTO DEL <span>FUTURO</span>
-    </h1>
+      <h1 id="heroTitle">
+        IMPULSANDO EL TALENTO DEL <span>FUTURO</span>
+      </h1>
 
-    <div class="nextMatch">
-      <div class="matchInfo">
-        <span>PRÓXIMO EVENTO</span>
+      <div class="nextMatch">
+        <div class="matchInfo">
+          <span>PRÓXIMO EVENTO</span>
 
-        <div class="teams">
-          <!-- <strong>TITANES</strong>
+          <div class="teams">
+            <!-- <strong>TITANES</strong>
           <span>VS</span>
           <strong>RAYOS</strong> -->
-          <strong>FUTSAL PROMISES LEAGUE</strong>
+            <strong>FUTSAL PROMISES LEAGUE</strong>
+          </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="countdown">
+          <div class="time">
+            <strong>02</strong>
+            <span>DÍAS</span>
+          </div>
+
+          <div class="time">
+            <strong>14</strong>
+            <span>HRS</span>
+          </div>
+
+          <div class="time">
+            <strong>35</strong>
+            <span>MIN</span>
+          </div>
         </div>
       </div>
 
-      <div class="separator"></div>
-
-      <div class="countdown">
-        <div class="time">
-          <strong>02</strong>
-          <span>DÍAS</span>
-        </div>
-
-        <div class="time">
-          <strong>14</strong>
-          <span>HRS</span>
-        </div>
-
-        <div class="time">
-          <strong>35</strong>
-          <span>MIN</span>
-        </div>
+      <div class="hero-actions">
+        <a href="/tickets" class="primary-button">IR A TORNEOS</a>
+        <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
       </div>
     </div>
+  </section>
 
-    <div class="hero-actions">
-      <a href="/tickets" class="primary-button">IR A TORNEOS</a>
-      <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
+  <section class="ecosystem" id="ecosystem">
+    <div class="ecosystemInfo">
+      <h2>EL ECOSISTEMA <span>NEXTGEN</span></h2>
+      <p>
+        Nuestra plataforma integral centraliza todos los servicios que un atleta
+        necesita en un solo lugar.
+      </p>
     </div>
-  </div>
-</section>
 
-  <section class="ecosystem">
-	<div class="ecosystemInfo">
-		<h2>EL ECOSISTEMA <span>NEXTGEN</span></h2>
-		<p>Nuestra plataforma integral centraliza todos los servicios que un atleta necesita en un solo lugar.</p>
-	</div>
-
-	<div class="ecosystemCards">
-		<div class="ecosystemCard">
-      <Volleyball size={48} color="#0094DD" />
-			<h3>Gestión Deportiva</h3>
-			<p>Asesoramos y automatizamos semillarios deportivos.</p>
-		</div>
-		<div class="ecosystemCard">
-      <TrendingUp size={48} color="#0094DD" />
-			<h3>Desarrollo y Cuidado</h3>
-			<p>Servicios especializados para deportistas de todo nivel.</p>
-		</div>
-		<div class="ecosystemCard">
-      <ShieldHalf size={48} color="#0094DD" />
-			<h3>Elite Squad</h3>
-      <p>Viaja con nosotros y vive experiencias internacionales.</p>
-		</div>
-    <div class="ecosystemCard">
-      <GraduationCap size={48} color="#0094DD" />
-			<h3>Academy Lab</h3>
-      <p>Formación especializada para profesionales del deporte.</p>
-		</div>
-	</div>
+    <div class="ecosystemCards">
+      <article class="ecosystemCard">
+        <Volleyball size={48} color="#0094DD" />
+        <h3>Gestión Deportiva</h3>
+        <p>Asesoramos y automatizamos semillarios deportivos.</p>
+      </article>
+      <article class="ecosystemCard">
+        <TrendingUp size={48} color="#0094DD" />
+        <h3>Desarrollo y Cuidado</h3>
+        <p>Servicios especializados para deportistas de todo nivel.</p>
+      </article>
+      <article class="ecosystemCard">
+        <ShieldHalf size={48} color="#0094DD" />
+        <h3>Elite Squad</h3>
+        <p>Viaja con nosotros y vive experiencias internacionales.</p>
+      </article>
+      <article class="ecosystemCard">
+        <GraduationCap size={48} color="#0094DD" />
+        <h3>Academy Lab</h3>
+        <p>Formación especializada para profesionales del deporte.</p>
+      </article>
+    </div>
   </section>
 
   <!-- <section class="">
 
   </section> -->
 
-  <section class="academies">
+  <section class="academies" id="academies">
     <div class="academiesTitle">
-      <h3>ACADEMIAS DE <span>FORMACIÓN</span></h3>
-      <p>Desarrollamos habilidades fundamentales en jóvenes atletas bajo la metodología NextGen.</p>
+      <h2>ACADEMIAS DE <span>FORMACIÓN</span></h2>
+      <p>
+        Desarrollamos habilidades fundamentales en jóvenes atletas bajo la
+        metodología NextGen.
+      </p>
     </div>
 
     <!-- <div class="academiesCards">
@@ -158,28 +171,34 @@ import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@
         </div>
       </div>
     </div> -->
-  
+
     <div class="almirantes">
       <div class="almirantesLogo">
-        <img src="/images/almirantes.png" alt="">
+        <img src="/images/almirantes.png" alt="" />
         <div class="almirantesInfo">
           <div class="almirantesInfoTxt">
-                <h3>academia <span>de futsal</span></h3>
-                <p>Formación integral para futuros campeones del fútbol. Haz que tu niño juegue mejor con nosotros.</p>
+            <h2>academia <span>de futsal</span></h2>
+            <p>
+              Formación integral para futuros campeones del fútbol. Haz que tu
+              niño juegue mejor con nosotros.
+            </p>
           </div>
-        <button class="almirantesInfoBtn">¡Súbete al Barco!</button>
+          <a class="almirantesInfoBtn">¡Súbete al Barco!</a>
+        </div>
       </div>
-      </div>
-
 
       <div class="almirantesFoto">
-        <img class="almirantesFotoImg" src="/images/fotoAlmirantes.png" alt="">
+        <img
+          class="almirantesFotoImg"
+          src="/images/fotoAlmirantes.png"
+          alt=""
+        />
       </div>
     </div>
   </section>
 
   <!-- <section class="gallery">
-    <div class="galleryTitle">
+    <div class="galleryTitle"> 
         <div class="galleryTitleInfo">
             <h3>NOTICIAS <span>RECIENTES</span> </h3>
             <p>Revive los momentos más intentsos de los últimos partidos</p>
@@ -211,575 +230,3 @@ import { ShieldHalf, GraduationCap, TrendingUp, ArrowRight, Volleyball } from "@
     
   </section> -->
 </MainLayout>
-
-<style>
-  .scoreboard {
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
-
-  ul {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    gap: 20px;
-    list-style: none;
-    padding-left: 10px;
-  }
-
-  .match {
-    width: 20%;
-    background-color:  #021027;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #083E76;
-    border-left: 5px solid #083E76;
-    margin: 0px;
-  }
-
-  .matchTop {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .matchTop span {
-    font-weight: bold;
-    font-size: 14px;
-  }
-
-  .matchBot {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .matchBot span {
-    font-weight: bold;
-    font-size: 14px;
-  }
-
-  .match .mark {
-    color: #9d9ea7;
-    font-weight: bold;
-  }
-
-  .live {
-    border: #22c25d 1px solid;
-    border-left: #22c25d 5px solid;
-  }
-
-  .live .matchTop .liveMark {
-    color: #22c25d;
-    font-weight: bold;
-  }
-
-  .live-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    background: #22c25d;
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
-    animation: livePulse 1.5s infinite;
-    margin-right: 5px;
-  }
-
-  @keyframes livePulse {
-    0% {
-      opacity: 1;
-      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
-    }
-
-    70% {
-      opacity: 1;
-      box-shadow: 0 0 0 6px rgba(0, 255, 136, 0);
-    }
-
-    100% {
-      opacity: 1;
-      box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
-    }
-  }
-.hero {
-  position: relative;
-  min-height: 75svh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 80px 20px;
-  overflow: hidden;
-
-  background: #131315;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: -30px;
-
-  background-image: url("/images/hero.jpg");
-  background-size: cover;
-  background-position: center;
-
-  filter: blur(2px);
-
-  transform: scale(1.05);
-
-  z-index: 0;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background: rgba(19, 19, 21, 0.72);
-
-  z-index: 1;
-}
-
-.heroContent {
-  position: relative;
-  z-index: 2;
-
-  width: min(1100px, 100%);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  text-align: center;
-}
-
-  .season {
-    display: inline-block;
-    margin: 0 0 25px;
-    padding: 3px 14px;
-    background: #bec6e0;
-    color: #131315;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 4px;
-  }
-
-  .hero h1 {
-    margin: 0;
-    font-size: clamp(3rem, 7vw, 7rem);
-	  font-style: italic;
-    line-height: 0.95;
-    font-weight: 300;
-    color: white;
-    font-size: 60px;
-  }
-
-  .hero h1 span {
-    display: block;
-    color: #0094DD;
-    font-weight: bold;
-  }
-
-  .nextMatch {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    margin-top: 35px;
-    gap: 28px;
-  }
-
-  .matchInfo {
-    text-align: left;
-  }
-
-  .matchInfo > span {
-    display: block;
-    margin-bottom: 8px;
-    color: #0094DD;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1px;
-  }
-
-  .teams {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: white;
-  }
-
-  .teams strong {
-    font-size: 18px;
-  }
-
-  .teams span {
-    color: #0094DD;
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .separator {
-    width: 1px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .countdown {
-    display: flex;
-    gap: 10px;
-  }
-
-  .time {
-    width: 52px;
-    height: 52px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #1b1b1d;
-    border-radius: 3px;
-  }
-
-  .time strong {
-    color: #0094DD;
-    font-size: 17px;
-  }
-
-  .time span {
-    margin-top: 2px;
-
-    color: #777;
-    font-size: 8px;
-  }
-  .hero-actions {
-    display: flex;
-    gap: 14px;
-
-    margin-top: 40px;
-  }
-  .hero-actions a {
-    min-width: 170px;
-    padding: 14px 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 11px;
-    font-weight: 800;
-    text-decoration: none;
-    transition:
-      transform 0.25s ease,
-      background 0.25s ease;
-  }
-
-  .primary-button {
-    background: #0094DD;
-    color: #131315;
-    box-shadow: 0 0 25px rgba(26, 163, 255, 0.25);
-  }
-
-  .secondary-button {
-    background: #1b1b1d;
-    color: white;
-    border: 1px solid #555;
-  }
-
-  .hero-actions a:hover {
-    transform: translateY(-3px);
-  }
-
-  .ecosystem {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 70px;
-    padding-top: 100px;
-    padding-bottom: 100px;
-  }
-
-  .ecosystemInfo{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-  }
-
-  .ecosystemInfo > h2{
-    font-size: 40px;
-    font-weight: 600;
-    font-style: italic;
-  }
-
-  .ecosystemInfo > h2 span{
-    color: #0094DD;
-  }
-
-  .ecosystemInfo > p{
-    max-width: 80%;
-    font-size: 20px;
-    color: #C2C2BA;
-  }
-
-  .ecosystemCards{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .ecosystemCard{
-    width: 20%;
-    height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-    border: 1px solid #0094DD;
-    border-top: 5px solid #0094DD;
-    border-radius: 20px;
-    padding: 20px;
-    background-color: #1B232F;
-  }
-
-  .academies{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    padding-left: 50px;
-    gap: 50px;
-    padding-bottom: 100px;
-  }
-
-  .academiesTitle h3{
-    font-size: 40px;
-    font-style: italic;
-  }
-
-  .academiesTitle span{
-    color: #0094DD;
-  }
-
-  .academiesTitle p{
-    color: #9d9ea7;
-    font-size: 20px;
-  }
-
-  .almirantes{
-    width: 96%;
-    background-color: #0094DD;
-    height: auto;
-    background-image: url("/images/fondo.png");
-    background-size: cover;
-    background-position: center;
-    padding-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-radius: 20px;
-  }
-
-  .almirantesLogo{
-    width: 70%;
-    display: flex;
-    justify-content: space-around;
-    align-items: start;
-  }
-
-  .almirantesLogo img{
-    width: 25%;
-    height: auto;
-  }
-
-  .almirantesInfo{
-    width: 50%;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    font-size: 40px;
-    flex-direction: column;
-    gap: 50px;
-  }
-
- @font-face {
-    font-family: arialNova;
-    src: url('/fonts/ArialNova.ttf') format('truetype');
- }
-
-  .almirantesInfo h3{
-    font-family: arialNova;
-    font-weight: normal;
-  }
-
-
-  .almirantesInfo span{
-    font-family: 'Times New Roman', Times, serif;
-    font-style: italic;
-  }
-
-  .almirantesInfo p{
-    font-family: arialNova;
-    font-weight: normal;
-    color: #6DAFE7;
-    font-size: 19px;
-    text-align: center;
-  }
-
-  .almirantesInfoBtn{
-    background: #1b1b1d;
-    color: white;
-    border: 1px solid #555;
-    width: 40%;
-    padding: 12px;
-  }
-
-  .almirantesInfoBtn:hover{
-    cursor: pointer;
-    opacity: 0.9;
-  }
-
-  .almirantesFoto{
-    width: 30%;
-    height: 100%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-  }
-
-  .almirantesFoto img{
-    width: 60%;
-    height: auto;
-  }
-
-  .almirantesInfoTxt{
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .academiesCards{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    gap: 20px;
-  }
-
-  .academyCard{ 
-    width: 30%;
-    height: 400px;
-    border-radius: 20px;
-    border: 1px solid #BEC6E0;
-    display: flex;
-    justify-content: top;
-    align-items: center;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .academyCardImg{
-    height: 60%;
-    width: 100%;
-  }
-
-  .academyCardImg img{
-    width: 100%;
-    height: 100%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-  }
-
-  .academyCardInfo{
-    width: 100%;
-    height: 30%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .academyCardInfo h3{
-    font-size: 25px;
-  }
-
-  .academyCardInfo p{
-    color: #9d9ea7;
-  }
-
-  .academyCardInfo button{
-    width: 90%;
-    height: 40%;
-    border: 1px solid #BEC6E0;
-    color: #BEC6E0;
-    background-color: transparent;
-  }
-
-  .academyCardInfo button:hover{
-    cursor: pointer;
-    opacity: 0.8;
-  }
-
-  .gallery{
-    width: 100%;
-    padding-left: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    gap: 50px;
-    padding-bottom: 100px;
-  }
-
-  .galleryTitle{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: end;
-  }
-
-.galleryTitle h3{
-    font-size: 40px;
-    font-style: italic;
-  }
-
-  .galleryTitle span{
-    color: #0094DD;
-  }
-
-  .galleryTitle p{
-    color: #9d9ea7;
-    font-size: 20px;
-  }
-
-  .galleryTitleMore{
-    margin-right: 70px;
-    padding: 10px;
-    background-color: #19212e;
-    border-radius: 20px;
-  }
-
-
-</style>

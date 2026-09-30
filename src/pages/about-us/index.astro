@@ -25,7 +25,8 @@ import { Goal,Eye, MapPin, Mail } from "@lucide/astro";
     <div class="misionVisionCardsGrid">
       <article class="misionVisionCard">
         <div class="misionVisionCardIcon">
-          <Goal size={40} color="#1B232F" />
+          <h3>01</h3>
+          <Goal size={40} color="#1B232F" class="icon" />
         </div>
 
         <div class="misionVisionCardContent">
@@ -36,6 +37,7 @@ import { Goal,Eye, MapPin, Mail } from "@lucide/astro";
 
       <article class="misionVisionCard">
         <div class="misionVisionCardIcon">
+          <h3>02</h3>
           <Eye size={40} color="#1B232F" class="icon" />
         </div>
 
@@ -55,6 +57,10 @@ import { Goal,Eye, MapPin, Mail } from "@lucide/astro";
 
     <div class="contactContent">
       <div class="contactForm">
+        <div class="cardInfoTitle">
+          <h3>ENVÍA UN MENSAJE</h3>
+        </div>
+
         <form class="contact-form">
           <div class="formGroup">
             <label for="name">Nombre</label>
@@ -71,14 +77,16 @@ import { Goal,Eye, MapPin, Mail } from "@lucide/astro";
             <textarea id="message" name="message" rows="4" required></textarea>
           </div>
 
-          <button type="submit">Enviar</button>
+          <div class="formGroupBtn">
+            <button class="formBtn" type="submit">Enviar</button>
+          </div>
         </form>
       </div>
 
       <div class="contactInfo">
         <div class="cardInfoTitle">
-          <h3>Información de contacto</h3>
-          <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          <h3>HABLEMOS</h3>
+          <p>¿Tienes una academia, equipo, torneo o proyecto deportivo? Estamos aquí para ayudarte a llevarlo al siguiente nivel.</p>
         </div>
 
         <article class="contactInfoCard">

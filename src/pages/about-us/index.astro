@@ -1,12 +1,108 @@
 ---
 import MaynLayout from "../../layouts/MainLayout.astro";
+import "./index.css";
+import { Goal,Eye, MapPin, Mail } from "@lucide/astro";
 ---
 
 <MaynLayout>
-  <section class="about-us">
-    <div class="about-us-info">
-      <h2>SOBRE <span>NOSOTROS</span></h2>
-      <p>NextGen es una plataforma integral que centraliza todos los servicios que un atleta necesita en un solo lugar. Nuestro objetivo es brindar a los atletas, entrenadores y academias las herramientas necesarias para alcanzar su máximo potencial.</p>
+  <section class="aboutHero">
+    <div class="aboutHeroContent">
+      <h1>¿QUÉ ES <span>NEXT GEN</span>?</h1>
+      <p>Es una plataforma integral diseñada para transformar la estructura deportiva mediante soluciones de alto nivel. Centralizamos todos los servicios y herramientas estratégicas que atletas profesionales y en formación, clubes y organizaciones requieren para optimizar su rendimiento, profesionalizar su gestión y maximizar sus oportunidades de proyección dentro y fuera del país.</p>
+    </div>
+
+    <div class="aboutHeroImg">
+      <img src="/images/hero.jpg" alt="Next Gen">
+    </div>
+  </section>
+
+  <section class="misionVision">
+    <div class="misionVisionTitle">
+        <h2>MISIÓN Y VISIÓN</h2>
+        <p>Nuestros pilares</p>
+    </div>
+
+    <div class="misionVisionCardsGrid">
+      <article class="misionVisionCard">
+        <div class="misionVisionCardIcon">
+          <Goal size={40} color="#1B232F" />
+        </div>
+
+        <div class="misionVisionCardContent">
+          <h3>MISIÓN</h3>
+          <p>Transformar la estructura deportiva mediante soluciones de alto nivel, centralizando todos los servicios y herramientas estratégicas que atletas profesionales y en formación, clubes y organizaciones requieren para optimizar su rendimiento, profesionalizar su gestión y maximizar sus oportunidades de proyección dentro y fuera del país.</p>
+        </div>
+      </article>
+
+      <article class="misionVisionCard">
+        <div class="misionVisionCardIcon">
+          <Eye size={40} color="#1B232F" class="icon" />
+        </div>
+
+        <div class="misionVisionCardContent">
+          <h3>VISIÓN</h3>
+          <p>Consolidarnos como el ecosistema deportivo líder de referencia regional e internacional, reconocido por transformar el desarrollo formativo y profesional de los atletas a través de la excelencia operativa, la formación continua y experiencias de competencia de primer nivel.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="contactTitle">
+      <h2>CONTÁCTANOS</h2>
+      <p>Ponte en contacto con nosotros.</p>
+    </div>
+
+    <div class="contactContent">
+      <div class="contactForm">
+        <form class="contact-form">
+          <div class="formGroup">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+
+          <div class="formGroup">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="formGroup">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+          </div>
+
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+
+      <div class="contactInfo">
+        <div class="cardInfoTitle">
+          <h3>Información de contacto</h3>
+          <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        </div>
+
+        <article class="contactInfoCard">
+          <div class="contactInfoCardIcon">
+            <img src="/icons/whatsapp.svg" alt="WhatsApp">
+          </div>
+
+          <div class="contactInfoCardContent">
+            <h3>WhatsApp</h3>
+            <a href="https://wa.me/584166687002" target="_blank" rel="noopener noreferrer">+58 416-6687002</a>
+          </div>
+        </article>
+
+        <article class="contactInfoCard">
+          <div class="contactInfoCardIcon">
+            <img src="/icons/instagram.svg" alt="Instagram">
+          </div>
+
+          <div class="contactInfoCardContent">
+            <h3>Instagram</h3>
+            <a href="https://www.instagram.com/nextgen.ven/" target="_blank" rel="noopener noreferrer">@nextgen.ven</a>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </MaynLayout>

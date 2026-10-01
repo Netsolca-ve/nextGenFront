@@ -1,0 +1,663 @@
+.almirantesHero{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.almirantesHero::before{
+  content: "";
+  position: absolute;
+  inset: -30px;
+  background-image: url("/images/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+.almirantesHero::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(19, 19, 21, 0.72);
+  z-index: 1;
+}
+
+.almirantesHero .heroContent{
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.almirantesHero .heroContent img{
+    width: 20%;
+    height: auto;
+}
+
+.almirantesHero .heroContent h1{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+    text-align: center;
+}
+
+.almirantesHero .heroContent p{
+    font-size: 20px;
+    color: #C2C2BA;
+    text-align: center;
+    max-width: 80%;
+}
+
+.categories{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: 10px;
+    flex-direction: column;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.categoriesTitle{
+    padding-left: 50px;
+}
+
+.categories .categoriesTitle h2{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.categories .categoriesTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+    max-width: 50%;
+}
+
+.categoriesCardsGrid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+    padding: 50px;
+}
+
+.categoriesCard{
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 10px;
+    background-color: #1B232F;
+    border: 1px solid #0094DD;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.categoriesCard:hover{
+    transform: translateY(-4px);
+    transition: transform 0.3s ease;
+}
+
+.categoriesCard strong{
+    font-size: 50px;
+    color: #0094DD;
+    font-weight: bold;
+}
+
+.categoriesCard span{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.metodologia{
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1B232F;
+    border-top: 2px solid #0094DD;
+    gap: 20px;
+    border-radius: 10px;
+    grid-column: 1 / -1;
+}
+
+.metodologia .netodologiaTitle{
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.metodologiaIcon{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.metodologiaIcon .icon{
+    width: 100px;
+    height: 100px;
+    color: #0094DD;
+}
+
+.metodologiaTxt{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.metodologiaTxt span{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.metodologiaTxt h3{
+    font-size: 30px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.divider{
+    width: 2px;
+    height: 80%;
+    background-color: #0094DD;
+}
+
+.metodologiaInfo{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.metodologiaInfo p{
+    max-width: 80%;
+    font-size: 20px;
+    color: #C2C2BA;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.training{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+
+.trainingTitle{
+    padding-left: 50px;
+}
+
+.training .trainingTitle h2{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.training .trainingTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.trainingGrid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(1, 1fr));
+    gap: 30px;
+    padding: 50px;
+}
+
+.train{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-direction: row;
+    gap: 10px;
+    border-bottom: 1px solid #0094DD;
+}
+
+.days{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.day{
+    font-weight: 600;
+}
+
+.time {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.trainInfo{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    border-bottom: 1px solid #0094DD;
+}
+
+.trainInfoTitle{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 40px;
+}
+
+.trainInfoTitle h3{
+    font-size: 20px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.trainInfoTitle span{
+    font-size: 16px;
+    color: #0094DD;
+    font-weight: 700;
+}
+
+.site{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 50px;
+    padding-bottom: 50px;
+}
+
+.siteTitle{
+    padding-left: 50px;
+}
+
+.siteTitle h2{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.siteTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.siteContent{
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: 20px;
+    /* padding: 50px; */;
+}
+
+.siteImg{
+    width: 50%;
+    height: 100%;
+}
+
+.siteImg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.siteInfo{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.siteInfo h3{
+    font-size: 30px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.address{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+.address .icon{
+    width: 30px;
+    height: 30px;
+    color: #0094DD;
+}
+
+.address p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.siteInfo p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.siteInfo a{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 10px 16px;
+    color: #fff;
+    background: transparent;
+    border: 1px solid #0094DD;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.siteInfo a:hover{
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+
+.trainers{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.trainersTitle{
+    padding-left: 50px;
+}
+
+.trainersTitle h2{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.trainersTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.trainersGrid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 50px;
+}
+
+.trainer{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: row;
+    gap: 10px;
+    border: 1px solid #0094DD;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.trainerImg{
+    width: 50%;
+    height: 100%;
+    position: relative;
+}
+
+.trainerImg h3{
+    position: absolute;
+    bottom: 0;
+    font-size: 20px;
+    background-color: #131315;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+}
+
+.trainerImg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trainerContent{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+.trainerContent h4{
+    font-size: 20px;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.trainerContent h3{
+    font-size: 35px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.trainerContent .blue{
+    color: #0094DD;
+}
+
+.trainerInfo{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+.trainerInfoIcon{
+    width: 100px;
+    height: 100px;
+}
+
+.trainerInfo .icon{
+    width: 100px;
+    height: 100px;
+    color: #0094DD;
+}
+
+.trainerInfo .icon2{
+    width: 50px;
+    height: 50px;
+    color: #0094DD;
+}
+
+.trainerInfo .icon3{
+    width: 150px;
+    height: 150px;
+    color: #0094DD;
+}
+
+.trainerInfo p{
+    font-size: 15px;
+    color: #C2C2BA;
+}
+
+.divider2{
+    width: 100%;
+    border: 1px solid #0094DD;
+}
+
+.plans{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.plansTitle{
+    padding-left: 50px;
+}
+
+.plansTitle h2{
+    font-size: 40px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plansTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.plansGrid{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    padding: 50px;
+}
+
+.plan{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #1B232F;
+    border: 1px solid #0094DD;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.planTitle{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.planTitle .icon{
+    width: 70px;
+    height: 70px;
+    color: #0094DD;
+}
+
+.planTitle h3{
+    font-size: 25px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.price{
+    width: 100%;
+    height: 15%;
+}
+
+.price h3{
+    font-size: 30px;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+    border-bottom: 1px solid #0094DD;
+}
+
+.planInfo{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.planInfo h3{
+    color: #0094DD
+}
+
+.planInfoItem{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: 10px;
+}
+
+.planInfoItem .icon{
+    width: 30px;
+    height: 30px;
+    color: #0094DD;
+}
+
+.planInfoItem p{
+    font-size: 18px;
+    color: #C2C2BA;
+}
+
+

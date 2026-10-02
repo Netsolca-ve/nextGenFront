@@ -574,14 +574,14 @@
 .plansGrid{
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 0.7fr 1.3fr 1.1fr;
     gap: 20px;
     padding: 50px;
 }
 
 .plan{
     width: 100%;
-    height: 500px;
+    height: 600px;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -595,7 +595,7 @@
 
 .planTitle{
     width: 100%;
-    height: 30%;
+    height: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -617,7 +617,7 @@
 
 .price{
     width: 100%;
-    height: 15%;
+    height: 10%;
 }
 
 .price h3{
@@ -662,12 +662,12 @@
 
 .plan2{
     width: 100%;
-    height: 500px;
+    height: 100%;
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
     background-color: #1B232F;
     border: 1px solid #0094DD;
     padding: 20px;
@@ -676,17 +676,31 @@
 
 .plan2 .planTitle{
     width: 100%;
-    height: 30%;
+    height: 20%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
+
+}
+
+.plan2 .planTitleIcon{
+    width: 30%;
+    height: 70px;
+    color: #0094DD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .planTitle .icon{
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     color: #0094DD;
+}
+
+.plan2 .planTitleTxt{
+    width: 70%;
 }
 
 .planTitle h3{
@@ -698,23 +712,23 @@
 
 .plan2 .price2{
     width: 100%;
-    height: 30%;
+    height: 25%;
     display: flex;
     /* justify-content: space-between; */
     align-items: start;
     border-bottom: 1px solid #0094DD;
-    gap: 10px;
+    gap: 30px;
 }
 
 .plan2 .price2 h3{
-    font-size: 30px;
+    font-size: 35px;
     color: #0094DD;
     font-weight: 700;
     font-style: italic;
 }
 
 .price2 .monthly .important{
-    font-size: 16px;
+    font-size: 15px;
     color: #0094DD;
     font-weight: 700;
 }
@@ -725,36 +739,222 @@
     background-color: #0094DD;
 }
 
-.planInfo{
+.price2 .monthly span{
+    font-size: 14px;
+    color: #C2C2BA;
+    font-weight: 700;
+}
+
+.price2 .regular span{
+    font-size: 15px;
+    color: #C2C2BA;
+    font-weight: 700;
+}
+
+.plan2 .planInfo2{
     width: 100%;
-    height: 40%;
+    height: auto;
     display: flex;
     justify-content: start;
     align-items: start;
     flex-direction: column;
-    gap: 10px;
+    gap: 40px;
 }
 
-.planInfo h3{
+.planInfo2 h3{
     color: #0094DD
 }
 
-.planInfoItem{
+.planInfoItem2{
+    height: 50%;
     display: flex;
     justify-content: start;
-    align-items: start;
+    align-items: center;
+    flex-direction: row;
     gap: 10px;
 }
 
-.planInfoItem .icon{
-    width: 30px;
-    height: 30px;
+.planInfoItem2Icon{
+    width: 15%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.planInfoItem2 .icon{
+    width: 100%;
+    height: 50px;
     color: #0094DD;
 }
 
-.planInfoItem p{
-    font-size: 18px;
+.planInfoItem2 .icon2{
+    width: 100%;
+    height: 50px;
+    color: #0094DD;
+}
+
+.planInfoItemTxt{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+    width: 70%;
+}
+
+.planInfoItem2 .planInfoItemTxt span{
+    color: #0094DD;
+    font-weight: 700;
+}
+
+.planInfoItem2 .planInfoItemTxt p{
+    font-size: 15px;
     color: #C2C2BA;
 }
 
+.plan3{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 30px;
+    background-color: #1B232F;
+    border: 1px solid #0094DD;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.plan3 .planTitle{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+}
+
+.plan3 .planTitleIcon{
+    width: 30%;
+    height: 70px;
+    color: #0094DD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.planTitle .icon{
+    width: 80px;
+    height: 80px;
+    color: #0094DD;
+}
+
+.plan3 .planTitleTxt{
+    width: 70%;
+}
+
+.planTitle h3{
+    font-size: 25px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plan3 .price3{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    border-bottom: 1px solid #0094DD;
+    gap: 10px;
+}
+
+.plan3 .price3 span{
+    font-size: 15px;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plan3 .price3 h3{
+    font-size: 35px;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plan3 .price3 p{
+    font-size: 15px;
+    color: #C2C2BA;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plan3 .planInfo3{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.planInfo3 h3{
+    color: #0094DD
+}
+
+.planInfoItem3{
+    height: 50%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.planInfoItem2Icon{
+    width: 15%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.planInfoItem3 .icon{
+    width: 100%;
+    height: 50px;
+    color: #0094DD;
+}
+
+.planInfoItem3 .icon3{
+    width: 100%;
+    height: 50px;
+    color: #0094DD;
+}
+
+.planInfoItemTxt{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+    width: 70%;
+}
+
+.planInfoItem3 .planInfoItemTxt span{
+    color: #0094DD;
+    font-weight: 700;
+}
+
+.planInfoItem3 .planInfoItemTxt p{
+    font-size: 15px;
+    color: #C2C2BA;
+}
 

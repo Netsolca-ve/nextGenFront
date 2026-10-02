@@ -1,7 +1,7 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
 import "./index.css";
-import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCheck, UserGroup, Target, User } from "@lucide/astro";
+import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCheck, UserGroup, Target, User, ChartNoAxesCombined, Dumbbell } from "@lucide/astro";
 ---
 
 <MainLayout>
@@ -253,26 +253,44 @@ import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCh
                     <h3>INCLUYE:</h3>
                     
                     <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
-                        <p>Trámite administrativo</p>
+                        <div class="planInfoItemIcon">
+                            <BadgeCheck class="icon" />
+                        </div>
+
+                        <div class="planInfoItemTxt">
+                            <p>Trámite administrativo</p>
+                        </div>
                     </div>
 
                     <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
-                        <p>Ficha formal de registro</p>
+                        <div class="planInfoItemIcon">
+                            <BadgeCheck class="icon" />
+                        </div>
+                        <div class="planInfoItemTxt">
+                            <p>Ficha formal de registro</p>
+                        </div>
                     </div>
 
                     <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
-                        <p>Chaleco personalizado oficial de entrenamiento</p>
+                        <div class="planInfoItemIcon">
+                            <BadgeCheck class="icon" />
+                        </div>
+                        <div class="planInfoItemTxt">
+                            <p>Chaleco personalizado oficial de entrenamiento</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="plan2">
                 <div class="planTitle">
-                    <UserGroup class="icon" />
-                    <h3>PLAN FORMATIVO</h3>
+                    <div class="planTitleIcon">
+                        <UserGroup class="icon" />
+                    </div>
+                    <div class="planTitleTxt">
+                        <h3>PLAN FORMATIVO</h3>
+                        <p>2 CLASES POR SEMANA</p>
+                    </div>
                 </div>
 
                 <div class="price2">
@@ -287,19 +305,73 @@ import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCh
                     <div class="regular">
                         <span>TARIFA REGULAR</span>
                         <h3>40 REF</h3>
-                        <span class="important">Pagos afectuados después del día 5 del mes</span>
+                        <span>Pagos afectuados después del día 5 del mes</span>
                     </div>
                 </div>
 
-                <div class="planInfo">
-                    <div class="planInfoItem">
-                        <Target class="icon" />
-                        <p>Trámite administrativo</p>
+                <div class="planInfo2">
+                    <div class="planInfoItem2">
+                        <div class="planInfoItem2Icon">
+                            <Target class="icon2" />
+                        </div>
+                        <div class="planInfoItemTxt">
+                            <span>ENFOQUE INTEGRAL</span>
+                            <p>Desarrollo motriz, hábitos deportivos, técnica de base y fundamentos tácticos.</p>
+                        </div>
                     </div>
 
-                    <div class="planInfoItem">
-                        <User class="icon" />
-                        <p>Ficha formal de registro</p>
+                    <div class="divider2"></div>
+
+                    <div class="planInfoItem2">
+                        <div class="planInfoItem2Icon">
+                            <User class="icon2" />
+                        </div>
+                        <div class="planInfoItemTxt">
+                            <span>PERFIL</span>
+                            <p>Diseñado para quienes buscan una actividad extracurricular formativa y recreativa, sin exigencias competitivas adicionales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="plan3">
+                <div class="planTitle">
+                    <div class="planTitleIcon">
+                        <ChartNoAxesCombined class="icon" />
+                    </div>
+                    <div class="planTitleTxt">
+                        <h3>PLAN NEXT GEN</h3>
+                        <p>3 CLASES POR SEMANA</p>
+                    </div>
+                </div>
+
+                <div class="price3">
+                    <span>INVERSIÓN MENSUAL</span>
+                    <p>Mensualidad regular vigente</p>
+                    <h3>+10 REF / mes</h3>
+                </div>
+
+                <div class="planInfo3">
+                    <div class="planInfoItem3">
+                        <div class="planInfoItem2Icon">
+                            <Dumbbell class="icon3" />
+                        </div>
+                        <div class="planInfoItemTxt">
+                            <span>ENFOQUE DE ALTO RENDIMIENTO</span>
+                            <p>Mayor volumen de trabajo, preparación física funcional y tecnificación intensiva aplicada al juego.</p>
+                        </div>
+                    </div>
+
+                    <div class="divider2"></div>
+
+                    <div class="planInfoItem3">
+                        <div class="planInfoItem2Icon">
+                            <User class="icon3" />
+                        </div>
+                        <div class="planInfoItemTxt last">
+                            <span>PERFIL</span>
+                            <p>Orientado a atletas que buscan satisfacer su vocación deportiva, potenciar su rendimiento y proyectarse a nivel competitivo.</p>
+                        </div>
                     </div>
                 </div>
             </div>

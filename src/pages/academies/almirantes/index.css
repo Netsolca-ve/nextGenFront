@@ -660,4 +660,101 @@
     color: #C2C2BA;
 }
 
+.plan2{
+    width: 100%;
+    height: 500px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #1B232F;
+    border: 1px solid #0094DD;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.plan2 .planTitle{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.planTitle .icon{
+    width: 70px;
+    height: 70px;
+    color: #0094DD;
+}
+
+.planTitle h3{
+    font-size: 25px;
+    color: white;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.plan2 .price2{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: start;
+    border-bottom: 1px solid #0094DD;
+    gap: 10px;
+}
+
+.plan2 .price2 h3{
+    font-size: 30px;
+    color: #0094DD;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.price2 .monthly .important{
+    font-size: 16px;
+    color: #0094DD;
+    font-weight: 700;
+}
+
+.dividerPrice{
+    width: 2px;
+    height: 80%;
+    background-color: #0094DD;
+}
+
+.planInfo{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.planInfo h3{
+    color: #0094DD
+}
+
+.planInfoItem{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: 10px;
+}
+
+.planInfoItem .icon{
+    width: 30px;
+    height: 30px;
+    color: #0094DD;
+}
+
+.planInfoItem p{
+    font-size: 18px;
+    color: #C2C2BA;
+}
+
 

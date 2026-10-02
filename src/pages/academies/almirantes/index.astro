@@ -1,7 +1,7 @@
 ---
 import MainLayout from "../../../layouts/MainLayout.astro";
 import "./index.css";
-import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCheck, UserGroup } from "@lucide/astro";
+import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCheck, UserGroup, Target, User } from "@lucide/astro";
 ---
 
 <MainLayout>
@@ -269,43 +269,40 @@ import { Goal, MapPin, GraduationCap, Star, IdCard, Trophy, FilePenLine, BadgeCh
                 </div>
             </div>
 
-            <!-- <div class="plan2">
+            <div class="plan2">
                 <div class="planTitle">
                     <UserGroup class="icon" />
                     <h3>PLAN FORMATIVO</h3>
                 </div>
 
-                <div class="price">
+                <div class="price2">
                     <div class="monthly">
                         <span>INVERSIÓN MENSUAL</span>
                         <h3>35 REF</h3>
-                        <span class="important">Tarifa preferencial por pronto pago durante los primeros 5 días del mes</span>
+                        <span class="important">Tarifa para los primeros 5 días del mes</span>
                     </div>
+
+                    <div class="dividerPrice"></div>
 
                     <div class="regular">
                         <span>TARIFA REGULAR</span>
                         <h3>40 REF</h3>
-                        <span class="important">Tarifa preferencial por pronto pago durante los primeros 5 días del mes</span>
+                        <span class="important">Pagos afectuados después del día 5 del mes</span>
                     </div>
                 </div>
 
                 <div class="planInfo">
                     <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
+                        <Target class="icon" />
                         <p>Trámite administrativo</p>
                     </div>
 
                     <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
+                        <User class="icon" />
                         <p>Ficha formal de registro</p>
                     </div>
-
-                    <div class="planInfoItem">
-                        <BadgeCheck class="icon" />
-                        <p>Chaleco personalizado oficial de entrenamiento</p>
-                    </div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </section>
 </MainLayout>

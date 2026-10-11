@@ -12,12 +12,13 @@
   content: "";
   position: absolute;
   inset: -30px;
-  background-image: url("/images/hero.jpg");
+  background-image: url("/images/almirantesHero.jpg");
   background-size: cover;
   background-position: center;
   filter: blur(2px);
   transform: scale(1.05);
   z-index: 0;
+  margin-top: 40px;
 }
 
 .almirantesHero::after{
@@ -85,7 +86,7 @@
 .categories .categoriesTitle p{
     font-size: 20px;
     color: #C2C2BA;
-    max-width: 50%;
+    /* max-width: 80%; */
 }
 
 .categoriesCardsGrid{
@@ -200,6 +201,11 @@
     color: #C2C2BA;
     text-align: left;
     line-height: 1.5;
+}
+
+.metodologiaInfo a{
+    text-decoration: underline;
+
 }
 
 .training{
@@ -599,7 +605,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* flex-direction: column; */
     gap: 20px;
+
 }
 
 .planTitle .icon{

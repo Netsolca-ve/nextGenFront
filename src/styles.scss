@@ -1,1 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #131315;
+    /* background: #0A2249; */
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+main {
+    flex: 1;
+}
+
+.container {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+}
+
+/* La cadena de layouts debe ser flex para que <main> empuje el footer al fondo,
+   igual que en el Astro original (body > nav, main, footer) */
+app-root,
+app-public-layout {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

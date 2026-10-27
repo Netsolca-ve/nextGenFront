@@ -1,0 +1,355 @@
+.aboutHero{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding-top: 50px;
+    gap: 20px;
+    padding-bottom: 100px;
+}
+
+.aboutHeroContent{
+    width: 50%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    padding-left: 30px;
+}
+
+.aboutHeroContent h1{
+    font-size: 50px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.aboutHeroContent span{
+    color: #0094DD;
+}
+
+.aboutHeroContent p{
+    font-size: 20px;
+    color: #C2C2BA;
+    line-height: 1.5;
+    /* text-wrap: balance; */
+    text-align: left;
+}
+
+.aboutHeroImg{
+    width: 50%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 30px;
+}
+
+.aboutHeroImg img{
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+.misionVision{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 50px;
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.misionVisionTitle{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    text-align: center;
+    padding-left: 20px;
+}
+
+.misionVisionTitle h2{
+    font-size: 40px;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.misionVisionTitle p{
+    color: #9d9ea7;
+    font-size: 20px;
+}
+
+.misionVisionCardsGrid{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.misionVisionCard{
+    width: 47%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #1B232F;
+    border: 1px solid #0094DD;
+    border-top: 5px solid #0094DD;
+}
+
+.misionVisionCard {
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.misionVisionCard:hover {
+  transform: translateY(-4px);
+}
+
+.misionVisionCardIcon{
+    border-radius: 10px;
+    padding: 6px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.misionVisionCardIcon h3{
+    font-size: 30px;
+    color: white;
+}
+
+.misionVisionCardIcon .icon{
+    width: 40px;
+    height: 40px;
+    background-color: #0094DD;
+}
+
+.misionVisionCardContent{
+    height: 70%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.misionVisionCardContent h3{
+    font-size: 30px;
+    color: white;
+    margin-bottom: 10px;
+    text-decoration: underline;
+    text-decoration-color: #0094DD;
+    text-underline-offset: 8px;
+    text-decoration-thickness: 2px;
+}
+
+.misionVisionCardContent p{
+    font-size: 15px;
+    color: #C2C2BA;
+    line-height: 1.5;
+    text-wrap: balance;
+}
+
+.contact{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 50px;
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.contactTitle{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    text-align: center;
+    padding-left: 20px;
+}
+
+.contactTitle h2{
+    font-size: 40px;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.contactTitle p{
+    font-size: 20px;
+    color: #C2C2BA;
+    line-height: 1.5;
+    text-wrap: balance;
+}
+
+.contactContent{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: row-reverse;
+    gap: 20px;
+}
+
+.contactForm{
+    width: 55%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    border-radius: 20px;
+
+}
+
+.contact-form{
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.contactForm .formGroup{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+}
+
+.contact-form label{
+    font-size: 20px;
+    color: #C2C2BA;
+}
+
+.contactForm input, .contactForm textarea{
+    width: 100%;
+    height: 50px;
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #0094DD;
+    resize: none;
+    outline: none;
+}
+
+.contactForm textarea{
+    margin-top: 16px;
+    height: 120px;
+    border-top: 1px solid #0094DD;
+}
+
+.contactForm button{
+    width: 20%;
+    height: 50px;
+    background-color: #0094DD;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.formGroupBtn{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.contactInfo{
+    width: 40%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cardInfoTitle{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cardInfoTitle h3{
+    font-size: 25px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.cardInfoTitle p{
+    font-size: 18px;
+    color: #C2C2BA;
+    max-width: 80%;
+}
+
+.contactInfoCard{
+    width: 90%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #0094DD;
+}
+
+.contactInfoCard{
+  transition: transform 0.25s ease;
+}
+
+.contactInfoCard:hover {
+  transform: translateX(6px);
+}
+
+.contactInfoCardIcon{
+    background-color: #0094DD;
+    border-radius: 10px;
+    padding: 6px;
+    width: 12%;
+}
+
+.contactInfoCardIcon:hover{
+      transform: scale(1.05);
+}
+
+.contactInfoCardContent{
+    width: 85%;
+    height: auto;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 5px;
+}

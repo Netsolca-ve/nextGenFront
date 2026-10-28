@@ -20,4 +20,16 @@ describe('Home', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('debería renderizar los 4 iconos lucide con size 48 y color', () => {
+    const el = fixture.nativeElement as HTMLElement;
+    const icons = el.querySelectorAll(
+      'svg[lucideVolleyball], svg[lucideTrendingUp], svg[lucideShieldHalf], svg[lucideGraduationCap]'
+    );
+    expect(icons.length).toBe(4);
+    for (const svg of icons) {
+      expect(svg.outerHTML).toMatch(/width="48"/);
+      expect(svg.outerHTML).toMatch(/(stroke|color)="#0094DD"/);
+    }
+  });
 });

@@ -1,0 +1,64 @@
+<section class="eventsHero">
+    <div class="eventsHeroContent">
+        <div class="eventsHeroTitle">
+            <svg lucideTrophy class="eventsHeroTrophy"></svg>
+            <span class="eventsHeroDivider"></span>
+
+            <div class="eventsHeroText">
+                <h1>EVENTOS</h1>
+                <p>Competiciones, torneos y mucho más.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tournaments" id="torneos">
+    <div class="eventsSectionTitle">
+        <h2>Nuestros <span>Torneos</span></h2>
+        <p>Demuestra tu talento y forma parte de la competencia.</p>
+    </div>
+
+    <div class="tournamentsGrid">
+        @for (tournament of tournaments; track tournament.id) {
+            <article [class]="'tournamentCard card--' + tournament.id" [attr.data-mark]="tournament.mark">
+                <span [class]="'tournamentBadge badge--' + tournament.statusClass">
+                    {{ tournament.status }}
+                </span>
+
+                <span class="tournamentBrand">{{ tournament.brand }}</span>
+
+                <div class="tournamentCardBody">
+                    <h3 class="tournamentName">TORNEO <span>{{ tournament.name }}</span></h3>
+
+                    <div class="tournamentMeta">
+                        <svg lucideCalendarDays></svg>
+                        <span>{{ tournament.dateShort }}</span>
+                    </div>
+
+                    <a [routerLink]="['/events', tournament.id]" class="tournamentLink">
+                        Ver Detalles
+                        <svg lucideArrowRight></svg>
+                    </a>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+<section class="eventsCta">
+    <div class="eventsCtaInfo">
+        <div class="eventsCtaIcon">
+            <svg lucideGoal></svg>
+        </div>
+
+        <div class="eventsCtaText">
+            <h3>¿Tienes lo que se necesita?</h3>
+            <p>Participa en nuestros torneos y pon a prueba tus habilidades.</p>
+        </div>
+    </div>
+
+    <a routerLink="/events" fragment="torneos" class="eventsCtaBtn">
+        Ver Todos los Eventos
+        <svg lucideArrowRight></svg>
+    </a>
+</section>

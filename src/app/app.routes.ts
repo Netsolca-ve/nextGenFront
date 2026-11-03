@@ -24,6 +24,15 @@ export const routes: Routes = [
                     import('./features/public/academies/almirantes/almirantes').then((m) => m.Almirantes),
             },
             {
+                path: 'events',
+                loadComponent: () => import('./features/public/events/events').then((m) => m.Events),
+            },
+            {
+                path: 'events/:id',
+                loadComponent: () =>
+                    import('./features/public/events/components/event/event').then((m) => m.Event),
+            },
+            {
                 path: '**',
                 redirectTo: '',
             },

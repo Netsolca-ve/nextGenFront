@@ -44,7 +44,7 @@
             <!-- <strong>TITANES</strong>
           <span>VS</span>
           <strong>RAYOS</strong> -->
-            <strong>FUTSAL PROMISES LEAGUE</strong>
+            <strong>{{ nextTournament()}}</strong>
           </div>
         </div>
 
@@ -52,18 +52,23 @@
 
         <div class="countdown">
           <div class="time">
-            <strong>02</strong>
+            <strong>{{ timeLeft().dias }}</strong>
             <span>DÍAS</span>
           </div>
 
           <div class="time">
-            <strong>14</strong>
+            <strong>{{ timeLeft().horas }}</strong>
             <span>HRS</span>
           </div>
 
           <div class="time">
-            <strong>35</strong>
+            <strong>{{ timeLeft().minutos }}</strong>
             <span>MIN</span>
+          </div>
+
+          <div class="time">
+            <strong>{{ timeLeft().segundos }}</strong>
+            <span>SEG</span>
           </div>
         </div>
       </div>

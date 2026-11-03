@@ -1,0 +1,474 @@
+.eventHero {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #0a1224;
+}
+
+.eventHero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 78% 40%, rgba(0, 148, 221, 0.2), transparent 55%);
+    z-index: 0;
+}
+
+.hero--futsal-cup::before {
+    content: '';
+    position: absolute;
+    inset: -30px;
+    background-image: url('/images/futsal-cup-banner.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(24px) brightness(0.45);
+    opacity: 0.45;
+    z-index: 0;
+}
+
+.eventHero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 78% 40%, rgba(0, 148, 221, 0.35), transparent 50%),
+        linear-gradient(
+            90deg,
+            rgba(8, 10, 16, 0.96) 0%,
+            rgba(8, 10, 16, 0.86) 45%,
+            rgba(8, 10, 16, 0.52) 100%
+        );
+    z-index: 1;
+}
+
+.eventHeroDecor {
+    position: absolute;
+    top: 50%;
+    right: 7%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0.85;
+    pointer-events: none;
+}
+
+.eventHeroDecorMark {
+    font-size: 150px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1;
+    letter-spacing: -6px;
+    color: rgba(255, 255, 255, 0.08);
+    text-transform: uppercase;
+}
+
+.eventHeroDecorIcon {
+    width: 210px;
+    height: 210px;
+    color: rgba(0, 148, 221, 0.4);
+    filter: drop-shadow(0 0 40px rgba(0, 148, 221, 0.55));
+}
+
+.eventHeroContent {
+    position: relative;
+    z-index: 3;
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+    gap: 14px;
+    padding: 60px 0;
+}
+
+.eventHeroBrand {
+    font-size: 22px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #dfe7f1;
+}
+
+.eventHeroTitle {
+    font-size: 72px;
+    font-weight: 800;
+    font-style: italic;
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: white;
+}
+
+.eventHeroTitle span {
+    display: block;
+    color: #0aa2ee;
+}
+
+.eventHeroSubtitle {
+    max-width: 560px;
+    font-size: 20px;
+    font-style: italic;
+    line-height: 1.5;
+    color: #c2c2ba;
+}
+
+.hero--futsal-cup {
+    background-color: #071423;
+}
+
+.eventDetails {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    padding: 60px 0 30px;
+}
+
+.eventDetailsGrid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+}
+
+.eventCard {
+    display: flex;
+    justify-content: start;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 28px;
+    border: 1px solid rgba(0, 148, 221, 0.35);
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(27, 35, 47, 0.95), rgba(15, 22, 31, 0.95));
+}
+
+.eventCardTitle {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    font-style: italic;
+    color: white;
+}
+
+.eventCardTitle::before {
+    content: '';
+    width: 4px;
+    height: 26px;
+    border-radius: 2px;
+    background-color: #0094dd;
+}
+
+.eventInfoList {
+    list-style: none;
+    display: flex;
+    justify-content: start;
+    align-items: stretch;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.eventInfoList li {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.eventInfoList li:last-child {
+    border-bottom: none;
+}
+
+.eventInfoIcon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(0, 148, 221, 0.3);
+    border-radius: 10px;
+    background-color: rgba(0, 148, 221, 0.12);
+    color: #0094dd;
+    flex-shrink: 0;
+}
+
+.eventInfoIcon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.eventInfoTxt span {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #8b93a1;
+}
+
+.eventInfoTxt p {
+    margin-top: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #eef2f7;
+}
+
+.eventCategories {
+    margin-top: auto;
+    padding-top: 22px;
+    display: flex;
+    justify-content: start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.eventCategoriesTitle {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #8b93a1;
+}
+
+.eventCategoriesTitle svg {
+    width: 18px;
+    height: 18px;
+    color: #0094dd;
+}
+
+.eventCategoryChips {
+    display: flex;
+    justify-content: start;
+    align-items: stretch;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.eventCategoryChip {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 18px;
+    border: 1px solid rgba(0, 148, 221, 0.35);
+    border-radius: 10px;
+    background-color: rgba(0, 148, 221, 0.08);
+}
+
+.eventCategoryChip strong {
+    font-size: 18px;
+    font-style: italic;
+    color: #0094dd;
+}
+
+.eventCategoryChip span {
+    font-size: 13px;
+    color: #c2c2ba;
+}
+
+.eventExpectCard {
+    justify-content: space-between;
+}
+
+.eventExpectList {
+    list-style: none;
+    display: flex;
+    justify-content: start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 12px 0 24px;
+}
+
+.eventExpectList li {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    color: #e2e8f0;
+}
+
+.eventExpectList svg {
+    width: 20px;
+    height: 20px;
+    color: #38bdf8;
+    flex-shrink: 0;
+}
+
+.eventPoster {
+    width: 100%;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 148, 221, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.eventPoster img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.eventRegisterBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0aa2ee, #0094dd);
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(0, 148, 221, 0.35);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.eventRegisterBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(0, 148, 221, 0.5);
+}
+
+.eventRegisterBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.eventActions {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    padding: 10px 0 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.eventBackBtn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.eventBackBtn:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: white;
+    transform: translateX(-3px);
+}
+
+.eventBackBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.eventShare {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+}
+
+.eventShare span {
+    font-size: 15px;
+    color: #c2c2ba;
+}
+
+.eventShare a {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    color: white;
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.eventShare a:hover {
+    background-color: rgba(0, 148, 221, 0.2);
+    border-color: #0094dd;
+    transform: translateY(-2px);
+}
+
+.eventShare svg {
+    width: 18px;
+    height: 18px;
+}
+
+@media (max-width: 1000px) {
+    .eventHero {
+        min-height: 380px;
+    }
+
+    .eventHeroDecor {
+        right: 0;
+        opacity: 0.35;
+    }
+
+    .eventHeroDecorMark {
+        font-size: 90px;
+    }
+
+    .eventHeroDecorIcon {
+        width: 140px;
+        height: 140px;
+    }
+
+    .eventHeroTitle {
+        font-size: 46px;
+    }
+
+    .eventHeroSubtitle {
+        font-size: 17px;
+    }
+
+    .eventDetailsGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .eventActions {
+        flex-direction: column;
+        align-items: start;
+    }
+}

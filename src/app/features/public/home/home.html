@@ -1,132 +1,230 @@
 <section class="scoreboard" aria-label="Partidos">
-    <ul>
-      <li class="match">
-        <div class="matchTop">
-          <span class="mark">HOY 8:00PM</span>
-        </div>
+  <ul>
+    <li class="match">
+      <div class="matchTop">
+        <span class="mark">HOY 8:00PM</span>
+      </div>
 
-        <div class="matchBot">
-          <span>TEAM 1</span>
-          <strong>1 - 1</strong>
-          <span>TEAM 2</span>
-        </div>
-      </li>
+      <div class="matchBot">
+        <span>TEAM 1</span>
+        <strong>1 - 1</strong>
+        <span>TEAM 2</span>
+      </div>
+    </li>
 
-      <li class="match live">
-        <div class="matchTop">
-          <span class="mark liveMark">
-            <span class="live-dot"></span>LIVE 65'
-          </span>
-        </div>
+    <li class="match live">
+      <div class="matchTop">
+        <span class="mark liveMark"> <span class="live-dot"></span>LIVE 65' </span>
+      </div>
 
-        <div class="matchBot">
-          <span>TEAM 1</span>
-          <strong>vs</strong>
-          <span>TEAM 2</span>
-        </div>
-      </li>
-    </ul>
-  </section>
+      <div class="matchBot">
+        <span>TEAM 1</span>
+        <strong>vs</strong>
+        <span>TEAM 2</span>
+      </div>
+    </li>
+  </ul>
+</section>
 
-  <section class="hero" aria-labelledby="heroTitle">
-    <div class="heroContent">
-      <!-- <p class="season">TEMPORADA 2026</p> -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="heroContent">
+    <!-- <p class="season">TEMPORADA 2026</p> -->
 
-      <h1 id="heroTitle">
-        IMPULSANDO EL TALENTO DEL <span>FUTURO</span>
-      </h1>
+    <h1 id="heroTitle">IMPULSANDO EL TALENTO DEL <span>FUTURO</span></h1>
 
-      <div class="nextMatch">
-        <div class="matchInfo">
-          <span>PRÓXIMO EVENTO</span>
+    <div class="nextMatch">
+      <div class="matchInfo">
+        <span>PRÓXIMO EVENTO</span>
 
-          <div class="teams">
-            <!-- <strong>TITANES</strong>
+        <div class="teams">
+          <!-- <strong>TITANES</strong>
           <span>VS</span>
           <strong>RAYOS</strong> -->
-            <strong>{{ nextTournament()}}</strong>
-          </div>
-        </div>
-
-        <div class="separator"></div>
-
-        <div class="countdown">
-          <div class="time">
-            <strong>{{ timeLeft().dias }}</strong>
-            <span>DÍAS</span>
-          </div>
-
-          <div class="time">
-            <strong>{{ timeLeft().horas }}</strong>
-            <span>HRS</span>
-          </div>
-
-          <div class="time">
-            <strong>{{ timeLeft().minutos }}</strong>
-            <span>MIN</span>
-          </div>
-
-          <div class="time">
-            <strong>{{ timeLeft().segundos }}</strong>
-            <span>SEG</span>
-          </div>
+          <strong>{{ nextTournament() }}</strong>
         </div>
       </div>
 
-      <div class="hero-actions">
-        <a href="/tickets" class="primary-button">IR A TORNEOS</a>
-        <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
+      <div class="separator"></div>
+
+      <div class="countdown">
+        <div class="time">
+          <strong>{{ timeLeft().dias }}</strong>
+          <span>DÍAS</span>
+        </div>
+
+        <div class="time">
+          <strong>{{ timeLeft().horas }}</strong>
+          <span>HRS</span>
+        </div>
+
+        <div class="time">
+          <strong>{{ timeLeft().minutos }}</strong>
+          <span>MIN</span>
+        </div>
+
+        <div class="time">
+          <strong>{{ timeLeft().segundos }}</strong>
+          <span>SEG</span>
+        </div>
       </div>
     </div>
-  </section>
 
-  <section class="ecosystem" id="ecosystem">
-    <div class="ecosystemInfo">
-      <h2>EL ECOSISTEMA <span>NEXTGEN</span></h2>
-      <p>
-        Nuestra plataforma integral centraliza todos los servicios que un atleta
-        necesita en un solo lugar.
-      </p>
+    <div class="hero-actions">
+      <a href="/tickets" class="primary-button">IR A TORNEOS</a>
+      <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
     </div>
+  </div>
+</section>
 
-    <div class="ecosystemCards">
-      <article class="ecosystemCard">
-        <svg lucideVolleyball [size]="48" color="#0094DD" />
-        <h3>Gestión Deportiva</h3>
-        <p>Asesoramos y automatizamos semillarios deportivos.</p>
-      </article>
-      <article class="ecosystemCard">
-        <svg lucideTrendingUp [size]="48" color="#0094DD" />
-        <h3>Desarrollo y Cuidado</h3>
-        <p>Servicios especializados para deportistas de todo nivel.</p>
-      </article>
-      <article class="ecosystemCard">
-        <svg lucideShieldHalf [size]="48" color="#0094DD" />
-        <h3>Elite Squad</h3>
-        <p>Viaja con nosotros y vive experiencias internacionales.</p>
-      </article>
-      <article class="ecosystemCard">
-        <svg lucideGraduationCap [size]="48" color="#0094DD" />
-        <h3>Academy Lab</h3>
-        <p>Formación especializada para profesionales del deporte.</p>
-      </article>
-    </div>
-  </section>
+<section class="ecosystem" id="ecosystem">
+  <div class="ecosystemInfo">
+    <h2>EL ECOSISTEMA <span>NEXTGEN</span></h2>
+    <p>
+      Nuestra plataforma integral centraliza todos los servicios que un atleta necesita en un solo
+      lugar.
+    </p>
+  </div>
 
-  <!-- <section class="">
+  <div class="ecosystemCards">
+    <article class="ecosystemCard">
+      <svg lucideVolleyball [size]="48" color="#0094DD" />
+      <h3>Gestión Deportiva</h3>
+      <p>Asesoramos y automatizamos semillarios deportivos.</p>
+    </article>
+    <article class="ecosystemCard">
+      <svg lucideTrendingUp [size]="48" color="#0094DD" />
+      <h3>Desarrollo y Cuidado</h3>
+      <p>Servicios especializados para deportistas de todo nivel.</p>
+    </article>
+    <article class="ecosystemCard">
+      <svg lucideShieldHalf [size]="48" color="#0094DD" />
+      <h3>Elite Squad</h3>
+      <p>Viaja con nosotros y vive experiencias internacionales.</p>
+    </article>
+    <article class="ecosystemCard">
+      <svg lucideGraduationCap [size]="48" color="#0094DD" />
+      <h3>Academy Lab</h3>
+      <p>Formación especializada para profesionales del deporte.</p>
+    </article>
+  </div>
+</section>
+
+<!-- <section class="">
 
   </section> -->
 
-  <section class="academies" id="academies">
-    <div class="academiesTitle">
-      <h2>ACADEMIAS DE <span>FORMACIÓN</span></h2>
-      <p>
-        Desarrollamos habilidades fundamentales en jóvenes atletas bajo la
-        metodología NextGen.
-      </p>
+<section class="tournaments" id="torneos" aria-labelledby="tournamentsTitle">
+  <div class="tournamentsTitle">
+    <h2 id="tournamentsTitle">TORNEOS <span>NEXTGEN</span></h2>
+    <a routerLink="/events" class="tournamentsTitleLink">
+      VER EVENTOS
+      <svg lucideArrowRight></svg>
+    </a>
+  </div>
+
+  <div class="tournamentsGrid">
+    <article class="standingsCard">
+      <div class="cardHeader">
+        <svg lucideTrophy></svg>
+        <h3>Tabla de posiciones</h3>
+      </div>
+
+      <ol class="standingsList">
+        @for (row of standings(); track row.position) {
+          <li class="standingsRow">
+            <span class="standingsPos">
+              {{ row.position < 10 ? '0' + row.position : row.position }}
+            </span>
+
+            <span class="teamLogo">
+              <img [src]="row.logo" [alt]="'Logo de ' + row.name" />
+            </span>
+
+            <span class="standingsName">{{ row.name }}</span>
+            <span class="standingsPoints">{{ row.points }} pts</span>
+          </li>
+        }
+      </ol>
+
+      <a routerLink="/events" class="cardLink">
+        VER TABLA COMPLETA
+        <svg lucideArrowRight></svg>
+      </a>
+    </article>
+
+    <article class="liveCard">
+      <span class="liveBadge">
+        <span class="live-dot"></span>
+        EN VIVO
+      </span>
+
+      <div class="liveBoard">
+        <div class="liveTeam">
+          <span class="teamLogo teamLogo--lg">
+            <img [src]="liveMatch().home.logo" [alt]="'Logo de ' + liveMatch().home.name" />
+          </span>
+          <span class="liveTeamName">{{ liveMatch().home.name }}</span>
+        </div>
+
+        <div class="liveScoreboard">
+          <div class="liveScore">
+            <strong>{{ liveMatch().homeScore }}</strong>
+            <span>-</span>
+            <strong>{{ liveMatch().awayScore }}</strong>
+          </div>
+          <span class="liveMinute">{{ liveMatch().minute }}</span>
+        </div>
+
+        <div class="liveTeam">
+          <span class="teamLogo teamLogo--lg">
+            <img [src]="liveMatch().away.logo" [alt]="'Logo de ' + liveMatch().away.name" />
+          </span>
+          <span class="liveTeamName">{{ liveMatch().away.name }}</span>
+        </div>
+      </div>
+
+      <a routerLink="/events" class="liveButton">
+        SEGUIR PARTIDO
+        <svg lucideArrowRight></svg>
+      </a>
+    </article>
+  </div>
+
+  <article class="nextMatchCard">
+    <div class="cardHeader">
+      <svg lucideCalendarDays></svg>
+      <h3>PRÓXIMO PARTIDO</h3>
     </div>
 
-    <!-- <div class="academiesCards">
+    <div class="nextMatchBody">
+      <div class="nextTeam">
+        <span class="teamLogo">
+          <img [src]="nextMatch().home.logo" [alt]="'Logo de ' + nextMatch().home.name" />
+        </span>
+        <strong>{{ nextMatch().home.name }}</strong>
+      </div>
+
+      <span class="nextVs">VS</span>
+
+      <div class="nextTeam nextTeam--away">
+        <strong>{{ nextMatch().away.name }}</strong>
+        <span class="teamLogo">
+          <img [src]="nextMatch().away.logo" [alt]="'Logo de ' + nextMatch().away.name" />
+        </span>
+      </div>
+    </div>
+
+    <p class="nextMatchDate">{{ nextMatch().date }} · {{ nextMatch().time }}</p>
+  </article>
+</section>
+
+<section class="academies" id="academies">
+  <div class="academiesTitle">
+    <h2>ACADEMIAS DE <span>FORMACIÓN</span></h2>
+    <p>Desarrollamos habilidades fundamentales en jóvenes atletas bajo la metodología NextGen.</p>
+  </div>
+
+  <!-- <div class="academiesCards">
       <div class="academyCard">
         <div class="academyCardImg">
           <img src="/images/futbol.webp" alt="foto academia">
@@ -164,32 +262,28 @@
       </div>
     </div> -->
 
-    <div class="almirantes">
-      <div class="almirantesLogo">
-        <img src="/images/almirantes.png" alt="" />
-        <div class="almirantesInfo">
-          <div class="almirantesInfoTxt">
-            <h2>academia <span>de futsal</span></h2>
-            <p>
-              Formación integral para futuros campeones del fútbol. Haz que tu
-              niño juegue mejor con nosotros.
-            </p>
-          </div>
-          <a class="almirantesInfoBtn" routerLink="/academies/almirantes">¡Súbete al Barco!</a>
+  <div class="almirantes">
+    <div class="almirantesLogo">
+      <img src="/images/almirantes.png" alt="" />
+      <div class="almirantesInfo">
+        <div class="almirantesInfoTxt">
+          <h2>academia <span>de futsal</span></h2>
+          <p>
+            Formación integral para futuros campeones del fútbol. Haz que tu niño juegue mejor con
+            nosotros.
+          </p>
         </div>
-      </div>
-
-      <div class="almirantesFoto">
-        <img
-          class="almirantesFotoImg"
-          src="/images/fotoAlmirantes.png"
-          alt=""
-        />
+        <a class="almirantesInfoBtn" routerLink="/academies/almirantes">¡Súbete al Barco!</a>
       </div>
     </div>
-  </section>
 
-  <!-- <section class="gallery">
+    <div class="almirantesFoto">
+      <img class="almirantesFotoImg" src="/images/fotoAlmirantes.png" alt="" />
+    </div>
+  </div>
+</section>
+
+<!-- <section class="gallery">
     <div class="galleryTitle"> 
         <div class="galleryTitleInfo">
             <h3>NOTICIAS <span>RECIENTES</span> </h3>

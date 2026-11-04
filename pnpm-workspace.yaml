@@ -3,3 +3,6 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
+minimumReleaseAgeExclude:
+  - '@angular/cdk@22.2.6'
+  - '@angular/material@22.2.6'

@@ -1,0 +1,45 @@
+<section class="adminPage">
+    <header class="adminPageHead">
+        <div>
+            <span class="adminEyebrow">
+                <svg lucideTrophy></svg>
+                Gestión de torneos
+            </span>
+
+            <h1>Gestionar <span>Torneos</span></h1>
+            <p>Consulta los torneos creados y administra las próximas competiciones de NextGen.</p>
+        </div>
+
+        <button mat-flat-button class="adminMaterialBtn" type="button" (click)="openCreateDialog()">
+            <span class="adminMaterialPlus">+</span>
+            Crear torneo
+        </button>
+    </header>
+
+    @if (loading()) {
+        <div class="adminEmptyState">Cargando torneos...</div>
+    } @else {
+        <section class="tournamentGrid" aria-label="Torneos creados">
+            @for (tournament of tournaments(); track tournament.id ?? tournament.name) {
+                <mat-card class="tournamentCard" tabindex="0" (click)="openUpdateDialog(tournament)" (keydown.enter)="openUpdateDialog(tournament)">
+                    @if (tournament.banner || tournament.image) {
+                        <img mat-card-image [src]="tournament.banner || tournament.image" [alt]="tournament.name || tournament.nombre" />
+                    } @else {
+                        <div class="tournamentCardArt"><svg lucideTrophy></svg></div>
+                    }
+                    <mat-card-header>
+                        <mat-card-title>{{ tournament.name || tournament.nombre || 'Sin nombre' }}</mat-card-title>
+                        <mat-card-subtitle>{{ tournament.organizer || tournament.organizador || 'Next Gen' }}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{ tournament.place || tournament.sede || 'Sede por definir' }}</p>
+                        <p>{{ tournament.startDate || tournament.fecha_inicio || 'Fecha por definir' }}</p>
+                        <span class="tournamentStatus">{{ tournament.status || tournament.estado || 'Próximo' }}</span>
+                    </mat-card-content>
+                </mat-card>
+            } @empty {
+                <div class="adminEmptyState">Aún no hay torneos creados.</div>
+            }
+        </section>
+        }
+</section>

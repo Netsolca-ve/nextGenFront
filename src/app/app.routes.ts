@@ -1,7 +1,48 @@
 import { Routes } from '@angular/router';
+import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { PublicLayout } from './layouts/public-layout/public-layout';
 
 export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () => import('./auth/login/login').then((m) => m.Login),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./auth/register/register').then((m) => m.Register),
+  },
+  {
+    path: 'admin',
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        redirectTo: 'torneos',
+        pathMatch: 'full',
+      },
+      {
+        path: 'torneos',
+        loadComponent: () =>
+          import('./features/admin/tournaments/admin-tournaments').then(
+            (m) => m.AdminTournaments,
+          ),
+      },
+      {
+        path: 'partidos',
+        loadComponent: () =>
+          import('./features/admin/matches/admin-matches').then((m) => m.AdminMatches),
+      },
+      {
+        path: 'equipos',
+        loadComponent: () =>
+          import('./features/admin/teams/admin-teams').then((m) => m.AdminTeams),
+      },
+      {
+        path: '**',
+        redirectTo: 'torneos',
+      },
+    ],
+  },
   {
     path: '',
     component: PublicLayout,

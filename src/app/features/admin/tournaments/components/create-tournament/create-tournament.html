@@ -1,0 +1,86 @@
+<header mat-dialog-title class="dialogHeader">
+    <span class="dialogIcon"><svg lucideTrophy></svg></span>
+    <span>
+        <strong>Crear torneo</strong>
+        <small>Configura los datos de la próxima competición.</small>
+    </span>
+</header>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <mat-dialog-content class="dialogContent">
+        @if (requestError()) {
+            <p class="dialogError">No se pudo crear el torneo. Inténtalo de nuevo.</p>
+        }
+
+        <mat-form-field appearance="outline" class="fieldFull">
+            <mat-label>Nombre del torneo</mat-label>
+            <input matInput formControlName="name" placeholder="Ej. Futsal Cup 2026" />
+            @if (showError('name')) { <mat-error>El nombre es obligatorio.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Organizador</mat-label>
+            <input matInput formControlName="organizer" />
+            @if (showError('organizer')) { <mat-error>Indica quién organiza.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Sede</mat-label>
+            <input matInput formControlName="place" placeholder="Club Bella Vista" />
+            @if (showError('place')) { <mat-error>La sede es obligatoria.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Fecha de inicio</mat-label>
+            <input matInput type="date" formControlName="startDate" />
+            @if (showError('startDate')) { <mat-error>Selecciona una fecha.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Fecha de cierre</mat-label>
+            <input matInput type="date" formControlName="endDate" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="open">Inscripciones abiertas</mat-option>
+                <mat-option value="upcoming">Próximo</mat-option>
+                <mat-option value="finished">Finalizado</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Cupo máximo</mat-label>
+            <input matInput type="number" formControlName="slots" min="1" placeholder="16" />
+        </mat-form-field>
+
+        <div class="categoryField fieldFull">
+            <span class="fieldLabel">Categorías</span>
+            <div class="categoryList">
+                @for (category of categories; track category) {
+                    <button mat-stroked-button type="button" [class.is-active]="isSelected(category)" (click)="toggleCategory(category)">
+                        {{ category }}
+                    </button>
+                }
+            </div>
+            @if (categoryError()) { <small class="fieldError">Selecciona al menos una categoría.</small> }
+        </div>
+
+        <label class="uploadField fieldFull">
+            <span class="dialogIcon"><svg lucideImagePlus></svg></span>
+            <span><strong>Banner del torneo</strong><small>{{ bannerName() || 'PNG o JPG recomendado' }}</small></span>
+            <input type="file" accept="image/png,image/jpeg" (change)="onFileSelected($event)" />
+        </label>
+
+        <mat-form-field appearance="outline" class="fieldFull">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="Formato, reglas y detalles importantes."></textarea>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" mat-dialog-close>Cancelar</button>
+        <button mat-flat-button class="dialogSubmit" type="submit">Crear torneo</button>
+    </mat-dialog-actions>
+</form>

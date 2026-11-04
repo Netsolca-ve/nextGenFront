@@ -1,0 +1,119 @@
+:host {
+    display: block;
+    color: #e6ebf2;
+}
+
+.dialogHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+}
+
+.dialogHeader span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dialogHeader strong {
+    color: white;
+    font-size: 19px;
+}
+
+.dialogHeader small,
+.uploadField small {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
+.dialogIcon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(0, 148, 221, 0.14);
+    color: #38bdf8;
+}
+
+.dialogIcon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.dialogContent {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 14px;
+    padding-top: 4px;
+}
+
+.fieldFull {
+    grid-column: 1 / -1;
+}
+
+.categoryField {
+    display: grid;
+    gap: 8px;
+    margin: 4px 0 10px;
+}
+
+.fieldLabel {
+    color: #9aa3b1;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.categoryList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.categoryList button.is-active {
+    border-color: #38bdf8;
+    background: rgba(0, 148, 221, 0.18);
+    color: #7dd3fc;
+}
+
+.uploadField {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.18);
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.uploadField > span:nth-child(2) {
+    display: grid;
+    gap: 4px;
+}
+
+.uploadField input {
+    display: none;
+}
+
+.dialogError,
+.fieldError {
+    color: #f87171;
+    font-size: 12px;
+}
+
+.dialogSubmit {
+    background: #0094dd !important;
+    color: white !important;
+}
+
+@media (max-width: 600px) {
+    .dialogContent {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fieldFull {
+        grid-column: auto;
+    }
+}

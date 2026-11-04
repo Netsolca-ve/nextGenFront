@@ -1,0 +1,15 @@
+<header mat-dialog-title class="dialogHeader"><span class="dialogIcon"><svg lucideShield></svg></span><span><strong>Editar equipo</strong><small>Actualiza los datos del equipo seleccionado.</small></span></header>
+<form [formGroup]="form" (ngSubmit)="submit()"><mat-dialog-content class="dialogContent">
+    @if (error()) { <p class="dialogError fieldFull">No se pudo actualizar el equipo.</p> }
+    <mat-form-field appearance="outline" class="fieldFull"><mat-label>Nombre del equipo</mat-label><input matInput formControlName="nombre" /><mat-error>El nombre es obligatorio.</mat-error></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Slug</mat-label><input matInput formControlName="slug" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Siglas</mat-label><input matInput formControlName="siglas" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Categoría</mat-label><input matInput formControlName="categoria" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Logo</mat-label><input matInput formControlName="logo" /></mat-form-field>
+    <div class="colorField"><label for="updateLocalColor">Color local</label><input id="updateLocalColor" type="color" formControlName="colorLocal" /><code>{{ form.controls.colorLocal.value }}</code></div>
+    <div class="colorField"><label for="updateAwayColor">Color visitante</label><input id="updateAwayColor" type="color" formControlName="colorVisitante" /><code>{{ form.controls.colorVisitante.value }}</code></div>
+    <mat-form-field appearance="outline"><mat-label>Horario de entrenamientos</mat-label><input matInput formControlName="horarioEntrenamientos" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Días de entrenamientos</mat-label><input matInput formControlName="diasEntrenamientos" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>ID de academia</mat-label><input matInput type="number" formControlName="idAcademia" min="1" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>ID de entrenador</mat-label><input matInput type="number" formControlName="idEntrenador" min="1" /></mat-form-field>
+</mat-dialog-content><mat-dialog-actions align="end"><button mat-button type="button" mat-dialog-close>Cancelar</button><button mat-flat-button class="dialogSubmit" type="submit">Guardar cambios</button></mat-dialog-actions></form>

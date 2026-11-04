@@ -89,6 +89,26 @@ nav {
   text-underline-offset: 8px;
   text-decoration-thickness: 2px;
 }
+
+.nav-links a.nav-login {
+  width: 15%;
+  border-radius: 10px;
+  text-align: center;
+  color: #7dd3fc;
+  // box-shadow: 0 0 25px rgba(26, 163, 255, 0.25);
+}
+
+.nav-links a.nav-login:hover {
+  opacity: 0.9;
+}
+
+// .nav-links a.nav-login.active {
+//   border-color: #0094dd;
+//   background-color: rgba(0, 148, 221, 0.22);
+//   color: white;
+//   text-decoration: none;
+// }
+
 footer {
   width: 100%;
   background: #0e0e10;
@@ -186,6 +206,21 @@ footer hr {
   text-decoration: underline;
 }
 
+@media (max-width: 1150px) {
+  .nav-links {
+    gap: 14px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .nav-links a.nav-login {
+    padding: 7px 12px;
+  }
+}
+
 @media (max-width: 900px) {
   nav {
     height: 76px;
@@ -255,6 +290,19 @@ footer hr {
   .nav-links a.active {
     color: #0094dd;
     text-decoration: none;
+  }
+
+  .nav-links a.nav-login {
+    padding: 14px 24px;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: #7dd3fc;
+  }
+
+  .nav-links a.nav-login.active {
+    background-color: transparent;
+    color: #7dd3fc;
   }
 
   .footerTop {

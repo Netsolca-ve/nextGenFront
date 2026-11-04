@@ -1,0 +1,102 @@
+@use '../admin.shared' as *;
+
+.adminMaterialBtn {
+	min-height: 46px;
+	padding: 0 20px;
+	border-radius: 9px;
+	background: linear-gradient(135deg, #0aa2ee, #0094dd);
+	color: white !important;
+	font-weight: 700;
+}
+
+.adminMaterialPlus {
+	margin-right: 8px;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.tournamentGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 20px;
+}
+
+.tournamentCard {
+	overflow: hidden;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 14px;
+	background: linear-gradient(160deg, #191a20 0%, #141519 100%);
+	color: white;
+}
+
+.tournamentCard img,
+.tournamentCardArt {
+	height: 145px;
+	object-fit: cover;
+}
+
+.tournamentCardArt {
+	display: grid;
+	place-items: center;
+	background: linear-gradient(135deg, rgba(0, 148, 221, 0.28), #17191f);
+	color: #38bdf8;
+}
+
+.tournamentCardArt svg {
+	width: 42px;
+	height: 42px;
+}
+
+.tournamentCard mat-card-header {
+	padding: 18px 18px 8px;
+}
+
+.tournamentCard mat-card-title {
+	color: white;
+	font-size: 18px;
+}
+
+.tournamentCard mat-card-subtitle,
+.tournamentCard mat-card-content p {
+	color: #9aa3b1;
+}
+
+.tournamentCard mat-card-content {
+	display: grid;
+	gap: 8px;
+	padding: 8px 18px 18px;
+}
+
+.tournamentCard mat-card-content p {
+	font-size: 13px;
+}
+
+.tournamentStatus {
+	width: fit-content;
+	margin-top: 4px;
+	padding: 5px 9px;
+	border: 1px solid rgba(0, 148, 221, 0.35);
+	border-radius: 999px;
+	background: rgba(0, 148, 221, 0.12);
+	color: #7dd3fc;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.adminEmptyState {
+	padding: 46px 24px;
+	border: 1px dashed rgba(255, 255, 255, 0.14);
+	border-radius: 14px;
+	color: #9aa3b1;
+	text-align: center;
+}
+
+@media (max-width: 760px) {
+	.adminPageHead {
+		align-items: stretch;
+	}
+
+	.adminMaterialBtn {
+		width: 100%;
+	}
+}

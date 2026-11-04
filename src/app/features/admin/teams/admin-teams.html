@@ -1,0 +1,14 @@
+<section class="adminPage">
+    <header class="adminPageHead"><div><span class="adminEyebrow"><svg lucideUsers></svg>Gestión de equipos</span><h1>Gestionar <span>Equipos</span></h1><p>Consulta y administra los equipos registrados en NextGen.</p></div><button mat-flat-button class="adminMaterialBtn" (click)="openCreateDialog()"><span class="adminMaterialPlus">+</span>Crear equipo</button></header>
+    @if (loading()) { <div class="adminEmptyState">Cargando equipos...</div> } @else {
+        <section class="teamGrid" aria-label="Equipos registrados">
+            @for (team of teams(); track team.id ?? team.name) {
+                <mat-card class="teamCard" tabindex="0" (click)="openUpdateDialog(team)" (keydown.enter)="openUpdateDialog(team)">
+                    @if (team.logo || team.image) { <img mat-card-image [src]="team.logo || team.image" [alt]="team.name || team.nombre" /> } @else { <div class="teamArt"><svg lucideShield></svg></div> }
+                    <mat-card-header><mat-card-title>{{ team.name || team.nombre || 'Sin nombre' }}</mat-card-title><mat-card-subtitle>{{ team.category || team.categoria || 'Categoría por definir' }}</mat-card-subtitle></mat-card-header>
+                    <mat-card-content><p>Entrenador: {{ team.coach || team.entrenador || 'Por definir' }}</p><p>Jugadores: {{ team.members || team.jugadores || 'Por definir' }}</p></mat-card-content>
+                </mat-card>
+            } @empty { <div class="adminEmptyState">Aún no hay equipos registrados.</div> }
+        </section>
+    }
+</section>

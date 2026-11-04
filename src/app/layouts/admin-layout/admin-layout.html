@@ -1,1 +1,226 @@
-<p>admin-layout works!</p>
+<div class="adminShell" [class.is-collapsed]="collapsed()">
+    <aside class="adminSidebar" [class.is-open]="mobileOpen()">
+        <div class="adminSidebarHead">
+            <a routerLink="/admin" class="adminBrand" aria-label="NextGen Admin" (click)="onNavigate()">
+                <img class="adminBrandLogo" src="/images/logo.png" alt="NextGen" />
+                <img class="adminBrandMark" src="/images/icon.png" alt="" />
+                <span class="adminBrandTag">Admin</span>
+            </a>
+
+            <button
+                type="button"
+                class="adminSidebarClose"
+                aria-label="Cerrar menú"
+                (click)="closeMobile()"
+            >
+                <svg lucideX></svg>
+            </button>
+        </div>
+
+        <nav class="adminNav" aria-label="Navegación administrativa">
+            <span class="adminNavLabel">Gestión</span>
+
+            <!-- <a
+                routerLink="/admin/partidos"
+                routerLinkActive="active"
+                ariaCurrentWhenActive="page"
+                class="adminNavLink"
+                (click)="onNavigate()"
+            >
+                <span class="adminNavIcon">
+                    <svg lucideSwords></svg>
+                </span>
+
+                <span class="adminNavText">
+                    <strong>Partido</strong>
+                    <small>Programa un encuentro</small>
+                </span>
+
+                <svg class="adminNavArrow" lucideArrowRight></svg>
+            </a> -->
+
+            <a
+                routerLink="/admin/torneos"
+                routerLinkActive="active"
+                ariaCurrentWhenActive="page"
+                class="adminNavLink"
+                (click)="onNavigate()"
+            >
+                <span class="adminNavIcon">
+                    <svg lucideTrophy></svg>
+                </span>
+
+                <span class="adminNavText">
+                    <strong>Torneos</strong>
+                    <small>Configura un torneo</small>
+                </span>
+
+                <svg class="adminNavArrow" lucideArrowRight></svg>
+            </a>
+
+            <a
+                routerLink="/admin/equipos"
+                routerLinkActive="active"
+                ariaCurrentWhenActive="page"
+                class="adminNavLink"
+                (click)="onNavigate()"
+            >
+                <span class="adminNavIcon">
+                    <svg lucideUsers></svg>
+                </span>
+
+                <span class="adminNavText">
+                    <strong>Equipos</strong>
+                    <small>Gestiona los equipos registrados</small>
+                </span>
+
+                <svg class="adminNavArrow" lucideArrowRight></svg>
+            </a>
+
+            <span class="adminNavLabel">Sistema</span>
+
+            <a routerLink="/" class="adminNavLink" (click)="onNavigate()">
+                <span class="adminNavIcon">
+                    <svg lucideLayoutDashboard></svg>
+                </span>
+
+                <span class="adminNavText">
+                    <strong>Ir al sitio</strong>
+                    <small>Ver la página pública</small>
+                </span>
+
+                <svg class="adminNavArrow" lucideArrowRight></svg>
+            </a>
+        </nav>
+
+        <div class="adminSidebarFoot">
+            <div class="adminUser">
+                <span class="adminAvatar">AD</span>
+
+                <span class="adminUserText">
+                    <strong>Admin</strong>
+                    <small>Administrador</small>
+                </span>
+            </div>
+
+            <a routerLink="/login" class="adminLogout" (click)="onNavigate()">
+                <svg lucideLogOut></svg>
+                <span>Salir</span>
+            </a>
+        </div>
+    </aside>
+
+    @if (mobileOpen()) {
+        <button
+            type="button"
+            class="adminScrim"
+            aria-label="Cerrar menú"
+            (click)="closeMobile()"
+        ></button>
+    }
+
+    <div class="adminMain">
+        <header class="adminTopbar">
+            <div class="adminTopbarLeft">
+                <button
+                    type="button"
+                    class="adminIconBtn adminCollapseBtn"
+                    [attr.aria-label]="collapsed() ? 'Abrir menú lateral' : 'Cerrar menú lateral'"
+                    [attr.aria-expanded]="!collapsed()"
+                    (click)="toggleCollapsed()"
+                >
+                    <svg lucidePanelLeft></svg>
+                </button>
+
+                <button
+                    type="button"
+                    class="adminIconBtn adminMobileBtn"
+                    [attr.aria-label]="mobileOpen() ? 'Cerrar menú' : 'Abrir menú'"
+                    [attr.aria-expanded]="mobileOpen()"
+                    (click)="toggleMobile()"
+                >
+                    @if (mobileOpen()) {
+                        <svg lucideX></svg>
+                    } @else {
+                        <svg lucideMenu></svg>
+                    }
+                </button>
+
+                <div class="adminSearch">
+                    <svg class="adminSearchIcon" lucideSearch></svg>
+
+                    <input
+                        type="search"
+                        placeholder="Buscar..."
+                        aria-label="Buscar en el panel"
+                        [value]="searchQuery()"
+                        (input)="updateSearch($event)"
+                    />
+
+                    @if (searchQuery()) {
+                        <button
+                            type="button"
+                            class="adminSearchClear"
+                            aria-label="Limpiar búsqueda"
+                            (click)="clearSearch()"
+                        >
+                            <svg lucideX></svg>
+                        </button>
+                    } @else {
+                        <span class="adminKbd">⌘K</span>
+                    }
+
+                    @if (searchQuery()) {
+                        <div class="adminSearchResults">
+                            @for (item of searchResults(); track item.route) {
+                                <a [routerLink]="item.route" (click)="onNavigate()">
+                                    <span>
+                                        <strong>{{ item.label }}</strong>
+                                        <small>{{ item.description }}</small>
+                                    </span>
+
+                                    <svg lucideArrowRight></svg>
+                                </a>
+                            } @empty {
+                                <p class="adminSearchEmpty">
+                                    Sin resultados para “{{ searchQuery() }}”.
+                                </p>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- <div class="adminTopbarRight">
+                <span class="adminWorkspace">
+                    <svg lucideLayoutDashboard></svg>
+                    Panel de administración
+                </span>
+
+                <button type="button" class="adminIconBtn" aria-label="Ayuda">
+                    <svg lucideCircleHelp></svg>
+                </button>
+
+                <button type="button" class="adminIconBtn adminNotif" aria-label="Notificaciones">
+                    <svg lucideBell></svg>
+                    <span class="adminDot"></span>
+                </button>
+
+                <div class="adminProfile">
+                    <span class="adminAvatar">AD</span>
+
+                    <span class="adminProfileText">
+                        <strong>Admin</strong>
+                        <small>Administrador</small>
+                    </span>
+
+                    <svg lucideChevronDown></svg>
+                </div>
+            </div> -->
+        </header>
+
+        <main class="adminContent">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

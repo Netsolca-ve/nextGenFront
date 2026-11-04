@@ -1,0 +1,15 @@
+@use '../admin.shared' as *;
+
+.teamGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+.teamCard { overflow: hidden; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: linear-gradient(160deg,#191a20,#141519); color: white; cursor: pointer; }
+.teamCard img, .teamArt { height: 145px; object-fit: cover; }
+.teamArt { display: grid; place-items: center; background: linear-gradient(135deg,rgba(0,148,221,.28),#17191f); color: #38bdf8; }
+.teamArt svg { width: 42px; height: 42px; }
+.teamCard mat-card-header { padding: 18px 18px 8px; }
+.teamCard mat-card-title { color: white; font-size: 18px; }
+.teamCard mat-card-subtitle, .teamCard mat-card-content p { color: #9aa3b1; }
+.teamCard mat-card-content { display: grid; gap: 8px; padding: 8px 18px 18px; }
+.teamCard mat-card-content p { font-size: 13px; }
+.adminMaterialBtn { min-height: 46px; padding: 0 20px; border-radius: 9px; background: linear-gradient(135deg,#0aa2ee,#0094dd); color: white !important; font-weight: 700; }
+.adminMaterialPlus { margin-right: 8px; font-size: 22px; }
+.adminEmptyState { padding: 46px 24px; border: 1px dashed rgba(255,255,255,.14); border-radius: 14px; color: #9aa3b1; text-align: center; }

@@ -23,4 +23,8 @@ export class Tournaments {
     createTournament(tournament: any) {
         return this.http.post(`${this.api}/tournaments`, tournament);
     }
+
+    updateTournament(id: string | number, tournament: any) {
+        return this.http.put(`${this.api}/tournaments/${id}`, tournament);
+    }
 }

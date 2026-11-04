@@ -1,1 +1,231 @@
-<p>match works!</p>
+<section class="match" aria-label="Partido en vivo">
+  <header class="matchHero">
+    <div class="heroTop">
+      <a routerLink="/events" class="backLink">
+        <svg lucideArrowLeft></svg>
+        Volver a Eventos
+      </a>
+
+      <div class="heroStatus">
+        <span class="matchLive">
+          <span class="matchLiveDot"></span>
+          EN VIVO
+        </span>
+        <p class="matchMeta">{{ tournament }} · {{ round }}</p>
+      </div>
+
+      <span aria-hidden="true"></span>
+    </div>
+
+    <div class="scoreboard">
+      <div class="teamSide">
+        <img [src]="home.logo" [alt]="'Logo de ' + home.name" />
+        <h1 class="teamName">{{ home.name }}</h1>
+      </div>
+
+      <div class="scoreCenter">
+        <div class="score">
+          <strong>{{ homeScore }}</strong>
+          <span>-</span>
+          <strong>{{ awayScore }}</strong>
+        </div>
+        <span class="clock">{{ clock }}</span>
+        <span class="period">{{ period }}</span>
+      </div>
+
+      <div class="teamSide">
+        <img [src]="away.logo" [alt]="'Logo de ' + away.name" />
+        <h2 class="teamName">{{ away.name }}</h2>
+      </div>
+    </div>
+  </header>
+
+  <section class="matchEvents" aria-label="Historial del partido">
+    <article class="eventsSide">
+      <header class="sideHeader">
+        <span class="teamSwatch" [style.background]="home.color"></span>
+        <h3>{{ home.name }}</h3>
+      </header>
+
+      <ul class="eventList">
+        @for (event of home.events; track $index) {
+          <li class="eventItem">
+            <span class="eventMinute">{{ event.minute }}</span>
+
+            <span class="eventIcon">
+              @switch (event.type) {
+                @case ('goal') {
+                  <svg lucideGoal class="eventGoal"></svg>
+                }
+                @case ('yellow') {
+                  <span class="card card--yellow"></span>
+                }
+                @case ('red') {
+                  <span class="card card--red"></span>
+                }
+                @case ('sub') {
+                  <svg lucideArrowRightLeft class="eventSub"></svg>
+                }
+              }
+            </span>
+
+            <div class="eventText">
+              <strong>{{ event.title }}</strong>
+              <span>{{ event.player }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    </article>
+
+    <article class="eventsSide">
+      <header class="sideHeader">
+        <span class="teamSwatch" [style.background]="away.color"></span>
+        <h3>{{ away.name }}</h3>
+      </header>
+
+      <ul class="eventList">
+        @for (event of away.events; track $index) {
+          <li class="eventItem">
+            <span class="eventMinute">{{ event.minute }}</span>
+
+            <span class="eventIcon">
+              @switch (event.type) {
+                @case ('goal') {
+                  <svg lucideGoal class="eventGoal"></svg>
+                }
+                @case ('yellow') {
+                  <span class="card card--yellow"></span>
+                }
+                @case ('red') {
+                  <span class="card card--red"></span>
+                }
+                @case ('sub') {
+                  <svg lucideArrowRightLeft class="eventSub"></svg>
+                }
+              }
+            </span>
+
+            <div class="eventText">
+              <strong>{{ event.title }}</strong>
+              <span>{{ event.player }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    </article>
+  </section>
+
+  <section class="lineupPanel" aria-label="Alineación del partido">
+    <header class="panelHeader">
+      <svg lucideShirt></svg>
+      <h2>Alineación del Partido</h2>
+    </header>
+
+    <div class="pitchWrap">
+      <div class="pitch">
+        <span class="pitchMid"></span>
+        <span class="pitchCircle"></span>
+        <span class="pitchDot"></span>
+        <span class="pitchBox pitchBox--left"></span>
+        <span class="pitchBox pitchBox--right"></span>
+        <span class="pitchGoal pitchGoal--left"></span>
+        <span class="pitchGoal pitchGoal--right"></span>
+
+        @for (player of home.lineup; track player.number) {
+          <div class="pitchPlayer" [style.left.%]="player.x" [style.top.%]="player.y">
+            <svg class="jersey" viewBox="0 0 64 64" [attr.fill]="home.color" aria-hidden="true">
+              <path
+                d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
+              />
+              <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
+              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+                {{ player.number }}
+              </text>
+            </svg>
+            <span class="pitchPlayerName">{{ player.name }}</span>
+          </div>
+        }
+
+        @for (player of away.lineup; track player.number) {
+          <div class="pitchPlayer" [style.left.%]="player.x" [style.top.%]="player.y">
+            <svg class="jersey" viewBox="0 0 64 64" [attr.fill]="away.color" aria-hidden="true">
+              <path
+                d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
+              />
+              <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
+              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+                {{ player.number }}
+              </text>
+            </svg>
+            <span class="pitchPlayerName">{{ player.name }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="benches" aria-label="Banca de jugadores">
+    <article class="bench">
+      <header class="sideHeader">
+        <svg lucideShirt class="benchShirt" [style.color]="home.color"></svg>
+        <h3>Banca · {{ home.name }}</h3>
+      </header>
+
+      <ul class="benchList">
+        @for (player of home.bench; track player.number) {
+          <li class="benchPlayer">
+            <svg
+              class="jersey jersey--sm"
+              viewBox="0 0 64 64"
+              [attr.fill]="home.color"
+              aria-hidden="true"
+            >
+              <path
+                d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
+              />
+              <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
+              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+                {{ player.number }}
+              </text>
+            </svg>
+
+            <span class="benchName">{{ player.name }}</span>
+            <span class="benchPos">{{ player.position }}</span>
+          </li>
+        }
+      </ul>
+    </article>
+
+    <article class="bench">
+      <header class="sideHeader">
+        <svg lucideShirt class="benchShirt" [style.color]="away.color"></svg>
+        <h3>Banca · {{ away.name }}</h3>
+      </header>
+
+      <ul class="benchList">
+        @for (player of away.bench; track player.number) {
+          <li class="benchPlayer">
+            <svg
+              class="jersey jersey--sm"
+              viewBox="0 0 64 64"
+              [attr.fill]="away.color"
+              aria-hidden="true"
+            >
+              <path
+                d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
+              />
+              <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
+              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+                {{ player.number }}
+              </text>
+            </svg>
+
+            <span class="benchName">{{ player.name }}</span>
+            <span class="benchPos">{{ player.position }}</span>
+          </li>
+        }
+      </ul>
+    </article>
+  </section>
+</section>

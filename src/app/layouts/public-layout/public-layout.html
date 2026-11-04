@@ -1,32 +1,59 @@
 <nav aria-label="Navegación principal">
-    <div class="nav-container">
-        <div class="logo">
-            <img src="/images/logo.png" alt="">
-        </div>
+  <div class="nav-container">
+    <a routerLink="/" class="logo" aria-label="NextGen - Inicio" (click)="closeMenu()">
+      <img src="/images/logo.png" alt="NextGen" />
+    </a>
 
-        <div class="nav-links">
-            <a
-                routerLink="/"
-                routerLinkActive="active"
-                ariaCurrentWhenActive="page"
-                [routerLinkActiveOptions]="{ exact: true }"
-            >
-                INICIO
-            </a>
-            <a routerLink="/" fragment="ecosystem">ECOSISTEMA</a>
-            <a routerLink="/" fragment="academies">ACADEMIAS</a>
-            <a routerLink="/events" routerLinkActive="active" ariaCurrentWhenActive="page">
-                EVENTOS
-            </a>
-            <a routerLink="/about-us" routerLinkActive="active" ariaCurrentWhenActive="page">
-                SOBRE NOSOTROS
-            </a>
-        </div>
+    <div class="nav-links" id="navLinks" [class.is-open]="menuOpen()">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+      >
+        INICIO
+      </a>
+      <a routerLink="/" fragment="ecosystem" (click)="closeMenu()">ECOSISTEMA</a>
+      <a routerLink="/" fragment="academies" (click)="closeMenu()">ACADEMIAS</a>
+      <a
+        routerLink="/events"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+      >
+        EVENTOS
+      </a>
+      <a
+        routerLink="/about-us"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+      >
+        SOBRE NOSOTROS
+      </a>
     </div>
+
+    <button
+      type="button"
+      class="menuToggle"
+      [class.is-open]="menuOpen()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="navLinks"
+      [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+      (click)="toggleMenu()"
+    >
+      @if (menuOpen()) {
+        <svg lucideX></svg>
+      } @else {
+        <svg lucideMenu></svg>
+      }
+    </button>
+  </div>
 </nav>
 
 <main>
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </main>
 
 <footer>
@@ -34,22 +61,24 @@
     <div class="footerTop">
       <div class="footerInfo">
         <div class="footerInfoTitle">
-          <img src="/images/logo.png" alt="">
+          <img src="/images/logo.png" alt="" />
         </div>
 
         <div class="footerInfoTxt">
-          <p>
-            Somos la plataforma de servicios que impulsan el talento deportivo del futuro.
-          </p>
+          <p>Somos la plataforma de servicios que impulsan el talento deportivo del futuro.</p>
         </div>
 
         <div class="footerInfoIcons">
-            <a href="https://www.instagram.com/nextgen.ven?stkn=YXNtejdwNXczbnpl" target="_blank" rel="noopener noreferrer">
-                <img src="/icons/instagram.svg" alt="Instagram" />
-            </a>
-            <a href="" target="_blank" rel="noopener noreferrer">
-                <img src="/icons/whatsapp.svg" alt="WhatsApp" />
-            </a>
+          <a
+            href="https://www.instagram.com/nextgen.ven?stkn=YXNtejdwNXczbnpl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/instagram.svg" alt="Instagram" />
+          </a>
+          <a href="" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/whatsapp.svg" alt="WhatsApp" />
+          </a>
         </div>
       </div>
 
@@ -68,10 +97,13 @@
       </div>
     </div>
 
-    <hr>
+    <hr />
 
     <div class="footerBot">
-        <p>© 2026 Next Gen. Todos los derechos reservados. Desarrollado por <a href="/about">Netsolca</a></p>
+      <p>
+        © 2026 Next Gen. Todos los derechos reservados. Desarrollado por
+        <a href="/about">Netsolca</a>
+      </p>
     </div>
   </div>
 </footer>

@@ -13,7 +13,7 @@
   margin-bottom: 16px;
 }
 
-ul {
+.scoreboard ul {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -666,55 +666,6 @@ ul {
   font-size: 13px;
 }
 
-@media (max-width: 900px) {
-  .tournaments {
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 80px;
-  }
-
-  .tournamentsTitle h2 {
-    font-size: 30px;
-  }
-
-  .tournamentsGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .liveBoard {
-    gap: 10px;
-  }
-
-  .teamLogo--lg {
-    width: 60px;
-    height: 60px;
-    padding: 6px;
-  }
-
-  .liveTeam {
-    font-size: 12px;
-  }
-
-  .liveScore strong {
-    font-size: 34px;
-  }
-
-  .liveScore span {
-    font-size: 22px;
-  }
-
-  .nextMatchBody {
-    flex-direction: column;
-  }
-
-  .nextTeam,
-  .nextTeam--away {
-    justify-content: center;
-  }
-}
-
 .academies {
   width: 100%;
   display: flex;
@@ -937,4 +888,368 @@ ul {
   padding: 10px;
   background-color: #19212e;
   border-radius: 20px;
+}
+
+/* ------------------------- Responsive ------------------------- */
+
+@media (max-width: 1100px) {
+  .ecosystemCards {
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .ecosystemCard {
+    width: calc(50% - 10px);
+  }
+}
+
+@media (max-width: 900px) {
+  .scoreboard {
+    padding: 0 10px;
+  }
+
+  .scoreboard ul {
+    flex-wrap: wrap;
+  }
+
+  .match {
+    width: calc(50% - 10px);
+  }
+
+  .matchBot {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 70px 20px;
+  }
+
+  .hero h1 {
+    font-size: 46px;
+  }
+
+  .nextMatch {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .matchInfo {
+    text-align: center;
+  }
+
+  .teams {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .separator {
+    width: 120px;
+    height: 1px;
+  }
+
+  .ecosystem {
+    gap: 45px;
+    padding-top: 70px;
+    padding-bottom: 70px;
+  }
+
+  .ecosystemInfo > h2 {
+    font-size: 32px;
+  }
+
+  .ecosystemInfo > p {
+    max-width: 90%;
+    font-size: 17px;
+  }
+
+  .tournaments {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 80px;
+  }
+
+  .tournamentsTitle h2 {
+    font-size: 32px;
+  }
+
+  .tournamentsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .teamLogo--lg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .academies {
+    padding: 0 20px 80px;
+    gap: 30px;
+  }
+
+  .academiesTitle h2 {
+    font-size: 32px;
+  }
+
+  .academiesTitle p {
+    font-size: 17px;
+  }
+
+  .almirantes {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .almirantesLogo {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .almirantesLogo img {
+    width: 120px;
+    flex-shrink: 0;
+  }
+
+  .almirantesInfo {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    gap: 24px;
+  }
+
+  .almirantesInfo h2 {
+    font-size: 34px;
+  }
+
+  .almirantesFoto {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .scoreboard ul {
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 0;
+  }
+
+  .match {
+    width: 100%;
+  }
+
+  .hero {
+    padding: 60px 16px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .teams strong {
+    max-width: 100%;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  .nextMatch {
+    margin-top: 26px;
+  }
+
+  .countdown {
+    gap: 8px;
+  }
+
+  .time {
+    width: 46px;
+    height: 46px;
+  }
+
+  .time strong {
+    font-size: 16px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+  }
+
+  .hero-actions a {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .ecosystem {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .ecosystemInfo {
+    gap: 12px;
+    padding: 0 16px;
+  }
+
+  .ecosystemInfo > h2 {
+    font-size: 26px;
+  }
+
+  .ecosystemInfo > p {
+    max-width: 100%;
+    font-size: 15px;
+  }
+
+  .ecosystemCards {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    padding: 0 16px;
+  }
+
+  .ecosystemCard {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    padding: 24px;
+  }
+
+  .tournaments {
+    gap: 16px;
+    padding-bottom: 60px;
+  }
+
+  .tournamentsTitle {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tournamentsTitle h2 {
+    font-size: 26px;
+  }
+
+  .tournamentsTitleLink {
+    font-size: 11px;
+  }
+
+  .standingsRow {
+    gap: 10px;
+    padding: 8px 10px;
+  }
+
+  .standingsName {
+    font-size: 13px;
+  }
+
+  .standingsPoints {
+    font-size: 13px;
+  }
+
+  .liveBoard {
+    gap: 10px;
+  }
+
+  .teamLogo--lg {
+    width: 60px;
+    height: 60px;
+    padding: 6px;
+  }
+
+  .liveTeam {
+    font-size: 12px;
+  }
+
+  .liveScore strong {
+    font-size: 34px;
+  }
+
+  .liveScore span {
+    font-size: 22px;
+  }
+
+  .nextMatchBody {
+    flex-direction: column;
+  }
+
+  .nextTeam,
+  .nextTeam--away {
+    justify-content: center;
+  }
+
+  .nextMatchDate {
+    text-align: center;
+  }
+
+  .academies {
+    padding: 0 16px 60px;
+    gap: 24px;
+  }
+
+  .academiesTitle h2 {
+    font-size: 26px;
+    line-height: 1.1;
+  }
+
+  .academiesTitle p {
+    font-size: 15px;
+  }
+
+  .almirantes {
+    gap: 18px;
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .almirantesLogo {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .almirantesLogo img {
+    width: 130px;
+  }
+
+  .almirantesInfo {
+    width: 100%;
+    flex: initial;
+    gap: 18px;
+  }
+
+  .almirantesInfoTxt {
+    gap: 6px;
+  }
+
+  .almirantesInfoTxt p {
+    display: none;
+  }
+
+  .almirantesInfo h2 {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .almirantesInfoBtn {
+    width: 100%;
+    max-width: 260px;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .time {
+    width: 42px;
+    height: 42px;
+  }
+
+  .time strong {
+    font-size: 15px;
+  }
 }

@@ -29,7 +29,7 @@ export const TOURNAMENTS: Tournament[] = [
         id: 'futsal-cup',
         mark: 'FC',
         image: '/images/futsal-cup-banner.png',
-        brand: 'Juegos Relámpagos CBV',
+        brand: 'Evento Next Gen',
         name: 'Futsal Cup',
         subtitle:
             'El torneo de futsal que reúne a las categorías SUB 9 y SUB 12 en Club Bella Vista de Maracaibo.',
@@ -38,7 +38,7 @@ export const TOURNAMENTS: Tournament[] = [
         dateShort: '07, 08, 14 Y 15 NOV 2026',
         dateLong: '07, 08, 14 y 15 de Noviembre de 2026',
         place: 'Club Bella Vista de Maracaibo',
-        organizer: 'Juegos Relámpagos CBV',
+        organizer: 'Next Gen',
         categoryLabel: 'SUB 9 · SUB 12',
         categories: [
             { name: 'SUB 9', years: '2018 - 2017' },

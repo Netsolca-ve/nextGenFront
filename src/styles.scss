@@ -89,3 +89,25 @@ app-public-layout {
   flex-direction: column;
   flex: 1;
 }
+
+/* Toasts de Angular Material */
+.nextgen-snackbar {
+  --mat-snack-bar-container-color: #1a1a21;
+  --mat-snack-bar-supporting-text-color: #f9fafb;
+  --mat-snack-bar-button-color: #38bdf8;
+}
+
+.nextgen-snackbar .mat-mdc-snackbar-surface {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 4px solid #38bdf8;
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.nextgen-snackbar--success .mat-mdc-snackbar-surface {
+  border-left-color: #22c55e;
+}
+
+.nextgen-snackbar--error .mat-mdc-snackbar-surface {
+  border-left-color: #ef4444;
+}

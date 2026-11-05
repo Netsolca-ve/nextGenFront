@@ -1,5 +1,5 @@
-import { Component, HostListener, computed, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   LucideArrowRight,
   LucideBell,
@@ -15,6 +15,7 @@ import {
   LucideUsers,
   LucideX,
 } from '@lucide/angular';
+import { Auth } from '../../@core/services/auth';
 
 interface AdminNavItem {
   label: string;
@@ -64,9 +65,27 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   templateUrl: './admin-layout.html',
 })
 export class AdminLayout {
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
+
   readonly collapsed = signal(false);
   readonly mobileOpen = signal(false);
   readonly searchQuery = signal('');
+
+  readonly displayName = computed(() => {
+    const user = this.auth.user();
+    return user ? `${user.nombre} ${user.apellido}`.trim() : 'Admin';
+  });
+
+  readonly initials = computed(() => {
+    const user = this.auth.user();
+
+    if (!user) {
+      return 'AD';
+    }
+
+    return `${user.nombre.charAt(0)}${user.apellido.charAt(0)}`.toUpperCase();
+  });
 
   readonly searchResults = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
@@ -77,8 +96,7 @@ export class AdminLayout {
 
     return ADMIN_NAV_ITEMS.filter(
       (item) =>
-        item.label.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query),
+        item.label.toLowerCase().includes(query) || item.description.toLowerCase().includes(query),
     );
   });
 
@@ -105,6 +123,12 @@ export class AdminLayout {
   onNavigate(): void {
     this.clearSearch();
     this.closeMobile();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.onNavigate();
+    void this.router.navigateByUrl('/login');
   }
 
   @HostListener('window:resize')

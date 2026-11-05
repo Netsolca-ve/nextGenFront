@@ -26,3 +26,71 @@
 	color: #e6ebf2;
 	font-size: 12px;
 }
+
+.academyToggle {
+	display: grid;
+	gap: 4px;
+	padding: 4px 0 10px;
+}
+
+.academyToggle small {
+	color: #9aa3b1;
+	font-size: 12px;
+}
+
+.logoPreview {
+	width: 52px;
+	height: 52px;
+	margin-left: auto;
+	border-radius: 10px;
+	object-fit: contain;
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.rosterAction {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-top: 8px;
+	padding: 14px;
+	border: 1px solid rgba(56, 189, 248, 0.24);
+	border-radius: 10px;
+	background: rgba(0, 148, 221, 0.08);
+}
+
+.rosterAction > div {
+	display: grid;
+	gap: 4px;
+}
+
+.rosterAction strong {
+	color: #e6ebf2;
+	font-size: 14px;
+}
+
+.rosterAction small {
+	color: #9aa3b1;
+	font-size: 12px;
+}
+
+.rosterAction button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	white-space: nowrap;
+	color: #7dd3fc !important;
+	border-color: rgba(56, 189, 248, 0.5) !important;
+}
+
+.rosterAction button svg {
+	width: 16px;
+	height: 16px;
+}
+
+@media (max-width: 600px) {
+	.rosterAction {
+		align-items: stretch;
+		flex-direction: column;
+	}
+}

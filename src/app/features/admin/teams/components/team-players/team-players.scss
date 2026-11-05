@@ -1,0 +1,180 @@
+@use '../create-team/create-team';
+
+.playersDialogContent {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	padding-top: 8px;
+}
+
+.rosterForm,
+.rosterList {
+	padding: 16px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.025);
+}
+
+.rosterSectionHead {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 14px;
+	margin-bottom: 14px;
+}
+
+.rosterSectionHead > div {
+	display: grid;
+	gap: 4px;
+}
+
+.rosterSectionHead strong {
+	color: #e6ebf2;
+	font-size: 15px;
+}
+
+.rosterSectionHead small {
+	color: #9aa3b1;
+	font-size: 12px;
+}
+
+.rosterCount {
+	padding: 5px 10px;
+	border-radius: 999px;
+	background: rgba(0, 148, 221, 0.14);
+	color: #7dd3fc;
+	font-size: 11px;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.playerFormGrid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 4px 14px;
+}
+
+.photoPicker {
+	grid-column: 1 / -1;
+}
+
+.playerPhotoPreview {
+	width: 46px;
+	height: 46px;
+	margin-left: auto;
+	border-radius: 50%;
+	object-fit: cover;
+	background: rgba(255, 255, 255, 0.06);
+}
+
+.rosterFormActions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	margin-top: 6px;
+}
+
+.rosterFormActions span {
+	color: #9aa3b1;
+	font-size: 11px;
+}
+
+.playerRows {
+	display: grid;
+	gap: 8px;
+}
+
+.playerRow {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 12px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.025);
+}
+
+.playerAvatar {
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: rgba(0, 148, 221, 0.16);
+}
+
+.playerInitials {
+	display: grid;
+	place-items: center;
+	color: #7dd3fc;
+	font-size: 13px;
+	font-weight: 800;
+}
+
+.playerInfo {
+	display: grid;
+	gap: 2px;
+	min-width: 0;
+}
+
+.playerInfo strong {
+	overflow: hidden;
+	color: #e6ebf2;
+	font-size: 14px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.playerInfo small {
+	color: #9aa3b1;
+	font-size: 11px;
+}
+
+.removePlayer {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	min-width: auto;
+	padding: 0 8px;
+	color: #f87171 !important;
+}
+
+.removePlayer svg {
+	width: 15px;
+	height: 15px;
+}
+
+.rosterEmpty {
+	margin: 0;
+	padding: 18px;
+	border: 1px dashed rgba(255, 255, 255, 0.14);
+	border-radius: 10px;
+	color: #9aa3b1;
+	font-size: 13px;
+	text-align: center;
+}
+
+@media (max-width: 600px) {
+	.playerFormGrid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.photoPicker {
+		grid-column: auto;
+	}
+
+	.rosterFormActions {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.playerRow {
+		grid-template-columns: auto minmax(0, 1fr);
+	}
+
+	.removePlayer {
+		grid-column: 1 / -1;
+		justify-self: end;
+	}
+}

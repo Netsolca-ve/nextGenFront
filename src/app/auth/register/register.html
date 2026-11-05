@@ -1,132 +1,236 @@
 <section class="auth auth--reverse">
-    <div class="authMedia">
-        <img src="/images/almirantesHero.jpg" alt="Jugadores de fútbol en plena acción" />
+  <div class="authMedia">
+    <img src="/images/almirantesHero.jpg" alt="Jugadores de fútbol en plena acción" />
 
-        <!-- <div class="authQuote">
+    <!-- <div class="authQuote">
             <span class="authQuoteTag">NextGen · Sport Ecosystem</span>
             <p>Tu próximo capítulo <span>empieza aquí.</span></p>
         </div> -->
-    </div>
+  </div>
 
-    <div class="authPanel">
-        <div class="authPanelInner">
-            <a routerLink="/" class="authLogo" aria-label="NextGen - Inicio">
-                <img src="/images/logo.png" alt="NextGen" />
-            </a>
+  <div class="authPanel">
+    <div class="authPanelInner">
+      <a routerLink="/" class="authLogo" aria-label="NextGen - Inicio">
+        <img src="/images/logo.png" alt="NextGen" />
+      </a>
 
-            <header class="authHeader">
-                <h1>Únete al equipo</h1>
-                <p>Regístrate y no te pierdas nada de lo que viene.</p>
-            </header>
+      <header class="authHeader">
+        <h1>Únete al equipo</h1>
+        <p>Regístrate y no te pierdas nada de lo que viene.</p>
+      </header>
 
-            <form class="authForm" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-                <label class="authField">
-                    <span class="authFieldLabel">Nombre completo</span>
+      <form class="authForm" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="authRow">
+          <label class="authField">
+            <span class="authFieldLabel">Nombre</span>
 
-                    <div class="authInput">
-                        <svg lucideUser></svg>
-                        <input
-                            type="text"
-                            formControlName="fullName"
-                            placeholder="Tu nombre y apellido"
-                            autocomplete="name"
-                        />
-                    </div>
+            <div class="authInput">
+              <svg lucideUser></svg>
+              <input
+                type="text"
+                formControlName="nombre"
+                placeholder="Tu nombre"
+                autocomplete="given-name"
+                maxlength="100"
+              />
+            </div>
 
-                    @if (showError('fullName')) {
-                        <small class="authError">Ingresa tu nombre completo.</small>
-                    }
-                </label>
+            @if (showError('nombre')) {
+              <small class="authError">Ingresa tu nombre.</small>
+            }
+          </label>
 
-                <label class="authField">
-                    <span class="authFieldLabel">Email</span>
+          <label class="authField">
+            <span class="authFieldLabel">Apellido</span>
 
-                    <div class="authInput">
-                        <svg lucideMail></svg>
-                        <input
-                            type="email"
-                            formControlName="email"
-                            placeholder="tu@email.com"
-                            autocomplete="email"
-                        />
-                    </div>
+            <div class="authInput">
+              <svg lucideUser></svg>
+              <input
+                type="text"
+                formControlName="apellido"
+                placeholder="Tu apellido"
+                autocomplete="family-name"
+                maxlength="100"
+              />
+            </div>
 
-                    @if (showError('email')) {
-                        <small class="authError">Ingresa un correo electrónico válido.</small>
-                    }
-                </label>
-
-                <label class="authField">
-                    <span class="authFieldLabel">Contraseña</span>
-
-                    <div class="authInput">
-                        <svg lucideLock></svg>
-                        <input
-                            [type]="showPassword() ? 'text' : 'password'"
-                            formControlName="password"
-                            placeholder="Mínimo 6 caracteres"
-                            autocomplete="new-password"
-                        />
-
-                        <button
-                            type="button"
-                            class="authPeek"
-                            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-                            (click)="togglePassword()"
-                        >
-                            {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
-                        </button>
-                    </div>
-
-                    @if (showError('password')) {
-                        <small class="authError">La contraseña debe tener al menos 6 caracteres.</small>
-                    }
-                </label>
-
-                <label class="authField">
-                    <span class="authFieldLabel">Confirmar contraseña</span>
-
-                    <div class="authInput">
-                        <svg lucideLock></svg>
-                        <input
-                            [type]="showConfirmPassword() ? 'text' : 'password'"
-                            formControlName="confirmPassword"
-                            placeholder="Repite tu contraseña"
-                            autocomplete="new-password"
-                        />
-
-                        <button
-                            type="button"
-                            class="authPeek"
-                            [attr.aria-label]="
-                                showConfirmPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'
-                            "
-                            (click)="toggleConfirmPassword()"
-                        >
-                            {{ showConfirmPassword() ? 'Ocultar' : 'Mostrar' }}
-                        </button>
-                    </div>
-
-                    @if (showConfirmError()) {
-                        <small class="authError">Las contraseñas no coinciden.</small>
-                    }
-                </label>
-
-                <button type="submit" class="authSubmit">
-                    Crear Cuenta
-                    <svg lucideArrowRight></svg>
-                </button>
-            </form>
-
-            <p class="authSwitch">
-                ¿Ya tienes una cuenta?
-                <a routerLink="/login">Iniciar sesión</a>
-            </p>
-
-            <p class="authSupport">
-                ¿Necesitas ayuda? Escríbenos a
-                <a href="mailto:soporte@nextgen.ven">soporte@nextgen.ven</a>
-            </p>
+            @if (showError('apellido')) {
+              <small class="authError">Ingresa tu apellido.</small>
+            }
+          </label>
         </div>
+
+        <label class="authField">
+          <span class="authFieldLabel">Correo electrónico</span>
+
+          <div class="authInput">
+            <svg lucideMail></svg>
+            <input
+              type="email"
+              formControlName="correo"
+              placeholder="tu@email.com"
+              autocomplete="email"
+              maxlength="150"
+            />
+          </div>
+
+          @if (showError('correo')) {
+            <small class="authError">Ingresa un correo electrónico válido.</small>
+          }
+        </label>
+
+        <div class="authRow">
+          <label class="authField">
+            <span class="authFieldLabel">Tipo de identificación</span>
+
+            <div class="authInput authSelect">
+              <svg lucideIdCard></svg>
+              <select formControlName="tipoIdentificacion">
+                <option value="">Selecciona...</option>
+                <option value="V">V - Cédula</option>
+                <option value="E">E - Extranjero</option>
+                <option value="P">P - Pasaporte</option>
+                <option value="J">J - RIF</option>
+              </select>
+            </div>
+
+            @if (showError('tipoIdentificacion')) {
+              <small class="authError">El tipo de identificación es demasiado largo.</small>
+            }
+          </label>
+
+          <label class="authField">
+            <span class="authFieldLabel">Identificación</span>
+
+            <div class="authInput">
+              <svg lucideIdCard></svg>
+              <input
+                type="text"
+                formControlName="identificacion"
+                placeholder="Número de documento"
+                autocomplete="off"
+                maxlength="50"
+              />
+            </div>
+
+            @if (showError('identificacion')) {
+              <small class="authError">La identificación es demasiado larga.</small>
+            }
+          </label>
+        </div>
+
+        <div class="authRow">
+          <label class="authField">
+            <span class="authFieldLabel">Teléfono</span>
+
+            <div class="authInput">
+              <svg lucidePhone></svg>
+              <input
+                type="tel"
+                formControlName="telefono"
+                placeholder="+58 412 000 0000"
+                autocomplete="tel"
+                maxlength="30"
+              />
+            </div>
+
+            @if (showError('telefono')) {
+              <small class="authError">El teléfono es demasiado largo.</small>
+            }
+          </label>
+
+          <label class="authField">
+            <span class="authFieldLabel">Dirección</span>
+
+            <div class="authInput">
+              <svg lucideMapPin></svg>
+              <input
+                type="text"
+                formControlName="direccion"
+                placeholder="Tu dirección"
+                autocomplete="street-address"
+                maxlength="255"
+              />
+            </div>
+
+            @if (showError('direccion')) {
+              <small class="authError">La dirección es demasiado larga.</small>
+            }
+          </label>
+        </div>
+
+        <label class="authField">
+          <span class="authFieldLabel">Contraseña</span>
+
+          <div class="authInput">
+            <svg lucideLock></svg>
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="clave"
+              placeholder="Mínimo 8 caracteres"
+              autocomplete="new-password"
+              maxlength="100"
+            />
+
+            <button
+              type="button"
+              class="authPeek"
+              [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              (click)="togglePassword()"
+            >
+              {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+
+          @if (showError('clave')) {
+            <small class="authError">La contraseña debe tener al menos 8 caracteres.</small>
+          }
+        </label>
+
+        <label class="authField">
+          <span class="authFieldLabel">Confirmar contraseña</span>
+
+          <div class="authInput">
+            <svg lucideLock></svg>
+            <input
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Repite tu contraseña"
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              class="authPeek"
+              [attr.aria-label]="
+                showConfirmPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
+              (click)="toggleConfirmPassword()"
+            >
+              {{ showConfirmPassword() ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+
+          @if (showConfirmError()) {
+            <small class="authError">Las contraseñas no coinciden.</small>
+          }
+        </label>
+
+        <button type="submit" class="authSubmit" [disabled]="loading()">
+          {{ loading() ? 'Creando cuenta...' : 'Crear Cuenta' }}
+          <svg lucideArrowRight></svg>
+        </button>
+      </form>
+
+      <p class="authSwitch">
+        ¿Ya tienes una cuenta?
+        <a routerLink="/login">Iniciar sesión</a>
+      </p>
+
+      <p class="authSupport">
+        ¿Necesitas ayuda? Escríbenos a
+        <a href="mailto:soporte@nextgen.ven">soporte@nextgen.ven</a>
+      </p>
     </div>
+  </div>
 </section>

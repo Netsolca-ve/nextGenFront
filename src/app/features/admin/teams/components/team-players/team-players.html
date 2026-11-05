@@ -1,0 +1,190 @@
+<header mat-dialog-title class="dialogHeader">
+    <span class="dialogIcon"><svg lucideUsers></svg></span>
+    <span>
+        <strong>Plantilla de {{ teamName }}</strong>
+        <small>Agrega uno a uno los jugadores que tendrá el equipo.</small>
+    </span>
+</header>
+
+<mat-dialog-content class="dialogContent playersDialogContent">
+    @if (error()) {
+        <p class="dialogError">No se pudo completar la gestión de la plantilla.</p>
+    }
+
+    <section class="rosterForm">
+        <header class="rosterSectionHead">
+            <div>
+                <strong>Agregar jugador</strong>
+                <small>Completa los datos y añádelo a la plantilla.</small>
+            </div>
+            <span class="rosterCount">{{ players().length }} en plantilla</span>
+        </header>
+
+        <form [formGroup]="form" (ngSubmit)="addPlayer()" novalidate>
+            <div class="playerFormGrid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="nombre" maxlength="100" />
+                    @if (showError('nombre')) {
+                        <mat-error>El nombre es obligatorio.</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Apellido</mat-label>
+                    <input matInput formControlName="apellido" maxlength="100" />
+                    @if (showError('apellido')) {
+                        <mat-error>El apellido es obligatorio.</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de identificación</mat-label>
+                    <mat-select formControlName="tipoIdentificacion">
+                        @for (type of identificationTypes; track type.value) {
+                            <mat-option [value]="type.value">{{ type.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Identificación</mat-label>
+                    <input matInput formControlName="identificacion" maxlength="50" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de nacimiento</mat-label>
+                    <input matInput type="date" formControlName="fechaNacimiento" />
+                    @if (showError('fechaNacimiento')) {
+                        <mat-error>La fecha de nacimiento es obligatoria.</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Número de camiseta</mat-label>
+                    <input
+                        matInput
+                        type="number"
+                        formControlName="numeroCamiseta"
+                        min="0"
+                        max="999"
+                    />
+                    @if (showError('numeroCamiseta')) {
+                        <mat-error>Indica un dorsal válido.</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Posición</mat-label>
+                    <mat-select formControlName="posicion" placeholder="Selecciona una posición">
+                        @for (position of positions; track position) {
+                            <mat-option [value]="position">{{ position }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <label class="uploadField photoPicker">
+                    <span class="dialogIcon"><svg lucideImagePlus></svg></span>
+
+                    <span>
+                        <strong>Foto del jugador</strong>
+                        <small>
+                            @if (uploadingPhoto()) {
+                                Subiendo imagen...
+                            } @else if (photoPreview()) {
+                                Cambiar foto
+                            } @else {
+                                Opcional (PNG, JPG o WebP)
+                            }
+                        </small>
+                    </span>
+
+                    @if (photoPreview()) {
+                        <img
+                            class="playerPhotoPreview"
+                            [src]="assetUrl(photoPreview())"
+                            alt="Foto del jugador"
+                        />
+                    }
+
+                    <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        (change)="onPhotoSelected($event)"
+                    />
+                </label>
+            </div>
+
+            <div class="rosterFormActions">
+                <span>Los campos con * son obligatorios.</span>
+                <button
+                    mat-flat-button
+                    class="dialogSubmit"
+                    type="submit"
+                    [disabled]="submitting() || uploadingPhoto()"
+                >
+                    {{ submitting() ? 'Añadiendo...' : 'Añadir jugador' }}
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <section class="rosterList">
+        <header class="rosterSectionHead">
+            <div>
+                <strong>Jugadores registrados</strong>
+                <small>Estos son los jugadores que pertenecen al equipo.</small>
+            </div>
+        </header>
+
+        @if (loading()) {
+            <p class="rosterEmpty">Cargando plantilla...</p>
+        } @else if (!players().length) {
+            <p class="rosterEmpty">Aún no hay jugadores en la plantilla.</p>
+        } @else {
+            <div class="playerRows">
+                @for (player of players(); track player.idJugador) {
+                    <article class="playerRow">
+                        @if (player.foto) {
+                            <img
+                                class="playerAvatar"
+                                [src]="assetUrl(player.foto)"
+                                [alt]="player.nombre + ' ' + player.apellido"
+                            />
+                        } @else {
+                            <span class="playerAvatar playerInitials">{{ initials(player) }}</span>
+                        }
+
+                        <div class="playerInfo">
+                            <strong>{{ player.nombre }} {{ player.apellido }}</strong>
+                            <small>
+                                #{{ player.numeroCamiseta ?? '—' }}
+                                · {{ player.posicion || 'Sin posición' }}
+                                · {{ player.fechaNacimiento | date: 'dd/MM/yyyy' }}
+                            </small>
+                            <small>
+                                {{ player.tipoIdentificacion || 'ID' }}
+                                {{ player.identificacion || 'sin identificación' }}
+                            </small>
+                        </div>
+
+                        <button
+                            mat-button
+                            type="button"
+                            class="removePlayer"
+                            [attr.aria-label]="'Quitar a ' + player.nombre + ' ' + player.apellido"
+                            (click)="removePlayer(player)"
+                        >
+                            <svg lucideX></svg>
+                            Quitar
+                        </button>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -1,15 +1,166 @@
-<header mat-dialog-title class="dialogHeader"><span class="dialogIcon"><svg lucideShield></svg></span><span><strong>Editar equipo</strong><small>Actualiza los datos del equipo seleccionado.</small></span></header>
-<form [formGroup]="form" (ngSubmit)="submit()"><mat-dialog-content class="dialogContent">
-    @if (error()) { <p class="dialogError fieldFull">No se pudo actualizar el equipo.</p> }
-    <mat-form-field appearance="outline" class="fieldFull"><mat-label>Nombre del equipo</mat-label><input matInput formControlName="nombre" /><mat-error>El nombre es obligatorio.</mat-error></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>Slug</mat-label><input matInput formControlName="slug" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>Siglas</mat-label><input matInput formControlName="siglas" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>Categoría</mat-label><input matInput formControlName="categoria" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>Logo</mat-label><input matInput formControlName="logo" /></mat-form-field>
-    <div class="colorField"><label for="updateLocalColor">Color local</label><input id="updateLocalColor" type="color" formControlName="colorLocal" /><code>{{ form.controls.colorLocal.value }}</code></div>
-    <div class="colorField"><label for="updateAwayColor">Color visitante</label><input id="updateAwayColor" type="color" formControlName="colorVisitante" /><code>{{ form.controls.colorVisitante.value }}</code></div>
-    <mat-form-field appearance="outline"><mat-label>Horario de entrenamientos</mat-label><input matInput formControlName="horarioEntrenamientos" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>Días de entrenamientos</mat-label><input matInput formControlName="diasEntrenamientos" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>ID de academia</mat-label><input matInput type="number" formControlName="idAcademia" min="1" /></mat-form-field>
-    <mat-form-field appearance="outline"><mat-label>ID de entrenador</mat-label><input matInput type="number" formControlName="idEntrenador" min="1" /></mat-form-field>
-</mat-dialog-content><mat-dialog-actions align="end"><button mat-button type="button" mat-dialog-close>Cancelar</button><button mat-flat-button class="dialogSubmit" type="submit">Guardar cambios</button></mat-dialog-actions></form>
+<header mat-dialog-title class="dialogHeader">
+    <span class="dialogIcon"><svg lucideShield></svg></span>
+    <span>
+        <strong>Editar equipo</strong>
+        <small>Actualiza los datos y la plantilla del equipo.</small>
+    </span>
+</header>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <mat-dialog-content class="dialogContent">
+        @if (error()) {
+            <p class="dialogError fieldFull">No se pudo actualizar el equipo.</p>
+        }
+
+        <mat-form-field appearance="outline" class="fieldFull">
+            <mat-label>Nombre del equipo</mat-label>
+            <input matInput formControlName="nombre" />
+            @if (showError('nombre')) {
+                <mat-error>El nombre es obligatorio.</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Siglas</mat-label>
+            <input matInput formControlName="siglas" maxlength="3" />
+            @if (showError('siglas')) {
+                <mat-error>Indica las siglas (máximo 3 caracteres).</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="categoria" placeholder="Selecciona una categoría">
+                @for (category of categories; track category) {
+                    <mat-option [value]="category">{{ category }}</mat-option>
+                }
+            </mat-select>
+            @if (showError('categoria')) {
+                <mat-error>La categoría es obligatoria.</mat-error>
+            }
+        </mat-form-field>
+
+        <label class="uploadField fieldFull">
+            <span class="dialogIcon"><svg lucideImagePlus></svg></span>
+
+            <span>
+                <strong>Logo del equipo</strong>
+                <small>
+                    @if (uploadingLogo()) {
+                        Subiendo imagen...
+                    } @else if (logoPreview()) {
+                        Cambiar logo
+                    } @else {
+                        Selecciona una imagen PNG, JPG o WebP (máx. 5 MB)
+                    }
+                </small>
+            </span>
+
+            @if (logoPreview()) {
+                <img class="logoPreview" [src]="assetUrl(logoPreview())" alt="Logo del equipo" />
+            }
+
+            <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                (change)="onLogoSelected($event)"
+            />
+        </label>
+
+        <div class="colorField">
+            <label for="updateLocalColor">Color local</label>
+            <input id="updateLocalColor" type="color" formControlName="colorLocal" />
+            <code>{{ form.controls.colorLocal.value }}</code>
+        </div>
+
+        <div class="colorField">
+            <label for="updateAwayColor">Color visitante</label>
+            <input id="updateAwayColor" type="color" formControlName="colorVisitante" />
+            <code>{{ form.controls.colorVisitante.value }}</code>
+        </div>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Horario de entrenamientos</mat-label>
+            <input
+                matInput
+                formControlName="horarioEntrenamientos"
+                placeholder="16:00 - 18:00"
+                maxlength="100"
+            />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Días de entrenamientos</mat-label>
+            <input
+                matInput
+                formControlName="diasEntrenamientos"
+                placeholder="Lunes y miércoles"
+                maxlength="150"
+            />
+        </mat-form-field>
+
+        <div class="academyToggle fieldFull">
+            <mat-checkbox [checked]="hasAcademy()" (change)="onAcademyToggle($event.checked)">
+                Ya tiene academia existente
+            </mat-checkbox>
+            <small>Actívalo si el equipo pertenece a una academia registrada.</small>
+        </div>
+
+        @if (hasAcademy()) {
+            <mat-form-field appearance="outline">
+                <mat-label>Academia</mat-label>
+                <mat-select formControlName="idAcademia" placeholder="Selecciona una academia">
+                    @for (academy of academies(); track academy.idAcademia) {
+                        <mat-option [value]="academy.idAcademia">{{ academy.nombre }}</mat-option>
+                    }
+                </mat-select>
+                @if (showError('idAcademia')) {
+                    <mat-error>Selecciona la academia del equipo.</mat-error>
+                } @else if (!loadingCatalogs() && !academies().length) {
+                    <mat-hint>No hay academias registradas.</mat-hint>
+                }
+            </mat-form-field>
+        }
+
+        <mat-form-field appearance="outline">
+            <mat-label>Entrenador</mat-label>
+            <mat-select formControlName="idEntrenador" placeholder="Selecciona un entrenador">
+                <mat-option [value]="null">Sin entrenador asignado</mat-option>
+                @for (coach of coaches(); track coach.idEntrenador) {
+                    <mat-option [value]="coach.idEntrenador">
+                        {{ coach.nombre }} {{ coach.apellido }}
+                        @if (coach.especialidad) {
+                            · {{ coach.especialidad }}
+                        }
+                    </mat-option>
+                }
+            </mat-select>
+            @if (!loadingCatalogs() && !coaches().length) {
+                <mat-hint>No hay entrenadores registrados.</mat-hint>
+            }
+        </mat-form-field>
+
+        <div class="rosterAction fieldFull">
+            <div>
+                <strong>Plantilla de jugadores</strong>
+                <small>Agrega uno a uno los jugadores que tendrá el equipo.</small>
+            </div>
+            <button mat-stroked-button type="button" (click)="openPlayers()">
+                <svg lucideUsers></svg>
+                Gestionar jugadores
+            </button>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" mat-dialog-close>Cancelar</button>
+        <button
+            mat-flat-button
+            class="dialogSubmit"
+            type="submit"
+            [disabled]="submitting() || uploadingLogo()"
+        >
+            {{ submitting() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+    </mat-dialog-actions>
+</form>

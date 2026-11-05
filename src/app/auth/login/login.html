@@ -1,85 +1,85 @@
 <section class="auth">
-    <div class="authPanel">
-        <div class="authPanelInner">
-            <a routerLink="/" class="authLogo" aria-label="NextGen - Inicio">
-                <img src="/images/logo.png" alt="NextGen" />
-            </a>
+  <div class="authPanel">
+    <div class="authPanelInner">
+      <a routerLink="/" class="authLogo" aria-label="NextGen - Inicio">
+        <img src="/images/logo.png" alt="NextGen" />
+      </a>
 
-            <header class="authHeader">
-                <h1>Bienvenido de nuevo</h1>
-                <p>Inicia sesión para acceder a tu portal.</p>
-            </header>
+      <header class="authHeader">
+        <h1>Bienvenido de nuevo</h1>
+        <p>Inicia sesión para acceder a tu portal.</p>
+      </header>
 
-            <form class="authForm" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-                <label class="authField">
-                    <span class="authFieldLabel">Email</span>
+      <form class="authForm" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <label class="authField">
+          <span class="authFieldLabel">Correo electrónico</span>
 
-                    <div class="authInput">
-                        <svg lucideMail></svg>
-                        <input
-                            type="email"
-                            formControlName="email"
-                            placeholder="tu@email.com"
-                            autocomplete="email"
-                        />
-                    </div>
+          <div class="authInput">
+            <svg lucideMail></svg>
+            <input
+              type="email"
+              formControlName="correo"
+              placeholder="tu@email.com"
+              autocomplete="email"
+            />
+          </div>
 
-                    @if (showError('email')) {
-                        <small class="authError">Ingresa un correo electrónico válido.</small>
-                    }
-                </label>
+          @if (showError('correo')) {
+            <small class="authError">Ingresa un correo electrónico válido.</small>
+          }
+        </label>
 
-                <label class="authField">
-                    <span class="authFieldLabel">Contraseña</span>
+        <label class="authField">
+          <span class="authFieldLabel">Contraseña</span>
 
-                    <div class="authInput">
-                        <svg lucideLock></svg>
-                        <input
-                            [type]="showPassword() ? 'text' : 'password'"
-                            formControlName="password"
-                            placeholder="Tu contraseña"
-                            autocomplete="current-password"
-                        />
+          <div class="authInput">
+            <svg lucideLock></svg>
+            <input
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="clave"
+              placeholder="Tu contraseña"
+              autocomplete="current-password"
+            />
 
-                        <button
-                            type="button"
-                            class="authPeek"
-                            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-                            (click)="togglePassword()"
-                        >
-                            {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
-                        </button>
-                    </div>
+            <button
+              type="button"
+              class="authPeek"
+              [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              (click)="togglePassword()"
+            >
+              {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
 
-                    @if (showError('password')) {
-                        <small class="authError">La contraseña debe tener al menos 6 caracteres.</small>
-                    }
-                </label>
+          @if (showError('clave')) {
+            <small class="authError">Ingresa tu contraseña.</small>
+          }
+        </label>
 
-                <button type="submit" class="authSubmit">
-                    Iniciar Sesión
-                    <svg lucideArrowRight></svg>
-                </button>
-            </form>
+        <button type="submit" class="authSubmit" [disabled]="loading()">
+          {{ loading() ? 'Ingresando...' : 'Iniciar Sesión' }}
+          <svg lucideArrowRight></svg>
+        </button>
+      </form>
 
-            <p class="authSwitch">
-                ¿Aún no tienes cuenta?
-                <a routerLink="/register">Crear una cuenta</a>
-            </p>
+      <p class="authSwitch">
+        ¿Aún no tienes cuenta?
+        <a routerLink="/register">Crear una cuenta</a>
+      </p>
 
-            <p class="authSupport">
-                ¿Necesitas ayuda? Escríbenos a
-                <a href="mailto:soporte@nextgen.ven">soporte@nextgen.ven</a>
-            </p>
-        </div>
+      <p class="authSupport">
+        ¿Necesitas ayuda? Escríbenos a
+        <a href="mailto:soporte@nextgen.ven">soporte@nextgen.ven</a>
+      </p>
     </div>
+  </div>
 
-    <div class="authMedia">
-        <img src="/images/hero.jpg" alt="Equipo de fútbol de NextGen en la cancha" />
+  <div class="authMedia">
+    <img src="/images/hero.jpg" alt="Equipo de fútbol de NextGen en la cancha" />
 
-        <!-- <div class="authQuote">
+    <!-- <div class="authQuote">
             <span class="authQuoteTag">NextGen · Sport Ecosystem</span>
             <p>El talento se entrena. <span>La pasión se vive.</span></p>
         </div> -->
-    </div>
+  </div>
 </section>

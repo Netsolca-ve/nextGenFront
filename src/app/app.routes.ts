@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './@core/guards/auth.guard';
 import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { PublicLayout } from './layouts/public-layout/public-layout';
 
@@ -14,6 +15,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayout,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -23,9 +25,7 @@ export const routes: Routes = [
       {
         path: 'torneos',
         loadComponent: () =>
-          import('./features/admin/tournaments/admin-tournaments').then(
-            (m) => m.AdminTournaments,
-          ),
+          import('./features/admin/tournaments/admin-tournaments').then((m) => m.AdminTournaments),
       },
       {
         path: 'partidos',
@@ -34,8 +34,7 @@ export const routes: Routes = [
       },
       {
         path: 'equipos',
-        loadComponent: () =>
-          import('./features/admin/teams/admin-teams').then((m) => m.AdminTeams),
+        loadComponent: () => import('./features/admin/teams/admin-teams').then((m) => m.AdminTeams),
       },
       {
         path: '**',

@@ -9,7 +9,7 @@
       <div class="heroStatus">
         <span class="matchLive">
           <span class="matchLiveDot"></span>
-          EN VIVO
+          {{ statusLabel }}
         </span>
         <p class="matchMeta">{{ tournament }} · {{ round }}</p>
       </div>
@@ -20,6 +20,7 @@
     <div class="scoreboard">
       <div class="teamSide">
         <img [src]="home.logo" [alt]="'Logo de ' + home.name" />
+        <span class="teamSideLabel">LOCAL</span>
         <h1 class="teamName">{{ home.name }}</h1>
       </div>
 
@@ -35,6 +36,7 @@
 
       <div class="teamSide">
         <img [src]="away.logo" [alt]="'Logo de ' + away.name" />
+        <span class="teamSideLabel">VISITANTE</span>
         <h2 class="teamName">{{ away.name }}</h2>
       </div>
     </div>
@@ -139,7 +141,7 @@
                 d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
               />
               <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
-              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+              <text [class]="jerseyNumberClass(home.color)" x="32" y="44" text-anchor="middle">
                 {{ player.number }}
               </text>
             </svg>
@@ -154,7 +156,7 @@
                 d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
               />
               <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
-              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+              <text [class]="jerseyNumberClass(away.color)" x="32" y="44" text-anchor="middle">
                 {{ player.number }}
               </text>
             </svg>
@@ -185,7 +187,7 @@
                 d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
               />
               <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
-              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+                <text [class]="jerseyNumberClass(home.color)" x="32" y="44" text-anchor="middle">
                 {{ player.number }}
               </text>
             </svg>
@@ -216,7 +218,7 @@
                 d="M23 5 L32 10 L41 5 L56 14 L49 27 L43 24 L43 57 C36 61 28 61 21 57 L21 24 L15 27 L8 14 Z"
               />
               <path d="M27 6 Q32 13 37 6" fill="rgba(0, 0, 0, 0.3)" />
-              <text class="jerseyNum" x="32" y="44" text-anchor="middle">
+              <text [class]="jerseyNumberClass(away.color)" x="32" y="44" text-anchor="middle">
                 {{ player.number }}
               </text>
             </svg>

@@ -80,23 +80,21 @@
         </div>
 
         <mat-form-field appearance="outline">
-            <mat-label>Horario de entrenamientos</mat-label>
-            <input
-                matInput
-                formControlName="horarioEntrenamientos"
-                placeholder="16:00 - 18:00"
-                maxlength="100"
-            />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Días de entrenamientos</mat-label>
-            <input
-                matInput
-                formControlName="diasEntrenamientos"
-                placeholder="Lunes y miércoles"
-                maxlength="150"
-            />
+            <mat-label>Entrenador</mat-label>
+            <mat-select formControlName="idEntrenador" placeholder="Selecciona un entrenador">
+                <mat-option [value]="null">Sin entrenador asignado</mat-option>
+                @for (coach of coaches(); track coach.idEntrenador) {
+                    <mat-option [value]="coach.idEntrenador">
+                        {{ coach.nombre }} {{ coach.apellido }}
+                        @if (coach.especialidad) {
+                            · {{ coach.especialidad }}
+                        }
+                    </mat-option>
+                }
+            </mat-select>
+            @if (!loadingCatalogs() && !coaches().length) {
+                <mat-hint>No hay entrenadores registrados.</mat-hint>
+            }
         </mat-form-field>
 
         <div class="academyToggle fieldFull">
@@ -120,25 +118,27 @@
                     <mat-hint>No hay academias registradas.</mat-hint>
                 }
             </mat-form-field>
-        }
 
-        <mat-form-field appearance="outline">
-            <mat-label>Entrenador</mat-label>
-            <mat-select formControlName="idEntrenador" placeholder="Selecciona un entrenador">
-                <mat-option [value]="null">Sin entrenador asignado</mat-option>
-                @for (coach of coaches(); track coach.idEntrenador) {
-                    <mat-option [value]="coach.idEntrenador">
-                        {{ coach.nombre }} {{ coach.apellido }}
-                        @if (coach.especialidad) {
-                            · {{ coach.especialidad }}
-                        }
-                    </mat-option>
-                }
-            </mat-select>
-            @if (!loadingCatalogs() && !coaches().length) {
-                <mat-hint>No hay entrenadores registrados.</mat-hint>
-            }
-        </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Horario de entrenamientos</mat-label>
+                <input
+                    matInput
+                    formControlName="horarioEntrenamientos"
+                    placeholder="16:00 - 18:00"
+                    maxlength="100"
+                />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Días de entrenamientos</mat-label>
+                <input
+                    matInput
+                    formControlName="diasEntrenamientos"
+                    placeholder="Lunes y miércoles"
+                    maxlength="150"
+                />
+            </mat-form-field>
+        }
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">

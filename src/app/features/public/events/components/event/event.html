@@ -1,18 +1,10 @@
-<section [class]="'eventHero hero--' + tournament().id">
-    <div class="eventHeroDecor">
-        <span class="eventHeroDecorMark">{{ tournament().mark }}</span>
-        <svg lucideGoal class="eventHeroDecorIcon"></svg>
-    </div>
-
+@if (tournament(); as current) {
+<section class="eventHero hero--{{ eventId() }}">
+    <div class="eventHeroBanner" [style.background-image]="heroBackground()"></div>
     <div class="eventHeroContent">
-        <span class="eventHeroBrand">{{ tournament().brand }}</span>
-
-        <h1 class="eventHeroTitle">
-            Torneo
-            <span>{{ tournament().name }}</span>
-        </h1>
-
-        <p class="eventHeroSubtitle">{{ tournament().subtitle }}</p>
+        <span class="eventHeroBrand">{{ organizer() }}</span>
+        <h1 class="eventHeroTitle">Torneo <span>{{ tournamentName() }}</span></h1>
+        <p class="eventHeroSubtitle">{{ subtitle() }}</p>
     </div>
 </section>
 
@@ -20,143 +12,69 @@
     <div class="eventDetailsGrid">
         <article class="eventCard">
             <h2 class="eventCardTitle">Información del Evento</h2>
-
             <ul class="eventInfoList">
-                <li>
-                    <div class="eventInfoIcon">
-                        <svg lucideCalendarDays></svg>
-                    </div>
-                    <div class="eventInfoTxt">
-                        <span>Fecha del Torneo</span>
-                        <p>{{ tournament().dateLong }}</p>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="eventInfoIcon">
-                        <svg lucideClock></svg>
-                    </div>
-                    <div class="eventInfoTxt">
-                        <span>Hora de Inicio</span>
-                        <p>{{ tournament().time }}</p>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="eventInfoIcon">
-                        <svg lucideMapPin></svg>
-                    </div>
-                    <div class="eventInfoTxt">
-                        <span>Lugar</span>
-                        <p>{{ tournament().place }}</p>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="eventInfoIcon">
-                        <svg lucideShieldCheck></svg>
-                    </div>
-                    <div class="eventInfoTxt">
-                        <span>Organiza</span>
-                        <p>{{ tournament().organizer }}</p>
-                    </div>
-                </li>
+                <li><div class="eventInfoIcon"><svg lucideCalendarDays></svg></div><div class="eventInfoTxt"><span>Fecha del Torneo</span><p>{{ dateRange() }}</p></div></li>
+                <li><div class="eventInfoIcon"><svg lucideClock></svg></div><div class="eventInfoTxt"><span>Hora de Inicio</span><p>{{ time() }}</p></div></li>
+                <li><div class="eventInfoIcon"><svg lucideMapPin></svg></div><div class="eventInfoTxt"><span>Lugar</span><p>{{ place() }}</p></div></li>
+                <li><div class="eventInfoIcon"><svg lucideShieldCheck></svg></div><div class="eventInfoTxt"><span>Organiza</span><p>{{ organizer() }}</p></div></li>
             </ul>
-
             <div class="eventCategories">
-                <div class="eventCategoriesTitle">
-                    <svg lucideUsers></svg>
-                    <span>Categorías</span>
-                </div>
-
-                <div class="eventCategoryChips">
-                    @for (category of tournament().categories; track category.name) {
-                        <div class="eventCategoryChip">
-                            <strong>{{ category.name }}</strong>
-                            <span>{{ category.years }}</span>
-                        </div>
-                    }
-                </div>
+                <div class="eventCategoriesTitle"><svg lucideUsers></svg><span>Categorías</span></div>
+                <div class="eventCategoryChips">@for (category of categories(); track category) { <div class="eventCategoryChip"><strong>{{ category }}</strong></div> }</div>
             </div>
         </article>
 
         <article class="eventCard eventExpectCard">
-            <h2 class="eventCardTitle">¿Qué esperar?</h2>
-
+            <h2 class="eventCardTitle">Sobre el torneo</h2>
             <ul class="eventExpectList">
-                @for (item of tournament().expectations; track item) {
-                    <li>
-                        <svg lucideCheck></svg>
-                        <span>{{ item }}</span>
-                    </li>
-                }
+                <li><svg lucideCheck></svg><span>{{ current.categoria || 'Competencia deportiva' }}</span></li>
+                <li><svg lucideCheck></svg><span>{{ current.totalEquipos ?? 'Equipos participantes' }} equipos inscritos</span></li>
+                <li><svg lucideCheck></svg><span>{{ current.totalPartidos ?? matches().length }} partidos programados</span></li>
             </ul>
-
-            @if (tournament().image) {
-                <div class="eventPoster">
-                    <img [src]="tournament().image" [alt]="'Torneo ' + tournament().name" />
-                </div>
-            }
-
-            <a
-                class="eventRegisterBtn"
-                href="https://wa.me/584166687002"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Inscribirse Ahora
-                <svg lucideArrowRight></svg>
-            </a>
+            @if (current.image || current.banner) { <div class="eventPoster"><img [src]="current.image || current.banner" [alt]="'Torneo ' + tournamentName()" /></div> }
         </article>
     </div>
 </section>
 
-<section class="eventActions">
-    <a routerLink="/events" class="eventBackBtn">
-        <svg lucideArrowLeft></svg>
-        Volver a Eventos
-    </a>
+<section class="eventCompetitionGrid">
+    <article class="eventCard eventCompetitionCard">
+        <h2 class="eventCardTitle">Partidos del torneo</h2>
+        @if (matches().length) {
+            <div class="publicMatchList">
+                @for (match of matches(); track match.idPartido) {
+                    <div class="publicMatchRow" [routerLink]="['/match', matchSlug(match)]" role="link" tabindex="0">
+                        <div><strong>{{ matchDate(match.fecha) }}</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
+                        <span>{{ teamName(match, 'local') }} <b>{{ match.marcadorLocal ?? '-' }} - {{ match.marcadorVisitante ?? '-' }}</b> {{ teamName(match, 'away') }}</span>
+                        <small>{{ matchStatus(match.status) }}</small>
+                    </div>
+                }
+            </div>
+        } @else { <p class="eventEmpty">Aún no hay partidos generados.</p> }
+    </article>
 
-    <div class="eventShare">
-        <span>Comparte este evento:</span>
-
-        <a
-            [href]="'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartir en Facebook"
-        >
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-                />
-            </svg>
-        </a>
-
-        <a
-            [href]="'https://twitter.com/intent/tweet?url=' + shareUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartir en X"
-        >
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                />
-            </svg>
-        </a>
-
-        <a
-            [href]="'https://wa.me/?text=' + shareUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartir en WhatsApp"
-        >
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"
-                />
-            </svg>
-        </a>
-    </div>
+    <article class="eventCard eventCompetitionCard">
+        <h2 class="eventCardTitle">Tabla de posiciones</h2>
+        @if (standings().length) {
+            <div class="publicStandings">
+                @for (row of standings(); track row.idEquipo) {
+                    <div class="publicStandingRow">
+                        <b>{{ row.posicion }}</b>
+                        <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
+                        <small>{{ row.partidosJugados }} PJ · {{ row.diferenciaGoles }} DG</small>
+                        <strong>{{ row.puntos }} pts</strong>
+                    </div>
+                }
+            </div>
+        } @else { <p class="eventEmpty">La tabla estará disponible cuando existan resultados.</p> }
+    </article>
 </section>
+
+<section class="eventActions">
+    <a routerLink="/events" class="eventBackBtn"><svg lucideArrowLeft></svg> Volver a Eventos</a>
+    <a [href]="'https://wa.me/?text=' + shareUrl" target="_blank" rel="noopener noreferrer" class="eventRegisterBtn">Compartir evento <svg lucideArrowRight></svg></a>
+</section>
+} @else if (loading()) {
+    <section class="eventEmpty">Cargando torneo...</section>
+} @else {
+    <section class="eventEmpty">No se encontró el torneo.</section>
+}

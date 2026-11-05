@@ -1,29 +1,19 @@
-<section class="scoreboard" aria-label="Partidos">
-  <ul>
-    <li class="match">
-      <div class="matchTop">
-        <span class="mark">HOY 8:00PM</span>
-      </div>
-
-      <div class="matchBot">
-        <span>TEAM 1</span>
-        <strong>1 - 1</strong>
-        <span>TEAM 2</span>
-      </div>
-    </li>
-
-    <li class="match live">
-      <div class="matchTop">
-        <span class="mark liveMark"> <span class="live-dot"></span>LIVE 65' </span>
-      </div>
-
-      <div class="matchBot">
-        <span>TEAM 1</span>
-        <strong>vs</strong>
-        <span>TEAM 2</span>
-      </div>
-    </li>
-  </ul>
+<section class="scoreboard" aria-label="Partidos del primer día">
+  @if (firstDayMatches().length) {
+    <ul #scoreboard
+      [class.dragging]="scoreboardDragging"
+      (pointerdown)="startScoreboardDrag($event, scoreboard)"
+      (pointermove)="moveScoreboardDrag($event, scoreboard)"
+      (pointerup)="endScoreboardDrag($event, scoreboard)"
+      (pointercancel)="endScoreboardDrag($event, scoreboard)">
+      @for (match of firstDayMatches(); track $index) {
+        <li class="match">
+          <div class="matchTop"><span class="mark">{{ match.date }} · {{ match.time }}</span></div>
+          <div class="matchBot"><span>{{ match.home.name }}</span><strong>{{ match.homeScore ?? '-' }} - {{ match.awayScore ?? '-' }}</strong><span>{{ match.away.name }}</span></div>
+        </li>
+      }
+    </ul>
+  }
 </section>
 
 <section class="hero" aria-labelledby="heroTitle">
@@ -70,8 +60,8 @@
     </div>
 
     <div class="hero-actions">
-      <a href="/tickets" class="primary-button">IR A TORNEOS</a>
-      <a href="/calendar" class="secondary-button">VER CALENDARIO</a>
+      <a routerLink="/events" class="primary-button">VER TORNEO</a>
+      <a [routerLink]="nextTournamentId() ? ['/events', nextTournamentId()] : ['/events']" class="secondary-button">VER CALENDARIO</a>
     </div>
   </div>
 </section>
@@ -152,39 +142,44 @@
       </a>
     </article>
 
-    <article class="liveCard">
+    <article class="liveCard firstMatchCard">
       <span class="liveBadge">
-        <span class="live-dot"></span>
-        EN VIVO
+        PRIMER PARTIDO
       </span>
 
+      @if (nextMatch(); as first) {
       <div class="liveBoard">
         <div class="liveTeam">
           <span class="teamLogo teamLogo--lg">
-            <img [src]="liveMatch().home.logo" [alt]="'Logo de ' + liveMatch().home.name" />
+            <img [src]="first.home.logo" [alt]="'Logo de ' + first.home.name" />
           </span>
-          <span class="liveTeamName">{{ liveMatch().home.name }}</span>
+          <span class="liveTeamName">{{ first.home.name }}</span>
+          <small class="teamSideLabel">LOCAL</small>
         </div>
 
         <div class="liveScoreboard">
           <div class="liveScore">
-            <strong>{{ liveMatch().homeScore }}</strong>
+            <strong>{{ first.homeScore ?? '-' }}</strong>
             <span>-</span>
-            <strong>{{ liveMatch().awayScore }}</strong>
+            <strong>{{ first.awayScore ?? '-' }}</strong>
           </div>
-          <span class="liveMinute">{{ liveMatch().minute }}</span>
+          <span class="liveMinute">{{ first.date }} · {{ first.time }}</span>
         </div>
 
         <div class="liveTeam">
           <span class="teamLogo teamLogo--lg">
-            <img [src]="liveMatch().away.logo" [alt]="'Logo de ' + liveMatch().away.name" />
+            <img [src]="first.away.logo" [alt]="'Logo de ' + first.away.name" />
           </span>
-          <span class="liveTeamName">{{ liveMatch().away.name }}</span>
+          <span class="liveTeamName">{{ first.away.name }}</span>
+          <small class="teamSideLabel">VISITANTE</small>
         </div>
       </div>
+      } @else {
+        <p class="homeEmptyState">No hay partidos en vivo.</p>
+      }
 
-      <a routerLink="/match" class="liveButton">
-        SEGUIR PARTIDO
+      <a [routerLink]="['/match', firstDayMatches()[0]?.slug || nextMatch()?.slug]" class="liveButton">
+        VER PARTIDO
         <svg lucideArrowRight></svg>
       </a>
     </article>
@@ -196,25 +191,29 @@
       <h3>PRÓXIMO PARTIDO</h3>
     </div>
 
+    @if (nextMatches().length > 1) {
     <div class="nextMatchBody">
       <div class="nextTeam">
         <span class="teamLogo">
-          <img [src]="nextMatch().home.logo" [alt]="'Logo de ' + nextMatch().home.name" />
+          <img [src]="nextMatches()[1].home.logo" [alt]="'Logo de ' + nextMatches()[1].home.name" />
         </span>
-        <strong>{{ nextMatch().home.name }}</strong>
+        <strong>{{ nextMatches()[1].home.name }}</strong>
+        <small class="teamSideLabel">LOCAL</small>
       </div>
 
       <span class="nextVs">VS</span>
 
       <div class="nextTeam nextTeam--away">
-        <strong>{{ nextMatch().away.name }}</strong>
+        <small class="teamSideLabel">VISITANTE</small>
+        <span class="nextTeamInfo"><strong>{{ nextMatches()[1].away.name }}</strong></span>
         <span class="teamLogo">
-          <img [src]="nextMatch().away.logo" [alt]="'Logo de ' + nextMatch().away.name" />
+          <img [src]="nextMatches()[1].away.logo" [alt]="'Logo de ' + nextMatches()[1].away.name" />
         </span>
       </div>
     </div>
 
-    <p class="nextMatchDate">{{ nextMatch().date }} · {{ nextMatch().time }}</p>
+    <p class="nextMatchDate">{{ nextMatches()[1].date }} · {{ nextMatches()[1].time }}</p>
+    } @else { <p class="homeEmptyState">No hay un segundo partido programado.</p> }
   </article>
 </section>
 

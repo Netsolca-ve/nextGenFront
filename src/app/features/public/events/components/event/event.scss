@@ -9,23 +9,15 @@
     background-color: #0a1224;
 }
 
-.eventHero::before {
+.eventHeroBanner {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 78% 40%, rgba(0, 148, 221, 0.2), transparent 55%);
-    z-index: 0;
-}
-
-.hero--futsal-cup::before {
-    content: '';
-    position: absolute;
-    inset: -30px;
-    background-image: url('/images/futsal-cup-banner.png');
-    background-size: cover;
+    inset: -18px;
     background-position: center;
-    filter: blur(24px) brightness(0.45);
-    opacity: 0.45;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: blur(1px) brightness(1) saturate(1);
+    opacity: 0.9;
     z-index: 0;
 }
 
@@ -33,47 +25,13 @@
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(circle at 78% 40%, rgba(0, 148, 221, 0.35), transparent 50%),
-        linear-gradient(
-            90deg,
-            rgba(8, 10, 16, 0.96) 0%,
-            rgba(8, 10, 16, 0.86) 45%,
-            rgba(8, 10, 16, 0.52) 100%
-        );
+    background: linear-gradient(
+        90deg,
+        rgba(6, 12, 24, 0.96) 0%,
+        rgba(6, 12, 24, 0.72) 48%,
+        rgba(6, 12, 24, 0.25) 100%
+    );
     z-index: 1;
-}
-
-.eventHeroDecor {
-    position: absolute;
-    top: 50%;
-    right: 7%;
-    transform: translateY(-50%);
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 4px;
-    opacity: 0.85;
-    pointer-events: none;
-}
-
-.eventHeroDecorMark {
-    font-size: 150px;
-    font-weight: 900;
-    font-style: italic;
-    line-height: 1;
-    letter-spacing: -6px;
-    color: rgba(255, 255, 255, 0.08);
-    text-transform: uppercase;
-}
-
-.eventHeroDecorIcon {
-    width: 210px;
-    height: 210px;
-    color: rgba(0, 148, 221, 0.4);
-    filter: drop-shadow(0 0 40px rgba(0, 148, 221, 0.55));
 }
 
 .eventHeroContent {
@@ -118,10 +76,6 @@
     font-style: italic;
     line-height: 1.5;
     color: #c2c2ba;
-}
-
-.hero--futsal-cup {
-    background-color: #071423;
 }
 
 .eventDetails {
@@ -441,20 +395,6 @@
         min-height: 380px;
     }
 
-    .eventHeroDecor {
-        right: 0;
-        opacity: 0.35;
-    }
-
-    .eventHeroDecorMark {
-        font-size: 90px;
-    }
-
-    .eventHeroDecorIcon {
-        width: 140px;
-        height: 140px;
-    }
-
     .eventHeroTitle {
         font-size: 46px;
     }
@@ -471,4 +411,48 @@
         flex-direction: column;
         align-items: start;
     }
+}
+
+.eventCompetitionGrid {
+    width: min(1200px, 90%);
+    margin: 0 auto;
+    padding: 18px 0 60px;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 24px;
+}
+
+.eventCompetitionCard { min-width: 0; }
+.publicMatchList, .publicStandings { display: grid; gap: 8px; }
+.publicMatchRow, .publicStandingRow {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    color: #eef2f7;
+    font-size: 13px;
+}
+.publicMatchRow div { display: grid; gap: 4px; }
+.publicMatchRow strong, .publicStandingRow b { color: #7dd3fc; }
+.publicMatchRow small, .publicStandingRow small, .eventEmpty { color: #8b93a1; font-size: 12px; }
+.publicMatchRow span { text-align: center; }
+.publicMatchRow span b { margin: 0 8px; color: white; }
+.publicStandingRow { grid-template-columns: 28px minmax(0, 1fr) auto auto; }
+.publicStandingRow strong { color: #7dd3fc; white-space: nowrap; }
+.publicStandingTeam { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.publicTeamLogo { display: grid; place-items: center; width: 30px; height: auto; flex: 0 0 auto; overflow: hidden; background: transparent; }
+.publicTeamLogo img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 850px) {
+    .eventCompetitionGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    .publicMatchRow { grid-template-columns: 76px minmax(0, 1fr); }
+    .publicMatchRow > small { grid-column: 2; }
+    .publicMatchRow span { text-align: left; }
+    .publicStandingRow { grid-template-columns: 24px minmax(0, 1fr) auto; }
+    .publicStandingRow small { display: none; }
 }

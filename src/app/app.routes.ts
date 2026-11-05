@@ -74,8 +74,13 @@ export const routes: Routes = [
           import('./features/public/events/components/event/event').then((m) => m.Event),
       },
       {
-        path: 'match',
+        path: 'match/:slug',
         loadComponent: () => import('./features/public/match/match').then((m) => m.Match),
+      },
+      {
+        path: 'match',
+        redirectTo: '',
+        pathMatch: 'full',
       },
       {
         path: '**',

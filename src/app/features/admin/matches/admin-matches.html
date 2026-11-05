@@ -1,193 +1,66 @@
 <section class="adminPage">
     <header class="adminPageHead">
         <div>
-            <span class="adminEyebrow">
-                <svg lucideSwords></svg>
-                Gestión de partidos
-            </span>
-
-            <h1>Crear <span>Partido</span></h1>
-            <p>Programa un encuentro y define los equipos, la cancha y el horario.</p>
+            <span class="adminEyebrow"><svg lucideSwords></svg>Gestión de partidos</span>
+            <h1>Partidos <span>registrados</span></h1>
+            <p>Consulta los partidos de la base de datos y administra su resultado, incidencias y alineación.</p>
         </div>
     </header>
 
-    <div class="adminGrid">
-        <form class="adminCard" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-            <header class="adminCardHead">
-                <div class="adminCardIcon">
-                    <svg lucideSwords></svg>
-                </div>
-
-                <div>
-                    <h2>Datos del partido</h2>
-                    <p>El encuentro aparecerá en el calendario del torneo seleccionado.</p>
-                </div>
-            </header>
-
-            <div class="adminForm">
-                @if (saved()) {
-                    <div class="adminAlert">
-                        <svg lucideCheck></svg>
-                        Partido listo. La conexión con el API se activará próximamente.
-                    </div>
-                }
-
-                <label class="adminField">
-                    <span>Torneo</span>
-                    <select formControlName="tournament">
-                        @for (tournament of tournaments; track tournament) {
-                            <option [value]="tournament">{{ tournament }}</option>
-                        }
-                    </select>
-                </label>
-
-                <label class="adminField">
-                    <span>Fase</span>
-                    <select formControlName="phase">
-                        @for (phase of phases; track phase) {
-                            <option [value]="phase">{{ phase }}</option>
-                        }
-                    </select>
-                </label>
-
-                <label class="adminField">
-                    <span>Equipo local</span>
-                    <input
-                        type="text"
-                        formControlName="homeTeam"
-                        placeholder="Ej. Almirantes"
-                        autocomplete="off"
-                    />
-
-                    @if (showError('homeTeam')) {
-                        <small class="adminError">Indica el equipo local.</small>
-                    }
-                </label>
-
-                <label class="adminField">
-                    <span>Equipo visitante</span>
-                    <input
-                        type="text"
-                        formControlName="awayTeam"
-                        placeholder="Ej. Rayos"
-                        autocomplete="off"
-                    />
-
-                    @if (showSameTeamsError()) {
-                        <small class="adminError">El equipo visitante debe ser distinto al local.</small>
-                    } @else if (showError('awayTeam')) {
-                        <small class="adminError">Indica el equipo visitante.</small>
-                    }
-                </label>
-
-                <label class="adminField">
-                    <span>Fecha</span>
-                    <input type="date" formControlName="date" />
-
-                    @if (showError('date')) {
-                        <small class="adminError">Selecciona la fecha del partido.</small>
-                    }
-                </label>
-
-                <label class="adminField">
-                    <span>Hora</span>
-                    <input type="time" formControlName="time" />
-
-                    @if (showError('time')) {
-                        <small class="adminError">Selecciona la hora del partido.</small>
-                    }
-                </label>
-
-                <label class="adminField">
-                    <span>Cancha</span>
-                    <input
-                        type="text"
-                        formControlName="venue"
-                        placeholder="Ej. Cancha Principal"
-                        autocomplete="off"
-                    />
-
-                    @if (showError('venue')) {
-                        <small class="adminError">Indica dónde se jugará el partido.</small>
-                    }
-                </label>
-
-                <label class="adminField">
-                    <span>Estado</span>
-                    <select formControlName="status">
-                        <option value="scheduled">Programado</option>
-                        <option value="live">En vivo</option>
-                        <option value="finished">Finalizado</option>
-                    </select>
-                </label>
-
-                <div class="adminActions">
-                    <button type="submit" class="adminBtn">
-                        <svg lucideSave></svg>
-                        Crear Partido
-                    </button>
-
-                    <button type="button" class="adminBtn adminBtn--ghost" (click)="resetForm()">
-                        <svg lucideRotateCcw></svg>
-                        Limpiar
-                    </button>
-                </div>
+    <section class="adminCard matchesCatalog" aria-label="Partidos registrados">
+        <header class="adminCardHead">
+            <div class="adminCardIcon"><svg lucideSwords></svg></div>
+            <div>
+                <h2>Todos los partidos</h2>
+                <p>{{ filteredMatches().length }} partido(s) encontrados</p>
             </div>
-        </form>
+        </header>
 
-        <aside class="adminAside">
-            <section class="adminSideCard">
-                <h2 class="adminSideTitle">
-                    <svg lucideSparkles></svg>
-                    Resumen del partido
-                </h2>
+        <div class="matchFilters">
+            <label class="adminField">
+                <span>Buscar por equipo</span>
+                <input type="search" [ngModel]="search()" (ngModelChange)="search.set($event)" placeholder="Nombre del equipo" />
+            </label>
+            <label class="adminField">
+                <span>Torneo</span>
+                <select [ngModel]="tournamentFilter()" (ngModelChange)="tournamentFilter.set($event)">
+                    <option value="">Todos</option>
+                    @for (tournament of tournamentOptions(); track tournament.id ?? tournament.idTorneo) {
+                        <option [value]="tournament.id ?? tournament.idTorneo">{{ tournament.nombre || 'Torneo sin nombre' }}</option>
+                    }
+                </select>
+            </label>
+            <label class="adminField">
+                <span>Categoría / SUB</span>
+                <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
+                    <option value="">Todas</option>
+                    @for (category of categories; track category) { <option [value]="category">{{ category }}</option> }
+                </select>
+            </label>
+            <label class="adminField">
+                <span>Fecha</span>
+                <input type="date" lang="es-VE" [ngModel]="dateFilter()" (ngModelChange)="dateFilter.set($event)" />
+            </label>
+        </div>
 
-                <dl class="adminSummary">
-                    <div>
-                        <dt>Torneo</dt>
-                        <dd>{{ formValue().tournament }}</dd>
-                    </div>
-
-                    <div>
-                        <dt>Fase</dt>
-                        <dd>{{ formValue().phase }}</dd>
-                    </div>
-
-                    <div>
-                        <dt>Partido</dt>
-                        <dd>{{ summaryMatch() }}</dd>
-                    </div>
-
-                    <div>
-                        <dt>Fecha y hora</dt>
-                        <dd>{{ summaryDate() }}</dd>
-                    </div>
-
-                    <div>
-                        <dt>Cancha</dt>
-                        <dd>{{ formValue().venue || 'Por definir' }}</dd>
-                    </div>
-
-                    <div>
-                        <dt>Estado</dt>
-                        <dd>{{ summaryStatus() }}</dd>
-                    </div>
-                </dl>
-            </section>
-
-            <section class="adminSideCard">
-                <h2 class="adminSideTitle">
-                    <svg lucideInfo></svg>
-                    Antes de programar
-                </h2>
-
-                <ul class="adminTips">
-                    <li>Confirma que ambos equipos estén inscritos en el torneo.</li>
-                    <li>Evita cruzar horarios en la misma cancha.</li>
-                    <li>Revisa la fase y la jornada antes de publicar el encuentro.</li>
-                    <li>El partido se mostrará automáticamente en el calendario público.</li>
-                </ul>
-            </section>
-        </aside>
-    </div>
+        @if (loading()) {
+            <div class="adminEmptyState">Cargando partidos...</div>
+        } @else {
+            <div class="matchList">
+                @for (match of filteredMatches(); track match.idPartido) {
+                    <article class="matchRow">
+                        <div class="matchRowDate"><strong>{{ matchDate(match) }}</strong><span>Ronda {{ match.numeroRonda ?? '-' }}</span></div>
+                        <div class="matchRowTeams">
+                            <strong>{{ teamName(match, 'local') }} {{ match.marcadorLocal ?? 0 }} - {{ match.marcadorVisitante ?? 0 }} {{ teamName(match, 'away') }}</strong>
+                            <span>{{ tournament(match) || 'Torneo sin definir' }} · {{ category(match) || 'Categoría sin definir' }} · {{ match.fase || 'Fase sin definir' }}</span>
+                        </div>
+                        <span class="matchStatus">{{ statusLabel(match.status) }}</span>
+                        <button mat-stroked-button type="button" (click)="openEditDialog(match)"><svg lucidePencil></svg> Editar</button>
+                    </article>
+                } @empty {
+                    <div class="adminEmptyState">No hay partidos con esos filtros.</div>
+                }
+            </div>
+        }
+    </section>
 </section>

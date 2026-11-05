@@ -19,8 +19,14 @@
     </div>
 
     <div class="tournamentsGrid">
-        @for (tournament of tournaments; track tournament.id) {
+        @if (loading()) {
+            <p class="eventsLoading">Cargando torneos...</p>
+        } @else {
+        @for (tournament of tournaments(); track tournament.id) {
             <article [class]="'tournamentCard card--' + tournament.id" [attr.data-mark]="tournament.mark">
+                @if (tournament.image) {
+                    <img class="tournamentBanner" [src]="tournament.image" [alt]="'Banner de ' + tournament.name" />
+                }
                 <span [class]="'tournamentBadge badge--' + tournament.statusClass">
                     {{ tournament.status }}
                 </span>
@@ -41,6 +47,8 @@
                     </a>
                 </div>
             </article>
+        }
+        @empty { <p class="eventsLoading">No hay torneos disponibles.</p> }
         }
     </div>
 </section>

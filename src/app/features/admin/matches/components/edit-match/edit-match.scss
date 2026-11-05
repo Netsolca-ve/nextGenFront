@@ -1,0 +1,339 @@
+:host {
+    display: block;
+    color: #e6ebf2;
+}
+
+.dialogHeader {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 20px;
+}
+
+.dialogHeader > span:last-child {
+    display: grid;
+    gap: 4px;
+}
+
+.dialogHeader strong {
+    color: white;
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.dialogHeader small,
+.rosterSection > .sectionHeading small,
+.teamRoster > p {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
+.dialogIcon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 11px;
+    background: rgba(0, 148, 221, 0.14);
+    color: #38bdf8;
+}
+
+.dialogIcon svg {
+    width: 21px;
+    height: 21px;
+}
+
+.dialogContent {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    max-height: 72vh;
+    padding-top: 6px;
+}
+
+.fieldFull {
+    grid-column: 1 / -1;
+}
+
+.scoreSection,
+.rosterSection,
+.incidentsSection {
+    display: grid;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.scoreSection > h3,
+.incidentsSection > h3,
+.sectionHeading h3,
+.teamRoster h4 {
+    margin: 0;
+    color: #e6ebf2;
+    font-weight: 750;
+}
+
+.scoreSection > h3,
+.incidentsSection > h3 {
+    font-size: 15px;
+}
+
+.scoreGrid,
+.rosterColumns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.sectionHeading {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sectionHeading h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.sectionHeading h3 svg {
+    width: 18px;
+    color: #38bdf8;
+}
+
+.teamRoster {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #0094dd;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.teamRoster:nth-child(2) {
+    border-top-color: #e05a5a;
+}
+
+.teamRoster h4 {
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 14px;
+}
+
+.playerRow {
+    display: grid;
+    grid-template-columns: 102px minmax(0, 1fr) 36px;
+    align-items: center;
+    gap: 7px;
+    min-height: 48px;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.025);
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.playerRow:hover {
+    border-color: rgba(56, 189, 248, 0.35);
+    background: rgba(0, 148, 221, 0.06);
+}
+
+.playerRow.unconvoked {
+    opacity: 0.62;
+}
+
+.convokedToggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 4px;
+    color: #9aa3b1;
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.convokedToggle input {
+    width: 16px;
+    height: 16px;
+    accent-color: #0094dd;
+}
+
+.starterButton,
+.captainButton {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #d3dae3;
+    font: inherit;
+    cursor: pointer;
+}
+
+.starterButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 10px;
+    text-align: left;
+}
+
+.starterButton span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.playerPosition {
+    margin-left: 4px;
+    color: #7dd3fc;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.starterButton small {
+    flex: 0 0 auto;
+    color: #8994a3;
+    font-size: 10px;
+}
+
+.starterButton.active {
+    border-color: rgba(56, 189, 248, 0.6);
+    background: rgba(0, 148, 221, 0.18);
+    color: #7dd3fc;
+}
+
+.starterButton:disabled,
+.captainButton:disabled {
+    cursor: not-allowed;
+}
+
+.captainButton {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    color: #9aa3b1;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.captainButton.active {
+    border-color: #0094dd;
+    background: #0094dd;
+    color: white;
+}
+
+.incidentForm {
+    display: grid;
+    grid-template-columns: 1.2fr 0.7fr 1.2fr 0.7fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+.goalForm {
+    grid-template-columns: 0.65fr 1fr 1.35fr 1.35fr auto auto;
+}
+
+.substitutionForm {
+    grid-template-columns: 0.65fr 0.65fr 1fr 1.35fr 1.35fr auto;
+}
+
+.cardForm {
+    grid-template-columns: 1.2fr 0.7fr 1.2fr 1.2fr auto;
+}
+
+.autoGoal {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #c4ccd7;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.autoGoal input {
+    width: 16px;
+    height: 16px;
+    accent-color: #0094dd;
+}
+
+.incidentForm button {
+    height: 52px;
+    border-color: rgba(56, 189, 248, 0.45);
+    color: #7dd3fc;
+    white-space: nowrap;
+}
+
+.incidentList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 20px;
+}
+
+.incidentList span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #c4ccd7;
+    font-size: 12px;
+}
+
+.incidentList button {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #9aa3b1;
+    cursor: pointer;
+}
+
+mat-dialog-actions {
+    gap: 10px;
+    padding-top: 16px;
+}
+
+.dialogSubmit {
+    min-width: 148px;
+    border-radius: 8px;
+    background: #0094dd !important;
+    color: white !important;
+}
+
+@media (max-width: 860px) {
+    .dialogContent {
+        grid-template-columns: 1fr;
+    }
+
+    .fieldFull {
+        grid-column: auto;
+    }
+
+    .scoreGrid,
+    .rosterColumns,
+    .incidentForm,
+    .goalForm,
+    .substitutionForm,
+    .cardForm {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .playerRow {
+        grid-template-columns: 88px minmax(0, 1fr) 34px;
+    }
+}

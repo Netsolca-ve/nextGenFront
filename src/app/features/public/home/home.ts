@@ -10,6 +10,11 @@ import {
   LucideVolleyball,
 } from '@lucide/angular';
 import { Tournaments } from '../../../@core/services/tournaments';
+import { TournamentMatch } from '../../../@core/models/tournament.models';
+import { AdminTeam } from '../../../@core/models/team.models';
+import { Teams } from '../../../@core/services/teams';
+import { forkJoin } from 'rxjs';
+import { matchSlug } from '../../../@core/utils/match-slug';
 
 interface TimeLeft {
   dias: string;
@@ -30,19 +35,15 @@ interface MatchTeam {
   logo: string;
 }
 
-interface LiveMatch {
-  home: MatchTeam;
-  away: MatchTeam;
-  homeScore: number;
-  awayScore: number;
-  minute: string;
-}
-
 interface NextMatch {
+  idPartido: number;
+  slug: string;
   home: MatchTeam;
   away: MatchTeam;
   date: string;
   time: string;
+  homeScore: number | null;
+  awayScore: number | null;
 }
 
 // Logo provisional mientras se cargan los escudos reales de cada equipo.
@@ -64,33 +65,20 @@ const TEAM_LOGO_PLACEHOLDER = '/images/almirantes.png';
   templateUrl: './home.html',
 })
 export class Home implements OnInit {
-  private tournamentService = inject(Tournaments);
+  private readonly tournamentService = inject(Tournaments);
+  private readonly teamsService = inject(Teams);
   nextTournament = signal<string>('');
+  nextTournamentId = signal<string | number | null>(null);
   timeLeft = signal<TimeLeft>({ dias: '00', horas: '00', minutos: '00', segundos: '00' });
 
-  // Datos de la sección "Torneos NextGen".
-  standings = signal<StandingRow[]>([
-    { position: 1, name: 'CITY FC', points: 24, logo: TEAM_LOGO_PLACEHOLDER },
-    { position: 2, name: 'UNITED', points: 21, logo: TEAM_LOGO_PLACEHOLDER },
-    { position: 3, name: 'RAYOS', points: 19, logo: TEAM_LOGO_PLACEHOLDER },
-    { position: 4, name: 'TITANES', points: 17, logo: TEAM_LOGO_PLACEHOLDER },
-    { position: 5, name: 'HALCONES', points: 15, logo: TEAM_LOGO_PLACEHOLDER },
-  ]);
+  standings = signal<StandingRow[]>([]);
 
-  liveMatch = signal<LiveMatch>({
-    home: { name: 'CITY FC', logo: TEAM_LOGO_PLACEHOLDER },
-    away: { name: 'RAYOS', logo: TEAM_LOGO_PLACEHOLDER },
-    homeScore: 2,
-    awayScore: 1,
-    minute: '68:24',
-  });
-
-  nextMatch = signal<NextMatch>({
-    home: { name: 'TITANES', logo: TEAM_LOGO_PLACEHOLDER },
-    away: { name: 'HALCONES', logo: TEAM_LOGO_PLACEHOLDER },
-    date: 'Sábado',
-    time: '7:00 PM',
-  });
+  nextMatch = signal<NextMatch | null>(null);
+  nextMatches = signal<NextMatch[]>([]);
+  firstDayMatches = signal<NextMatch[]>([]);
+  scoreboardDragging = false;
+  private scoreboardDragStartX = 0;
+  private scoreboardScrollStart = 0;
 
   private targetDate!: Date;
   private timerSubscription!: any;
@@ -104,11 +92,82 @@ export class Home implements OnInit {
           this.targetDate = new Date(res.fechaInicio);
           this.startCountdown();
         }
+
+        const tournamentId = res?.idTorneo ?? res?.id;
+        if (tournamentId) {
+          this.nextTournamentId.set(tournamentId);
+          this.loadTournamentData(tournamentId);
+        }
       },
       error: () => {
         this.nextTournament.set('Sin eventos próximos');
       },
     });
+  }
+
+  private loadTournamentData(tournamentId: string | number): void {
+    forkJoin({
+      matches: this.tournamentService.getTournamentMatches(tournamentId),
+      standings: this.tournamentService.getTournamentStandings(tournamentId),
+      teams: this.teamsService.getAllTeams(),
+    }).subscribe({
+      next: ({ matches, standings, teams }) => {
+        const teamList = Array.isArray(teams) ? teams : (teams.data ?? []);
+        this.standings.set(standings.map((row) => ({
+          position: row.posicion,
+          name: row.nombre,
+          points: row.puntos,
+          logo: row.logo ?? this.teamLogo(teamList, row.idEquipo),
+        })));
+        const upcoming = matches
+          .slice()
+          .sort((a, b) => this.dateValue(a.fecha) - this.dateValue(b.fecha))
+          .map((match) => this.toNextMatch(match, teamList));
+        this.firstDayMatches.set(
+          matches
+            .slice()
+            .sort((a, b) => this.dateValue(a.fecha) - this.dateValue(b.fecha))
+            .map((match) => this.toNextMatch(match, teamList)),
+        );
+        this.nextMatches.set(upcoming.slice(0, 2));
+        this.nextMatch.set(upcoming[0] ?? null);
+      },
+      error: () => {
+        this.standings.set([]);
+        this.nextMatches.set([]);
+        this.firstDayMatches.set([]);
+        this.nextMatch.set(null);
+      },
+    });
+  }
+
+  private toNextMatch(match: TournamentMatch, teams: AdminTeam[]): NextMatch {
+    const date = new Date(match.fecha);
+    return {
+      idPartido: match.idPartido,
+      slug: matchSlug(match.idPartido, match.nombreEquipoLocal, match.nombreEquipoVisitante),
+      home: { name: match.nombreEquipoLocal ?? 'Local', logo: match.logoEquipoLocal ?? this.teamLogo(teams, match.idEquipoLocal) },
+      away: { name: match.nombreEquipoVisitante ?? 'Visitante', logo: match.logoEquipoVisitante ?? this.teamLogo(teams, match.idEquipoVisitante) },
+      date: Number.isNaN(date.getTime()) ? match.fecha : date.toLocaleDateString('es-VE'),
+      time: Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }),
+      homeScore: match.marcadorLocal,
+      awayScore: match.marcadorVisitante,
+    };
+  }
+
+  private teamLogo(teams: AdminTeam[], idEquipo: number | null | undefined): string {
+    const team = teams.find((item) => Number(item.idEquipo ?? item.id) === Number(idEquipo));
+    return team?.logo ?? team?.image ?? TEAM_LOGO_PLACEHOLDER;
+  }
+
+  private dateValue(value: string): number {
+    const timestamp = new Date(value).getTime();
+    return Number.isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
+  }
+
+  private dateKey(value: string): string {
+    const match = String(value ?? '').match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
+    return match ? `${match[1]}-${String(match[2]).padStart(2, '0')}-${String(match[3]).padStart(2, '0')}` : '';
   }
 
   private startCountdown(): void {
@@ -150,5 +209,23 @@ export class Home implements OnInit {
     if (this.timerSubscription) {
       clearInterval(this.timerSubscription);
     }
+  }
+
+  startScoreboardDrag(event: PointerEvent, element: HTMLUListElement): void {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    this.scoreboardDragging = true;
+    this.scoreboardDragStartX = event.clientX;
+    this.scoreboardScrollStart = element.scrollLeft;
+    element.setPointerCapture(event.pointerId);
+  }
+
+  moveScoreboardDrag(event: PointerEvent, element: HTMLUListElement): void {
+    if (!this.scoreboardDragging) return;
+    element.scrollLeft = this.scoreboardScrollStart - (event.clientX - this.scoreboardDragStartX);
+  }
+
+  endScoreboardDrag(event: PointerEvent, element: HTMLUListElement): void {
+    this.scoreboardDragging = false;
+    if (element.hasPointerCapture(event.pointerId)) element.releasePointerCapture(event.pointerId);
   }
 }

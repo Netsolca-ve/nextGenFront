@@ -118,6 +118,13 @@
   text-align: center;
 }
 
+.teamSideLabel {
+  color: #8fa0b8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
 .teamSide img {
   width: 120px;
   height: 120px;
@@ -423,6 +430,10 @@
   font-family: Arial, sans-serif;
   font-size: 19px;
   font-weight: 800;
+}
+
+.jerseyNum--dark {
+  fill: #111827;
 }
 
 .pitchPlayerName {

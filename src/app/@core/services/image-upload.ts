@@ -12,7 +12,7 @@ export class ImageUpload {
   private readonly http = inject(HttpClient);
   private readonly api = environment.api;
 
-  upload(file: File, folder: 'teams' | 'players'): Observable<string> {
+  upload(file: File, folder: 'teams' | 'players' | 'tournaments'): Observable<string> {
     return from(this.prepare(file)).pipe(
       switchMap((image) =>
         this.http.post<{ url: string }>(`${this.api}/uploads/image`, { image, folder }),

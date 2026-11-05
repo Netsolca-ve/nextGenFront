@@ -97,6 +97,15 @@
     display: none;
 }
 
+.bannerPreview {
+    width: 84px;
+    height: 48px;
+    margin-left: auto;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 7px;
+    object-fit: cover;
+}
+
 .dialogError,
 .fieldError {
     color: #f87171;
@@ -108,6 +117,128 @@
     color: white !important;
 }
 
+.sectionTitle {
+    margin: 20px 0 4px;
+    color: #7dd3fc;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.sectionBlock {
+    display: grid;
+    gap: 10px;
+    margin: 4px 0 8px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.blockGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 14px;
+}
+
+.addField {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.addField mat-form-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.addField button {
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+.chipGroup {
+    display: grid;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.chipList {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 999px;
+    background: rgba(0, 148, 221, 0.14);
+    color: #7dd3fc;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.chip:hover {
+    border-color: #f87171;
+    color: #f87171;
+}
+
+.chipRemove {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.fieldHint {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
+.cruceRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    gap: 4px 10px;
+    align-items: start;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.cruceRemove {
+    align-self: center;
+    white-space: nowrap;
+    color: #f87171 !important;
+    border-color: rgba(248, 113, 113, 0.5) !important;
+}
+
+.teamsHead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.categoryList button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.categoryList button small {
+    margin-left: 6px;
+    color: #9aa3b1;
+    font-size: 11px;
+}
+
+.categoryList button.is-active small {
+    color: #bae6fd;
+}
+
 @media (max-width: 600px) {
     .dialogContent {
         grid-template-columns: minmax(0, 1fr);
@@ -115,5 +246,10 @@
 
     .fieldFull {
         grid-column: auto;
+    }
+
+    .blockGrid,
+    .cruceRow {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

@@ -1,0 +1,117 @@
+<header mat-dialog-title class="dialogHeader">
+    <span class="dialogIcon"><svg lucideSquareStack></svg></span>
+    <span>
+        <strong>Editar partido</strong>
+        <small>{{ match.nombreEquipoLocal || 'Local' }} vs {{ match.nombreEquipoVisitante || 'Visitante' }}</small>
+    </span>
+</header>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <mat-dialog-content class="dialogContent">
+        @if (error()) {
+            <p class="dialogError fieldFull">No se pudo cargar o guardar toda la información del partido.</p>
+        }
+
+        <section class="scoreSection fieldFull">
+            <h3>Marcador</h3>
+            <div class="scoreGrid">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ match.nombreEquipoLocal || 'Local' }}</mat-label>
+                    <input matInput type="number" min="0" formControlName="marcadorLocal" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-label>
+                    <input matInput type="number" min="0" formControlName="marcadorVisitante" />
+                </mat-form-field>
+            </div>
+        </section>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="programado">Programado</mat-option>
+                <mat-option value="en_vivo">En vivo</mat-option>
+                <mat-option value="finalizado">Finalizado</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput type="date" lang="es-VE" formControlName="fecha" />
+        </mat-form-field>
+
+        <section class="fieldFull rosterSection">
+            <div class="sectionHeading">
+                <div><h3><svg lucideShirt></svg> Convocados y titulares</h3><small>Convocado agrega al jugador al partido. Luego puedes marcarlo como titular o capitán.</small></div>
+            </div>
+            @if (loading()) {
+                <p>Cargando plantilla del partido...</p>
+            } @else {
+                <div class="rosterColumns">
+                    @for (teamId of [match.idEquipoLocal, match.idEquipoVisitante]; track teamId) {
+                        <div class="teamRoster">
+                            <h4>{{ teamName(teamId || 0) }}</h4>
+                            @for (alignment of teamAlignments(teamId || 0); track alignment.idJugador) {
+                                <div class="playerRow" [class.unconvoked]="!alignment.convocado">
+                                    <label class="convokedToggle">
+                                        <input type="checkbox" [checked]="alignment.convocado" (change)="toggleConvoked(alignment)" />
+                                        <span>Convocado</span>
+                                    </label>
+                                    <button type="button" class="starterButton" [class.active]="alignment.esTitular" [disabled]="!alignment.convocado" (click)="toggleStarter(alignment)">
+                                        <span>{{ alignment.numeroCamiseta || '-' }} · {{ playerName(alignment) }} <small class="playerPosition">{{ alignment.posicion || 'Sin posición' }}</small></span>
+                                        <small>{{ alignment.esTitular ? 'Titular' : 'Banca' }}</small>
+                                    </button>
+                                    <button type="button" class="captainButton" [class.active]="alignment.esCapitan" [disabled]="!alignment.convocado" (click)="toggleCaptain(alignment)" aria-label="Marcar capitán">C</button>
+                                </div>
+                            } @empty {
+                                <p>No hay jugadores alineados.</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="fieldFull incidentsSection">
+            <h3>Goles</h3>
+            <div class="incidentForm goalForm" [formGroup]="goalForm">
+                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Goleador</mat-label><mat-select formControlName="idJugador">@for (player of goalPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Asistencia</mat-label><mat-select formControlName="idJugadorAsistencia"><mat-option [value]="null">Sin asistencia</mat-option>@for (player of goalPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
+                <label class="autoGoal"><input type="checkbox" formControlName="esAutogol" /> Autogol</label>
+                <button mat-stroked-button type="button" (click)="addGoal()">Agregar gol</button>
+            </div>
+            <div class="incidentList">
+                @for (goal of goals(); track $index) { <span>Gol {{ goal.minuto }}' · {{ playerLabel(goal.idJugador) }}{{ goal.idJugadorAsistencia ? ' · Asistió ' + playerLabel(goal.idJugadorAsistencia) : '' }}{{ goal.esAutogol ? ' · Autogol' : '' }} <button type="button" (click)="removeIncident('goals', $index)">×</button></span> }
+            </div>
+
+            <h3>Cambios y tarjetas</h3>
+            <div class="incidentForm substitutionForm" [formGroup]="substitutionForm">
+                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Período</mat-label><mat-select formControlName="periodo"><mat-option value="1">1</mat-option><mat-option value="2">2</mat-option><mat-option value="3">3</mat-option><mat-option value="4">4</mat-option></mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Sale</mat-label><mat-select formControlName="idJugadorSale">@for (player of substitutionPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Entra</mat-label><mat-select formControlName="idJugadorEntra">@for (player of substitutionPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
+                <button mat-stroked-button type="button" (click)="addSubstitution()">Agregar cambio</button>
+            </div>
+            <div class="incidentForm cardForm" [formGroup]="incidentForm">
+                <mat-form-field appearance="outline"><mat-label>Tipo</mat-label><mat-select formControlName="tipo"><mat-option value="yellow">Tarjeta amarilla</mat-option><mat-option value="red">Tarjeta roja</mat-option></mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Jugador</mat-label><mat-select formControlName="idJugador">@for (player of playersForTeam(incidentForm.controls.idEquipo.value); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
+                <button mat-stroked-button type="button" (click)="addIncident()">Agregar</button>
+            </div>
+            <div class="incidentList">
+                @for (incident of cards(); track $index) { <span>{{ incident.tipo === 'yellow' ? 'Amarilla' : 'Roja' }} · {{ incident.minuto }}' · {{ teamName(incident.idEquipo) }} <button type="button" (click)="removeIncident('cards', $index)">×</button></span> }
+                @for (incident of substitutions(); track $index) { <span>Cambio · {{ incident.minuto }}' · {{ playerLabel(incident.idJugadorSale) }} por {{ playerLabel(incident.idJugadorEntra) }} <button type="button" (click)="removeIncident('substitutions', $index)">×</button></span> }
+            </div>
+        </section>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" mat-dialog-close>Cancelar</button>
+        <button mat-flat-button class="dialogSubmit" type="submit" [disabled]="submitting() || loading()">
+           {{ submitting() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+    </mat-dialog-actions>
+</form>

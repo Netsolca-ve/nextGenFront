@@ -1,16 +1,18 @@
 <header mat-dialog-title class="dialogHeader">
     <span class="dialogIcon"><svg lucideTrophy></svg></span>
     <span>
-        <strong>Crear torneo</strong>
-        <small>Configura los datos de la próxima competición.</small>
+        <strong>{{ isEdit ? 'Editar torneo' : 'Crear torneo' }}</strong>
+        <small>{{ isEdit ? 'Actualiza la configuración de la competición.' : 'Configura los datos de la próxima competición.' }}</small>
     </span>
 </header>
 
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <mat-dialog-content class="dialogContent">
         @if (requestError()) {
-            <p class="dialogError">No se pudo crear el torneo. Inténtalo de nuevo.</p>
+            <p class="dialogError fieldFull">No se pudo guardar el torneo. Inténtalo de nuevo.</p>
         }
+
+        <h3 class="sectionTitle fieldFull">Datos generales</h3>
 
         <mat-form-field appearance="outline" class="fieldFull">
             <mat-label>Nombre del torneo</mat-label>
@@ -41,22 +43,29 @@
             <input matInput type="date" formControlName="endDate" />
         </mat-form-field>
 
+        <label class="uploadField">
+            <span class="dialogIcon"><svg lucideImagePlus></svg></span>
+            <span><strong>Banner del torneo</strong><small>{{ uploadingBanner() ? 'Subiendo banner...' : (bannerName() || 'PNG o JPG recomendado') }}</small></span>
+            @if (bannerUrl()) { <img class="bannerPreview" [src]="bannerUrl()" alt="Vista previa del banner" /> }
+            <input type="file" accept="image/png,image/jpeg" (change)="onFileSelected($event)" />
+        </label>
+
         <mat-form-field appearance="outline">
             <mat-label>Estado</mat-label>
             <mat-select formControlName="status">
-                <mat-option value="open">Inscripciones abiertas</mat-option>
-                <mat-option value="upcoming">Próximo</mat-option>
-                <mat-option value="finished">Finalizado</mat-option>
+                @for (estado of torneoEstados; track estado.value) {
+                    <mat-option [value]="estado.value">{{ estado.label }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Cupo máximo</mat-label>
-            <input matInput type="number" formControlName="slots" min="1" placeholder="16" />
+        <mat-form-field appearance="outline" class="fieldFull">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="Formato, reglas y detalles importantes."></textarea>
         </mat-form-field>
 
         <div class="categoryField fieldFull">
-            <span class="fieldLabel">Categorías</span>
+            <span class="fieldLabel">Categorías habilitadas</span>
             <div class="categoryList">
                 @for (category of categories; track category) {
                     <button mat-stroked-button type="button" [class.is-active]="isSelected(category)" (click)="toggleCategory(category)">
@@ -67,20 +76,268 @@
             @if (categoryError()) { <small class="fieldError">Selecciona al menos una categoría.</small> }
         </div>
 
-        <label class="uploadField fieldFull">
-            <span class="dialogIcon"><svg lucideImagePlus></svg></span>
-            <span><strong>Banner del torneo</strong><small>{{ bannerName() || 'PNG o JPG recomendado' }}</small></span>
-            <input type="file" accept="image/png,image/jpeg" (change)="onFileSelected($event)" />
-        </label>
+        <h3 class="sectionTitle fieldFull">Formato del torneo</h3>
 
-        <mat-form-field appearance="outline" class="fieldFull">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="description" rows="3" placeholder="Formato, reglas y detalles importantes."></textarea>
+        <mat-form-field appearance="outline">
+            <mat-label>Tipo de torneo</mat-label>
+            <mat-select formControlName="tipoTorneo">
+                @for (tipo of torneoTipos; track tipo.value) {
+                    <mat-option [value]="tipo.value">{{ tipo.label }}</mat-option>
+                }
+            </mat-select>
         </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Total de equipos</mat-label>
+            <input matInput type="number" formControlName="totalEquipos" min="4" placeholder="4" />
+            @if (showError('totalEquipos')) { <mat-error>Mínimo 4 equipos.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Hora de inicio de jornada</mat-label>
+            <input matInput type="time" formControlName="horaInicioJornada" />
+            @if (showError('horaInicioJornada')) { <mat-error>Indica la hora de inicio.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Tiempos por partido</mat-label>
+            <input matInput type="number" formControlName="tiemposPorPartido" min="1" />
+            @if (showError('tiemposPorPartido')) { <mat-error>Mínimo 1 tiempo.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Duración de cada tiempo (min)</mat-label>
+            <input matInput type="number" formControlName="duracionTiempoMinutos" min="1" />
+            @if (showError('duracionTiempoMinutos')) { <mat-error>Mínimo 1 minuto.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Descanso entre tiempos (min)</mat-label>
+            <input matInput type="number" formControlName="duracionDescansoMinutos" min="0" />
+            @if (showError('duracionDescansoMinutos')) { <mat-error>No puede ser negativo.</mat-error> }
+        </mat-form-field>
+
+        <h3 class="sectionTitle fieldFull">Calendario de partidos</h3>
+
+        <div class="sectionBlock fieldFull">
+            <div class="blockGrid">
+                <div class="addField">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Agregar día de juego</mat-label>
+                        <input matInput type="date" #diaInput />
+                    </mat-form-field>
+                    <button mat-stroked-button type="button" (click)="addDia(diaInput)">Agregar</button>
+                </div>
+
+                <div class="addField">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Agregar cancha</mat-label>
+                        <input matInput type="text" #canchaInput maxlength="60" placeholder="Cancha Principal" />
+                    </mat-form-field>
+                    <button mat-stroked-button type="button" (click)="addCancha(canchaInput)">Agregar</button>
+                </div>
+
+                <div class="chipGroup fieldFull">
+                    <span class="fieldLabel">Días de juego ({{ diasJuego().length }})</span>
+                    <div class="chipList">
+                        @for (dia of diasJuego(); track dia) {
+                            <button type="button" class="chip" (click)="removeDia(dia)">
+                                {{ dia }} <span class="chipRemove">&times;</span>
+                            </button>
+                        } @empty {
+                            <small class="fieldHint">Sin días definidos: se usará la fecha de inicio del torneo.</small>
+                        }
+                    </div>
+                </div>
+
+                <div class="chipGroup fieldFull">
+                    <span class="fieldLabel">Canchas ({{ canchas().length }})</span>
+                    <div class="chipList">
+                        @for (cancha of canchas(); track cancha) {
+                            <button type="button" class="chip" (click)="removeCancha(cancha)">
+                                {{ cancha }} <span class="chipRemove">&times;</span>
+                            </button>
+                        } @empty {
+                            <small class="fieldHint">Agrega al menos una cancha.</small>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="sectionTitle fieldFull">Fase todos contra todos</h3>
+
+        <div class="sectionBlock fieldFull">
+            <div class="blockGrid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre de la fase</mat-label>
+                    <input matInput formControlName="fase1Nombre" maxlength="50" />
+                    @if (showError('fase1Nombre')) { <mat-error>Indica el nombre de la fase.</mat-error> }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Total de jornadas</mat-label>
+                    <input matInput type="number" formControlName="fase1TotalJornadas" min="1" />
+                    @if (showError('fase1TotalJornadas')) { <mat-error>Mínimo 1 jornada.</mat-error> }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="fieldFull">
+                    <mat-label>Descripción de la fase</mat-label>
+                    <input matInput formControlName="fase1Descripcion" maxlength="150" />
+                </mat-form-field>
+
+                <mat-checkbox formControlName="fase1PermiteEmpate" class="fieldFull">
+                    Permite empate en esta fase
+                </mat-checkbox>
+
+                <span class="fieldLabel fieldFull">Puntuación</span>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Victoria</mat-label>
+                    <input matInput type="number" formControlName="puntuacionVictoria" min="0" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Empate</mat-label>
+                    <input matInput type="number" formControlName="puntuacionEmpate" min="0" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Derrota</mat-label>
+                    <input matInput type="number" formControlName="puntuacionDerrota" min="0" />
+                </mat-form-field>
+            </div>
+        </div>
+
+        <h3 class="sectionTitle fieldFull">Fase definitoria</h3>
+
+        <div class="sectionBlock fieldFull">
+            <div class="blockGrid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre de la fase</mat-label>
+                    <input matInput formControlName="faseDefNombre" maxlength="50" />
+                    @if (showError('faseDefNombre')) { <mat-error>Indica el nombre de la fase.</mat-error> }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Definición de empate</mat-label>
+                    <mat-select formControlName="definicionEmpate">
+                        @for (definicion of definicionesEmpate; track definicion.value) {
+                            <mat-option [value]="definicion.value">{{ definicion.label }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-checkbox formControlName="faseDefPermiteEmpate" class="fieldFull">
+                    Permite empate en la fase definitoria
+                </mat-checkbox>
+
+                <div class="chipGroup fieldFull">
+                    <span class="fieldLabel">Cruces ({{ cruces().length }})</span>
+
+                    @for (cruce of cruces(); track $index) {
+                        <div class="cruceRow">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Fase</mat-label>
+                                <input matInput [value]="cruce.fase" (input)="updateCruce($index, 'fase', $event)" placeholder="FINAL" maxlength="30" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nombre del cruce</mat-label>
+                                <input matInput [value]="cruce.nombre" (input)="updateCruce($index, 'nombre', $event)" placeholder="Gran Final" maxlength="60" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Local</mat-label>
+                                <input matInput [value]="cruce.local" (input)="updateCruce($index, 'local', $event)" placeholder="POSICION_1" maxlength="30" />
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Visitante</mat-label>
+                                <input matInput [value]="cruce.visitante" (input)="updateCruce($index, 'visitante', $event)" placeholder="POSICION_2" maxlength="30" />
+                            </mat-form-field>
+
+                            <button
+                                mat-stroked-button
+                                type="button"
+                                class="cruceRemove"
+                                (click)="removeCruce($index)"
+                            >
+                                Quitar
+                            </button>
+                        </div>
+                    }
+
+                    <button mat-stroked-button type="button" (click)="addCruce()">+ Agregar cruce</button>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="sectionTitle fieldFull">Criterios de desempate</h3>
+
+        <div class="sectionBlock fieldFull">
+            <span class="fieldLabel">Prioridad ({{ criteriosDesempate().length }} de {{ criteriosDisponibles.length }})</span>
+            <div class="categoryList">
+                @for (criterio of criteriosDisponibles; track criterio.value) {
+                    <button
+                        mat-stroked-button
+                        type="button"
+                        [class.is-active]="criteriosDesempate().includes(criterio.value)"
+                        (click)="toggleCriterio(criterio.value)"
+                    >
+                        {{ criterio.label }}
+                    </button>
+                }
+            </div>
+            <small class="fieldHint">El orden en que aparecen seleccionados define la prioridad al desempatar.</small>
+        </div>
+
+        <h3 class="sectionTitle fieldFull">Equipos participantes</h3>
+
+        <div class="sectionBlock fieldFull">
+            <div class="teamsHead">
+                <span class="fieldLabel">
+                    Selecciona {{ form.controls.totalEquipos.value || 0 }} equipos
+                    ({{ selectedTeams().length }} / {{ form.controls.totalEquipos.value || 0 }})
+                </span>
+                @if (loadingTeams()) {
+                    <small class="fieldHint">Cargando equipos...</small>
+                }
+            </div>
+
+            <div class="categoryList">
+                @for (team of teams(); track team.idEquipo ?? team.id) {
+                    <button
+                        mat-stroked-button
+                        type="button"
+                        [class.is-active]="isTeamSelected(team)"
+                        [disabled]="isTeamDisabled(team)"
+                        (click)="toggleTeam(team)"
+                    >
+                        {{ team.nombre || team.name || 'Equipo' }}
+                        @if (team.categoria) {
+                            <small>{{ team.categoria }}</small>
+                        }
+                    </button>
+                } @empty {
+                    @if (!loadingTeams()) {
+                        <small class="fieldHint">No hay equipos registrados. Crea los equipos primero.</small>
+                    }
+                }
+            </div>
+
+            @if (teamsError()) {
+                <small class="fieldError">
+                    Selecciona exactamente {{ form.controls.totalEquipos.value || 0 }} equipos.
+                </small>
+            }
+        </div>
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
         <button mat-button type="button" mat-dialog-close>Cancelar</button>
-        <button mat-flat-button class="dialogSubmit" type="submit">Crear torneo</button>
+        <button mat-flat-button class="dialogSubmit" type="submit" [disabled]="submitting()">
+            {{ submitting() ? 'Guardando...' : (isEdit ? 'Guardar cambios' : 'Crear torneo') }}
+        </button>
     </mat-dialog-actions>
 </form>

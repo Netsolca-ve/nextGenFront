@@ -27,13 +27,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-            <mat-label>Sede</mat-label>
+            <mat-label>Sede{{ esProximamente() ? ' (opcional)' : '' }}</mat-label>
             <input matInput formControlName="place" placeholder="Club Bella Vista" />
             @if (showError('place')) { <mat-error>La sede es obligatoria.</mat-error> }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-            <mat-label>Fecha de inicio</mat-label>
+            <mat-label>Fecha de inicio{{ esProximamente() ? ' (opcional)' : '' }}</mat-label>
             <input matInput type="date" formControlName="startDate" />
             @if (showError('startDate')) { <mat-error>Selecciona una fecha.</mat-error> }
         </mat-form-field>
@@ -57,6 +57,9 @@
                     <mat-option [value]="estado.value">{{ estado.label }}</mat-option>
                 }
             </mat-select>
+            @if (esProximamente()) {
+                <mat-hint>Con este estado no es obligatorio indicar sede ni fecha.</mat-hint>
+            }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="fieldFull">
@@ -289,7 +292,7 @@
                     </button>
                 }
             </div>
-            <small class="fieldHint">El orden en que aparecen seleccionados define la prioridad al desempatar.</small>
+            <small class="fieldHint">Los puntos siempre son lo primero; estos criterios se aplican en el orden de la lista (de arriba hacia abajo) al desempatar.</small>
         </div>
 
         <h3 class="sectionTitle fieldFull">Equipos participantes</h3>
@@ -333,6 +336,10 @@
             }
         </div>
     </mat-dialog-content>
+
+    @if (formError()) {
+        <p class="dialogFormError" role="alert">{{ formError() }}</p>
+    }
 
     <mat-dialog-actions align="end">
         <button mat-button type="button" mat-dialog-close>Cancelar</button>

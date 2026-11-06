@@ -1,7 +1,7 @@
 <section class="adminPage">
     <header class="adminPageHead">
         <div>
-            <span class="adminEyebrow"><svg lucideSwords></svg>Gestión de partidos</span>
+           
             <h1>Partidos <span>registrados</span></h1>
             <p>Consulta los partidos de la base de datos y administra su resultado, incidencias y alineación.</p>
         </div>
@@ -34,7 +34,7 @@
                 <span>Categoría / SUB</span>
                 <select [ngModel]="categoryFilter()" (ngModelChange)="categoryFilter.set($event)">
                     <option value="">Todas</option>
-                    @for (category of categories; track category) { <option [value]="category">{{ category }}</option> }
+                    @for (category of categories(); track category) { <option [value]="category">{{ category }}</option> }
                 </select>
             </label>
             <label class="adminField">
@@ -52,7 +52,7 @@
                         <div class="matchRowDate"><strong>{{ matchDate(match) }}</strong><span>Ronda {{ match.numeroRonda ?? '-' }}</span></div>
                         <div class="matchRowTeams">
                             <strong>{{ teamName(match, 'local') }} {{ match.marcadorLocal ?? 0 }} - {{ match.marcadorVisitante ?? 0 }} {{ teamName(match, 'away') }}</strong>
-                            <span>{{ tournament(match) || 'Torneo sin definir' }} · {{ category(match) || 'Categoría sin definir' }} · {{ match.fase || 'Fase sin definir' }}</span>
+                            <span>{{ tournament(match) || 'Torneo sin definir' }} · {{ category(match) || 'Categoría sin definir' }} · {{ faseLabel(match.fase) }}</span>
                         </div>
                         <span class="matchStatus">{{ statusLabel(match.status) }}</span>
                         <button mat-stroked-button type="button" (click)="openEditDialog(match)"><svg lucidePencil></svg> Editar</button>

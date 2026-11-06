@@ -10,7 +10,9 @@ import { CreateTeam } from './components/create-team/create-team';
 import { UpdateTeam } from './components/update-team/update-team';
 
 @Component({
-  imports: [MatButtonModule, MatCardModule, MatDialogModule, LucideShield, LucideUsers],
+  imports: [MatButtonModule, MatCardModule, MatDialogModule, LucideShield, 
+    ///LucideUsers
+  ],
   selector: 'app-admin-teams',
   templateUrl: './admin-teams.html',
   styleUrl: './admin-teams.scss',

@@ -24,28 +24,34 @@
         } @else {
         @for (tournament of tournaments(); track tournament.id) {
             <article [class]="'tournamentCard card--' + tournament.id" [attr.data-mark]="tournament.mark">
-                @if (tournament.image) {
-                    <img class="tournamentBanner" [src]="tournament.image" [alt]="'Banner de ' + tournament.name" />
-                }
-                <span [class]="'tournamentBadge badge--' + tournament.statusClass">
-                    {{ tournament.status }}
-                </span>
+                    <img class="tournamentBanner" [src]="tournament.image" [alt]="tournament.comingSoon ? 'Próximamente' : 'Banner de ' + tournament.name" />
 
-                <span class="tournamentBrand">{{ tournament.brand }}</span>
-
-                <div class="tournamentCardBody">
-                    <h3 class="tournamentName">{{ tournament.name }}<span>Juegos Relámpagos CBV</span></h3>
-
-                    <div class="tournamentMeta">
-                        <svg lucideCalendarDays></svg>
-                        <span>{{ tournament.dateShort }}</span>
+                @if (tournament.comingSoon) {
+                    <!-- Torneo por anunciar: solo la imagen y el título -->
+                    <div class="tournamentCardBody tournamentCardBody--soon">
+                        <h3 class="tournamentName">Próximamente</h3>
                     </div>
+                } @else {
+                    <span [class]="'tournamentBadge badge--' + tournament.statusClass">
+                        {{ tournament.status }}
+                    </span>
 
-                    <a [routerLink]="['/events', tournament.id]" class="tournamentLink">
-                        Ver Detalles
-                        <svg lucideArrowRight></svg>
-                    </a>
-                </div>
+                    <span class="tournamentBrand">{{ tournament.brand }}</span>
+
+                    <div class="tournamentCardBody">
+                        <h3 class="tournamentName">{{ tournament.name }}<span>Juegos Relámpagos CBV</span></h3>
+
+                        <div class="tournamentMeta">
+                            <svg lucideCalendarDays></svg>
+                            <span>{{ tournament.dateShort }}</span>
+                        </div>
+
+                        <a [routerLink]="['/events', tournament.id]" class="tournamentLink">
+                            Ver Detalles
+                            <svg lucideArrowRight></svg>
+                        </a>
+                    </div>
+                }
             </article>
         }
         @empty { <p class="eventsLoading">No hay torneos disponibles.</p> }
@@ -60,8 +66,8 @@
         </div>
 
         <div class="eventsCtaText">
-            <h3>¿Tienes lo que se necesita?</h3>
-            <p>Participa en nuestros torneos y pon a prueba tus habilidades.</p>
+            <h3>¿Quieres más emoción?</h3>
+            <p> Explora nuestros torneos Next Gen y Afiliados.</p>
         </div>
     </div>
 

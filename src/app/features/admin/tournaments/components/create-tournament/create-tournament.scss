@@ -112,6 +112,19 @@
     font-size: 12px;
 }
 
+/* Motivo por el que no se pudo guardar: queda a la vista junto a los botones */
+.dialogFormError {
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    border-radius: 8px;
+    background-color: rgba(248, 113, 113, 0.12);
+    color: #f87171;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
 .dialogSubmit {
     background: #0094dd !important;
     color: white !important;

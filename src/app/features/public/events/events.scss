@@ -12,7 +12,7 @@
     content: '';
     position: absolute;
     inset: -30px;
-    background-image: url('/images/almirantesHero.jpg');
+    background-image: url('/images/bannerEvento.jpg');
     background-size: cover;
     background-position: center;
     filter: blur(2px);
@@ -326,6 +326,22 @@
 .tournamentLink svg {
     width: 16px;
     height: 16px;
+}
+
+/* --- Tarjeta "Próximamente": solo la imagen y el título --- */
+.tournamentCardBody--soon {
+    margin: auto 0;
+    align-items: center;
+    text-align: center;
+}
+
+.tournamentCard:has(.tournamentCardBody--soon) .tournamentBanner {
+    opacity: 0.85;
+    filter: saturate(1);
+}
+
+.tournamentCard:has(.tournamentCardBody--soon)::after {
+    background: linear-gradient(180deg, rgba(6, 12, 24, 0.5), rgba(6, 12, 24, 0.85));
 }
 
 .eventsCta {

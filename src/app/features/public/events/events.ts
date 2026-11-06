@@ -6,7 +6,16 @@ import {
   LucideGoal,
   LucideTrophy,
 } from '@lucide/angular';
-import { AdminTournament, parseFormatoConfig, toDateInput } from '../../../@core/models/tournament.models';
+import {
+  AdminTournament,
+  DEFAULT_EVENT_BANNER,
+  isProximamente,
+  normalizeEstado,
+  parseFormatoConfig,
+  PROXIMAMENTE_BANNER,
+  toDateInput,
+  TORNEO_ESTATOS,
+} from '../../../@core/models/tournament.models';
 import { Tournaments } from '../../../@core/services/tournaments';
 
 interface PublicTournament {
@@ -18,6 +27,8 @@ interface PublicTournament {
   subtitle: string;
   status: string;
   statusClass: 'upcoming' | 'open' | 'finished';
+  /** Torneo aún no anunciado: solo se muestra la imagen y el título "Próximamente". */
+  comingSoon: boolean;
   dateShort: string;
   dateLong: string;
   place: string;
@@ -60,15 +71,19 @@ export class Events {
     const start = toDateInput(tournament.fechaInicio ?? tournament.fecha_inicio);
     const end = toDateInput(tournament.fechaFin ?? tournament.fecha_fin);
     const categories = tournament.categorias ?? tournament.categories ?? (tournament.categoria ? tournament.categoria.split(',').map((item) => item.trim()) : []);
+    const estado = tournament.estado ?? tournament.status ?? 'PROGRAMADO';
+    const comingSoon = isProximamente(estado);
     return {
       id: String(tournament.idTorneo ?? tournament.id ?? ''),
       mark: (tournament.nombre ?? tournament.name ?? 'NG').slice(0, 3).toUpperCase(),
-      image: tournament.banner ?? tournament.image ?? '',
+      // Los torneos por anunciarse siempre muestran su imagen de "Próximamente"
+      image: comingSoon ? PROXIMAMENTE_BANNER : tournament.banner ?? tournament.image ?? DEFAULT_EVENT_BANNER,
       brand: tournament.organizador ?? tournament.organizer ?? 'NextGen',
       name: tournament.nombre ?? tournament.name ?? 'Torneo NextGen',
       subtitle: tournament.description ?? 'Competencia deportiva NextGen.',
-      status: tournament.estado ?? tournament.status ?? 'Programado',
-      statusClass: this.statusClass(tournament.estado ?? tournament.status),
+      status: comingSoon ? 'Próximamente' : this.statusLabel(estado),
+      statusClass: this.statusClass(estado),
+      comingSoon,
       dateShort: this.dateRange(start, end),
       dateLong: this.dateRange(start, end),
       place: tournament.sede ?? tournament.place ?? 'Sede por definir',
@@ -80,8 +95,17 @@ export class Events {
     };
   }
 
+  /** Traduce el estado guardado (PROGRAMADO, EN_CURSO...) a su etiqueta legible. */
+  private statusLabel(estado: string): string {
+    const value = normalizeEstado(estado);
+    const found = TORNEO_ESTATOS.find(
+      (option) => normalizeEstado(option.value) === value || normalizeEstado(option.label) === value,
+    );
+    return found?.label ?? estado;
+  }
+
   private statusClass(status?: string): PublicTournament['statusClass'] {
-    const value = (status ?? '').toLowerCase();
+    const value = normalizeEstado(status);
     return value.includes('final') ? 'finished' : value.includes('abierta') || value.includes('open') ? 'open' : 'upcoming';
   }
 

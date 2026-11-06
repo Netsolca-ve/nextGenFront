@@ -176,7 +176,7 @@ function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: Mat
 
   return {
     tournament: match.nombreTorneo ?? match.torneo?.nombre ?? 'Partido',
-    round: match.fase,
+    round: faseLabel(match.fase),
     homeScore: match.marcadorLocal ?? 0,
     awayScore: match.marcadorVisitante ?? 0,
     clock: '',
@@ -199,6 +199,17 @@ function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: Mat
       'away',
     ),
   };
+}
+
+/** Etiqueta en español de la fase de un partido. */
+function faseLabel(fase: string | null | undefined): string {
+  const labels: Record<string, string> = {
+    GRUPO: 'Fase de grupos',
+    SEMI_FINAL: 'Semifinal',
+    TERCER_LUGAR: 'Tercer lugar',
+    FINAL: 'Gran Final',
+  };
+  return labels[fase ?? ''] ?? fase ?? '';
 }
 
 function isTrue(value: boolean | number | string): boolean {

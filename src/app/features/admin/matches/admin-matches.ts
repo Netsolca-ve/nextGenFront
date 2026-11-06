@@ -5,7 +5,6 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LucidePencil, LucideSwords } from '@lucide/angular';
 import { AdminMatch } from '../../../@core/models/match.models';
 import { AdminTournament } from '../../../@core/models/tournament.models';
-import { TEAM_CATEGORIES } from '../../../@core/models/team.models';
 import { Matches } from '../../../@core/services/matches';
 import { Tournaments } from '../../../@core/services/tournaments';
 import { Notifications } from '../../../@core/services/notifications';
@@ -47,12 +46,22 @@ export class AdminMatches {
     return this.matches().filter((match) => {
       const teams = `${this.teamName(match, 'local')} ${this.teamName(match, 'away')}`.toLowerCase();
       const matchTournament = String(match.idTorneo);
-      const matchCategory = this.category(match).toLowerCase();
-      return (!query || teams.includes(query)) && (!tournament || matchTournament === tournament) && (!category || matchCategory === category) && (!date || this.toIsoDate(match.fecha) === date);
+      const matchCategories = this.category(match).split(',').map((item) => item.trim().toLowerCase()).filter(Boolean);
+      return (!query || teams.includes(query)) && (!tournament || matchTournament === tournament) && (!category || matchCategories.includes(category)) && (!date || this.toIsoDate(match.fecha) === date);
     });
   });
 
-  readonly categories = [...TEAM_CATEGORIES];
+  /** Categorías reales presentes en los partidos (p. ej. "SUB 9", "SUB 12"). */
+  readonly categories = computed(() => {
+    const values = new Set<string>();
+    for (const match of this.matches()) {
+      for (const part of this.category(match).split(',')) {
+        const value = part.trim();
+        if (value) values.add(value);
+      }
+    }
+    return [...values].sort();
+  });
 
   constructor() {
     this.loadMatches();
@@ -143,7 +152,22 @@ export class AdminMatches {
       programado: 'Programado',
       en_vivo: 'En vivo',
       finalizado: 'Finalizado',
+      // Estados legacy del backend
+      SCHEDULED: 'Programado',
+      PENDING: 'Por definir',
+      LIVE: 'En vivo',
+      FINALIZED: 'Finalizado',
     };
     return labels[status ?? ''] ?? status ?? 'Sin estado';
+  }
+
+  faseLabel(fase: string | null): string {
+    const labels: Record<string, string> = {
+      GRUPO: 'Fase de grupos',
+      SEMI_FINAL: 'Semifinal',
+      TERCER_LUGAR: 'Tercer lugar',
+      FINAL: 'Gran Final',
+    };
+    return labels[fase ?? ''] ?? fase ?? 'Fase sin definir';
   }
 }

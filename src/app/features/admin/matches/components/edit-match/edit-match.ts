@@ -62,12 +62,12 @@ export class EditMatch {
   ];
 
   readonly form = new FormGroup({
-    marcadorLocal: new FormControl(this.match.marcadorLocal ?? 0, {
-      nonNullable: true,
+    // Sin marcador real el campo queda vacío (null), nunca en 0: si no, al
+    // cambiar solo el estado se guardaría un 0-0 falso en el partido
+    marcadorLocal: new FormControl<number | null>(this.match.marcadorLocal ?? null, {
       validators: [Validators.min(0)],
     }),
-    marcadorVisitante: new FormControl(this.match.marcadorVisitante ?? 0, {
-      nonNullable: true,
+    marcadorVisitante: new FormControl<number | null>(this.match.marcadorVisitante ?? null, {
       validators: [Validators.min(0)],
     }),
     marcadorPenalesLocal: new FormControl(this.match.marcadorPenalesLocal ?? null),
@@ -224,10 +224,10 @@ export class EditMatch {
     this.error.set(false);
     const values = this.form.getRawValue();
     const payload: MatchUpdateInput = {
-      marcadorLocal: values.marcadorLocal,
-      marcadorVisitante: values.marcadorVisitante,
-      marcadorPenalesLocal: values.marcadorPenalesLocal,
-      marcadorPenalesVisitante: values.marcadorPenalesVisitante,
+      marcadorLocal: values.marcadorLocal ?? null,
+      marcadorVisitante: values.marcadorVisitante ?? null,
+      marcadorPenalesLocal: values.marcadorPenalesLocal ?? null,
+      marcadorPenalesVisitante: values.marcadorPenalesVisitante ?? null,
       status: values.status,
       fecha: values.fecha,
       tarjetas: this.cards(),

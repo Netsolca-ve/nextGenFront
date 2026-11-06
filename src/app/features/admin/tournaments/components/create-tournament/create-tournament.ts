@@ -13,6 +13,7 @@ import {
   AdminTournament,
   CruceConfig,
   DEFINICIONES_EMPATE,
+  isProximamente,
   TORNEO_ESTATOS,
   TORNEO_TIPOS,
   TournamentInput,
@@ -64,6 +65,8 @@ export class CreateTournament {
   readonly bannerUrl = signal<string | null>(null);
   readonly uploadingBanner = signal(false);
   readonly requestError = signal(false);
+  /** Motivo por el que no se pudo guardar, visible junto al botón (nunca falla en silencio). */
+  readonly formError = signal('');
   readonly submitting = signal(false);
 
   readonly teams = signal<AdminTeam[]>([]);
@@ -151,6 +154,15 @@ export class CreateTournament {
       this.applyTournament(this.tournament);
     }
 
+    // Con estado "Próximamente" la sede y la fecha dejan de ser obligatorias
+    this.form.controls.status.valueChanges.subscribe(() => this.syncOptionalFields());
+    this.syncOptionalFields();
+
+    // El motivo de bloqueo se limpia en cuanto el usuario vuelve a editar
+    this.form.valueChanges.subscribe(() => {
+      if (this.formError()) this.formError.set('');
+    });
+
     // Si se reduce la cantidad de equipos, se recorta la selección actual.
     this.form.controls.totalEquipos.valueChanges.subscribe((max) => {
       const limit = typeof max === 'number' && max > 0 ? max : 0;
@@ -158,6 +170,20 @@ export class CreateTournament {
     });
 
     this.loadTeams();
+  }
+
+  /** Estado actual del torneo como "Próximamente". */
+  esProximamente(): boolean {
+    return isProximamente(this.form.controls.status.value);
+  }
+
+  /** Agrega o quita la obligatoriedad de sede y fecha según el estado elegido. */
+  private syncOptionalFields(): void {
+    const validators = this.esProximamente() ? [] : [Validators.required];
+    this.form.controls.place.setValidators(validators);
+    this.form.controls.startDate.setValidators(validators);
+    this.form.controls.place.updateValueAndValidity({ emitEvent: false });
+    this.form.controls.startDate.updateValueAndValidity({ emitEvent: false });
   }
 
   showError(controlName: string): boolean {
@@ -293,19 +319,28 @@ export class CreateTournament {
   }
 
   submit(): void {
-    if (this.submitting() || this.uploadingBanner()) {
+    if (this.submitting()) {
+      return;
+    }
+
+    if (this.uploadingBanner()) {
+      this.formError.set('Espera a que termine de subir el banner del torneo.');
       return;
     }
 
     const totalEquipos = Number(this.form.controls.totalEquipos.value) || 0;
     const equiposInvalidos = this.selectedTeams().length !== totalEquipos;
+    const faltanCategorias = !this.selectedCategories().length;
 
-    if (this.form.invalid || !this.selectedCategories().length || equiposInvalidos) {
+    if (this.form.invalid || faltanCategorias || equiposInvalidos) {
       this.form.markAllAsTouched();
-      this.categoryError.set(!this.selectedCategories().length);
+      this.categoryError.set(faltanCategorias);
       this.teamsError.set(equiposInvalidos);
+      this.formError.set(this.blockedMessage(totalEquipos, faltanCategorias, equiposInvalidos));
       return;
     }
+
+    this.formError.set('');
 
     const raw = this.form.getRawValue();
 
@@ -313,7 +348,8 @@ export class CreateTournament {
       nombre: raw.name.trim(),
       categoria: this.selectedCategories().join(', '),
       banner: this.bannerUrl(),
-      fechaInicio: raw.startDate,
+      // Sin fecha (p. ej. estado "Próximamente") se envía null, nunca vacío
+      fechaInicio: raw.startDate || null,
       fechaFin: raw.endDate || null,
       status: raw.status,
       equiposIds: this.selectedTeams(),
@@ -351,7 +387,9 @@ export class CreateTournament {
             cruces: this.cruces(),
           },
         },
-        criteriosDesempate: this.criteriosDesempate(),
+        criteriosDesempate: this.criteriosDisponibles
+          .filter((criterio) => this.criteriosDesempate().includes(criterio.value))
+          .map((criterio) => criterio.value),
       },
     };
 
@@ -367,11 +405,23 @@ export class CreateTournament {
         this.submitting.set(false);
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (error: unknown) => {
         this.submitting.set(false);
         this.requestError.set(true);
+        this.formError.set(getErrorMessage(error, 'No se pudo guardar el torneo. Inténtalo de nuevo.'));
       },
     });
+  }
+
+  /** Motivo visible junto al botón cuando no se puede guardar todavía. */
+  private blockedMessage(totalEquipos: number, faltanCategorias: boolean, equiposInvalidos: boolean): string {
+    if (equiposInvalidos) {
+      return `Selecciona exactamente ${totalEquipos} equipos antes de guardar.`;
+    }
+    if (faltanCategorias) {
+      return 'Selecciona al menos una categoría.';
+    }
+    return 'Revisa los campos marcados en rojo: faltan datos obligatorios.';
   }
 
   private teamId(team: AdminTeam): number {

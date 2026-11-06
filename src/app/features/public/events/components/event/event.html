@@ -13,9 +13,20 @@
         <article class="eventCard">
             <h2 class="eventCardTitle">Información del Evento</h2>
             <ul class="eventInfoList">
-                <li><div class="eventInfoIcon"><svg lucideCalendarDays></svg></div><div class="eventInfoTxt"><span>Fecha del Torneo</span><p>{{ dateRange() }}</p></div></li>
-                <li><div class="eventInfoIcon"><svg lucideClock></svg></div><div class="eventInfoTxt"><span>Hora de Inicio</span><p>{{ time() }}</p></div></li>
-                <li><div class="eventInfoIcon"><svg lucideMapPin></svg></div><div class="eventInfoTxt"><span>Lugar</span><p>{{ place() }}</p></div></li>
+                @if (comingSoon()) {
+                    <li>
+                        <div class="eventInfoIcon"><svg lucideClock></svg></div>
+                        <div class="eventInfoTxt">
+                            <span>Estado</span>
+                            <p>Próximamente</p>
+                            <small>Estamos preparando este evento. Pronto compartiremos la fecha y la sede.</small>
+                        </div>
+                    </li>
+                } @else {
+                    <li><div class="eventInfoIcon"><svg lucideCalendarDays></svg></div><div class="eventInfoTxt"><span>Fecha del Torneo</span><p>{{ dateRange() }}</p></div></li>
+                    <li><div class="eventInfoIcon"><svg lucideClock></svg></div><div class="eventInfoTxt"><span>Hora de Inicio</span><p>{{ time() }}</p></div></li>
+                    <li><div class="eventInfoIcon"><svg lucideMapPin></svg></div><div class="eventInfoTxt"><span>Lugar</span><p>{{ place() }}</p></div></li>
+                }
                 <li><div class="eventInfoIcon"><svg lucideShieldCheck></svg></div><div class="eventInfoTxt"><span>Organiza</span><p>{{ organizer() }}</p></div></li>
             </ul>
             <div class="eventCategories">
@@ -28,10 +39,14 @@
             <h2 class="eventCardTitle">Sobre el torneo</h2>
             <ul class="eventExpectList">
                 <li><svg lucideCheck></svg><span>{{ current.categoria || 'Competencia deportiva' }}</span></li>
-                <li><svg lucideCheck></svg><span>{{ current.totalEquipos ?? 'Equipos participantes' }} equipos inscritos</span></li>
-                <li><svg lucideCheck></svg><span>{{ current.totalPartidos ?? matches().length }} partidos programados</span></li>
+                @if (comingSoon()) {
+                    <li><svg lucideCheck></svg><span>Equipos, calendario y sede próximamente</span></li>
+                } @else {
+                    <li><svg lucideCheck></svg><span>{{ current.totalEquipos ?? 'Equipos participantes' }} equipos inscritos</span></li>
+                    <li><svg lucideCheck></svg><span>{{ matchesSummary() }}</span></li>
+                }
             </ul>
-            @if (current.image || current.banner) { <div class="eventPoster"><img [src]="current.image || current.banner" [alt]="'Torneo ' + tournamentName()" /></div> }
+            <div class="eventPoster"><img [src]="posterImage()" [alt]="'Torneo ' + tournamentName()" /></div>
         </article>
     </div>
 </section>
@@ -45,7 +60,7 @@
                     <div class="publicMatchRow" [routerLink]="['/match', matchSlug(match)]" role="link" tabindex="0">
                         <div><strong>{{ matchDate(match.fecha) }}</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
                         <span>{{ teamName(match, 'local') }} <b>{{ match.marcadorLocal ?? '-' }} - {{ match.marcadorVisitante ?? '-' }}</b> {{ teamName(match, 'away') }}</span>
-                        <small>{{ matchStatus(match.status) }}</small>
+                        <small>{{ matchStatus(match?.status) }}</small>
                     </div>
                 }
             </div>

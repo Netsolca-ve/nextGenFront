@@ -1,3 +1,9 @@
+/** Banner por defecto de los eventos cuando el torneo no tiene uno propio. */
+export const DEFAULT_EVENT_BANNER = '/images/bannerEvento.jpg';
+
+/** Imagen de los torneos aún no anunciados (estado PROXIMAMENTE). */
+export const PROXIMAMENTE_BANNER = '/images/proximamente.webp';
+
 export const TORNEO_TIPOS = [
   { value: 'ROUND_ROBIN_CON_FINALES', label: 'Todos contra todos con finales' },
   { value: 'ROUND_ROBIN', label: 'Todos contra todos (sin finales)' },
@@ -5,11 +11,22 @@ export const TORNEO_TIPOS = [
 ] as const;
 
 export const TORNEO_ESTATOS = [
+  { value: 'PROXIMAMENTE', label: 'Próximamente' },
   { value: 'PROGRAMADO', label: 'Próximo' },
   { value: 'INSCRIPCIONES_ABIERTAS', label: 'Inscripciones abiertas' },
   { value: 'EN_CURSO', label: 'En curso' },
   { value: 'FINALIZADO', label: 'Finalizado' },
 ] as const;
+
+/** Normaliza un estado ("PRÓXIMO", "Próximo", "PROXIMAMENTE"...) a minúsculas y sin acentos. */
+export function normalizeEstado(estado?: string | null): string {
+  return (estado ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+}
+
+/** Un torneo está "por anunciarse" cuando su estado es PROXIMAMENTE. */
+export function isProximamente(estado?: string | null): boolean {
+  return normalizeEstado(estado) === 'proximamente';
+}
 
 export const CRITERIOS_DESEMPATE = [
   { value: 'DIFERENCIA_DE_GOLES', label: 'Diferencia de goles' },
@@ -226,6 +243,7 @@ export interface TournamentStanding {
   golesFavor: number;
   golesContra: number;
   diferenciaGoles: number;
+  vallasInvictas?: number;
   puntos: number;
   logo?: string | null;
 }

@@ -5,6 +5,7 @@ import { Matches } from '../../../@core/services/matches';
 import { AdminMatch, MatchAlignment, MatchGoal, MatchSubstitution } from '../../../@core/models/match.models';
 import { AdminTeam } from '../../../@core/models/team.models';
 import { Teams } from '../../../@core/services/teams';
+import { SeoService } from '../../../@core/services/seo';
 import { matchIdFromSlug } from '../../../@core/utils/match-slug';
 import { forkJoin } from 'rxjs';
 
@@ -52,6 +53,7 @@ export class Match {
   private readonly matchesService = inject(Matches);
   private readonly teamsService = inject(Teams);
   private readonly route = inject(ActivatedRoute);
+  private readonly seo = inject(SeoService);
   readonly match = signal<MatchView>(emptyMatch());
 
   constructor() {
@@ -71,11 +73,23 @@ export class Match {
       }).subscribe({
         next: ({ alignments, goals, substitutions, teams }) => {
           const teamList = Array.isArray(teams) ? teams : (teams.data ?? []);
-          this.match.set(toMatchView(current, alignments, goals, substitutions, teamList));
+          const view = toMatchView(current, alignments, goals, substitutions, teamList);
+          this.match.set(view);
+          this.applySeo(view);
         },
-        error: () => this.match.set(toMatchView(current, [], [], [], [])),
+        error: () => {
+          const view = toMatchView(current, [], [], [], []);
+          this.match.set(view);
+          this.applySeo(view);
+        },
       }),
     });
+  }
+
+  private applySeo(view: MatchView): void {
+    const title = `${view.home.name} vs ${view.away.name} | NextGen`;
+    const description = `${view.tournament} · ${view.round}. Resultado, alineaciones, goles y sustituciones.`;
+    this.seo.setPage(title, description);
   }
 
   get tournament(): string { return this.match().tournament; }

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Áreas privadas (no indexar)
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://next-gen-chris-projects-29c611e1.vercel.app/sitemap.xml

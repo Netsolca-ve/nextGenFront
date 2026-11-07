@@ -26,6 +26,7 @@ import {
   uniqueCategories,
 } from '../../../../../@core/models/tournament.models';
 import { Tournaments } from '../../../../../@core/services/tournaments';
+import { SeoService } from '../../../../../@core/services/seo';
 import { matchSlug } from '../../../../../@core/utils/match-slug';
 import { Teams } from '../../../../../@core/services/teams';
 import { AdminTeam } from '../../../../../@core/models/team.models';
@@ -50,6 +51,7 @@ export class Event {
   private readonly route = inject(ActivatedRoute);
   private readonly service = inject(Tournaments);
   private readonly teamsService = inject(Teams);
+  private readonly seo = inject(SeoService);
 
   readonly tournament = signal<AdminTournament | null>(null);
   readonly matches = signal<TournamentMatch[]>([]);
@@ -90,6 +92,11 @@ export class Event {
         this.eventId.set(id);
         const tournament = result.tournaments.find((item) => String(item.idTorneo ?? item.id) === id);
         this.tournament.set(tournament ?? null);
+
+        this.seo.setPage(
+          `${this.tournamentName()} | NextGen`,
+          this.subtitle(),
+        );
 
         const matches = result.matches.map((match) => ({
           ...match,

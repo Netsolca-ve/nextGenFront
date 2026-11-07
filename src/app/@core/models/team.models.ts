@@ -1,4 +1,4 @@
-export const TEAM_CATEGORIES = ['SUB-8', 'SUB-10', 'SUB-12', 'SUB-14', 'SUB-16'] as const;
+export const TEAM_CATEGORIES = ['SUB-9', 'SUB-10', 'SUB-12', 'SUB-14', 'SUB-16'] as const;
 
 export const IDENTIFICATION_TYPES = [
   { value: 'V', label: 'V - Cédula' },

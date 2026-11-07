@@ -19,7 +19,7 @@ describe('Almirantes', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería renderizar los 20 iconos lucide con sus clases y size por defecto', () => {
+  it('debería renderizar los iconos lucide con sus clases y size por defecto', () => {
     const el = fixture.nativeElement as HTMLElement;
     const mapPin = el.querySelector('svg[lucideMapPin]');
     expect(mapPin).toBeTruthy();
@@ -31,10 +31,10 @@ describe('Almirantes', () => {
         'svg[lucideIdCard], svg[lucideFilePenLine], svg[lucideBadgeCheck], svg[lucideUserGroup], ' +
         'svg[lucideTarget], svg[lucideUser], svg[lucideDumbbell], svg[lucideSportShoe], svg[lucideWhistle]'
     ).length;
-    expect(count).toBe(20);
+    expect(count).toBe(18);
     // clases de variantes preservadas
     expect(el.querySelectorAll('svg.icon4').length).toBe(1); // SportShoe
-    expect(el.querySelectorAll('svg.icon3').length).toBe(2); // Dumbbell + User
+    expect(el.querySelectorAll('svg.icon3').length).toBe(0); // plan3 está comentado en el template
     expect(el.querySelectorAll('svg.icon2').length).toBe(5); // IdCard, Whistle, GraduationCap, Target, User
   });
 });

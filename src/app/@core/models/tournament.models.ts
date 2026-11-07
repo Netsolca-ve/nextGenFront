@@ -216,6 +216,61 @@ export interface AdminTournament {
   totalPartidos?: number;
 }
 
+/** Normaliza una categoría para comparar "SUB-12", "SUB 12" y "sub12". */
+export function normalizeCategory(value?: string | null): string {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '');
+}
+
+/** Compara dos categorías sin depender de espacios, guiones o mayúsculas. */
+export function sameCategory(first?: string | null, second?: string | null): boolean {
+  const firstKey = normalizeCategory(first);
+  const secondKey = normalizeCategory(second);
+  return Boolean(firstKey && secondKey && firstKey === secondKey);
+}
+
+/** Une categorías eliminando duplicados normalizados y conservando la etiqueta original. */
+export function uniqueCategories(
+  values: Array<string | null | undefined | Array<string | null | undefined>>,
+): string[] {
+  const seen = new Set<string>();
+  const categories: string[] = [];
+
+  for (const value of values) {
+    const items = Array.isArray(value) ? value : [value];
+
+    for (const item of items) {
+      const label = String(item ?? '').trim();
+      const key = normalizeCategory(label);
+      if (!key || seen.has(key)) continue;
+
+      seen.add(key);
+      categories.push(label);
+    }
+  }
+
+  return categories;
+}
+
+/** Categorías configuradas en un torneo, con compatibilidad para datos antiguos. */
+export function getTournamentCategories(tournament?: AdminTournament | null): string[] {
+  if (!tournament) return [];
+
+  const config = parseFormatoConfig(tournament.formato_config);
+  const legacy = typeof tournament.categoria === 'string' ? tournament.categoria.split(',') : [];
+
+  return uniqueCategories([
+    config.categoriasHabilitadas,
+    tournament.categorias,
+    tournament.categories,
+    legacy,
+  ]);
+}
+
 export interface TournamentMatch {
   idPartido: number;
   fase: string;
@@ -226,6 +281,9 @@ export interface TournamentMatch {
   marcadorLocal: number | null;
   marcadorVisitante: number | null;
   status: string | null;
+  categoria?: string | null;
+  categoriaEquipoLocal?: string | null;
+  categoriaEquipoVisitante?: string | null;
   nombreEquipoLocal?: string;
   nombreEquipoVisitante?: string;
   logoEquipoLocal?: string | null;
@@ -246,4 +304,5 @@ export interface TournamentStanding {
   vallasInvictas?: number;
   puntos: number;
   logo?: string | null;
+  categoria?: string | null;
 }

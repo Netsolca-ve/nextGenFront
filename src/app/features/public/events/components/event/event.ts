@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -15,12 +15,15 @@ import { forkJoin } from 'rxjs';
 import {
   AdminTournament,
   DEFAULT_EVENT_BANNER,
+  getTournamentCategories,
   isProximamente,
   parseFormatoConfig,
   PROXIMAMENTE_BANNER,
+  sameCategory,
   toDateInput,
   TournamentMatch,
   TournamentStanding,
+  uniqueCategories,
 } from '../../../../../@core/models/tournament.models';
 import { Tournaments } from '../../../../../@core/services/tournaments';
 import { matchSlug } from '../../../../../@core/utils/match-slug';
@@ -51,6 +54,10 @@ export class Event {
   readonly tournament = signal<AdminTournament | null>(null);
   readonly matches = signal<TournamentMatch[]>([]);
   readonly standings = signal<TournamentStanding[]>([]);
+  readonly categories = signal<string[]>([]);
+  readonly selectedCategory = signal('');
+  readonly filteredMatches = computed(() => this.filterMatchesByCategory(this.matches()));
+  readonly filteredStandings = computed(() => this.filterStandingsByCategory(this.standings()));
   readonly loading = signal(true);
   readonly eventId = signal('');
 
@@ -71,15 +78,56 @@ export class Event {
     }).subscribe({
       next: (result) => {
         const teams = Array.isArray(result.teams) ? result.teams : (result.teams.data ?? []);
+        const teamCategories = new Map<number, string>();
+        for (const team of teams) {
+          const teamId = Number(team.idEquipo ?? team.id);
+          const category = team.categoria ?? team.category;
+          if (Number.isFinite(teamId) && category) {
+            teamCategories.set(teamId, category);
+          }
+        }
+
         this.eventId.set(id);
         const tournament = result.tournaments.find((item) => String(item.idTorneo ?? item.id) === id);
         this.tournament.set(tournament ?? null);
-        this.matches.set(result.matches);
 
-        this.standings.set(result.standings.map((standing) => ({
+        const matches = result.matches.map((match) => ({
+          ...match,
+          categoria:
+            match.categoria ??
+            match.categoriaEquipoLocal ??
+            match.categoriaEquipoVisitante ??
+            teamCategories.get(Number(match.idEquipoLocal)) ??
+            teamCategories.get(Number(match.idEquipoVisitante)) ??
+            null,
+        }));
+        this.matches.set(matches);
+
+        const standings = result.standings.map((standing) => ({
           ...standing,
           logo: standing.logo ?? this.teamLogo(teams, standing.idEquipo),
-        })));
+          categoria: standing.categoria ?? teamCategories.get(Number(standing.idEquipo)) ?? null,
+        }));
+        this.standings.set(standings);
+
+        const categories = uniqueCategories([
+          getTournamentCategories(tournament),
+          standings.map((standing) => standing.categoria),
+          matches.flatMap((match) => [
+            match.categoria,
+            match.categoriaEquipoLocal,
+            match.categoriaEquipoVisitante,
+          ]),
+        ]);
+        this.categories.set(categories);
+        const withData =
+          categories.find((category) =>
+            matches.some((match) => sameCategory(this.matchCategory(match), category)),
+          ) ??
+          categories.find((category) =>
+            standings.some((standing) => sameCategory(standing.categoria, category)),
+          );
+        this.selectedCategory.set(withData ?? categories[0] ?? '');
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -90,9 +138,9 @@ export class Event {
   subtitle(): string { return this.tournament()?.description ?? 'Competencia deportiva NextGen.'; }
   organizer(): string { return this.tournament()?.organizador ?? this.tournament()?.organizer ?? 'NextGen'; }
   place(): string { return this.tournament()?.sede ?? this.tournament()?.place ?? 'Sede por definir'; }
-  categories(): string[] {
-    const tournament = this.tournament();
-    return tournament?.categorias ?? tournament?.categories ?? (tournament?.categoria ? tournament.categoria.split(',').map((item) => item.trim()) : []);
+  selectCategory(category: string): void { this.selectedCategory.set(category); }
+  matchCategory(match: TournamentMatch): string {
+    return match.categoria ?? match.categoriaEquipoLocal ?? match.categoriaEquipoVisitante ?? '';
   }
   dateRange(): string {
     const tournament = this.tournament();
@@ -114,14 +162,31 @@ export class Event {
 
   /** Resumen real de los partidos del evento (finalizados vs pendientes). */
   matchesSummary(): string {
-    const total = this.matches().length;
+    const matches = this.filteredMatches();
+    const total = matches.length;
     if (!total) return 'Sin partidos';
-    const finished = this.matches().filter((match) => this.isFinished(match.status)).length;
+    const finished = matches.filter((match) => this.isFinished(match.status)).length;
     if (finished === total) return `${total} partidos finalizados`;
     if (finished > 0) return `${finished} de ${total} partidos finalizados`;
     return `${total} partidos programados`;
   }
   matchSlug(match: TournamentMatch): string { return matchSlug(match.idPartido, match.nombreEquipoLocal, match.nombreEquipoVisitante); }
+
+  private filterMatchesByCategory(matches: TournamentMatch[]): TournamentMatch[] {
+    const category = this.selectedCategory();
+    if (!category) return matches;
+    return matches.filter((match) => sameCategory(this.matchCategory(match), category));
+  }
+
+  private filterStandingsByCategory(standings: TournamentStanding[]): TournamentStanding[] {
+    const category = this.selectedCategory();
+    const rows = category
+      ? standings.filter((row) => sameCategory(row.categoria, category))
+      : standings;
+
+    return rows.map((row, index) => ({ ...row, posicion: index + 1 }));
+  }
+
   private teamLogo(teams: AdminTeam[], idEquipo: number | null | undefined): string | null {
     const team = teams.find((item) => Number(item.idEquipo ?? item.id) === Number(idEquipo));
     return team?.logo ?? team?.image ?? null;

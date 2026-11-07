@@ -112,11 +112,40 @@
     </a>
   </div>
 
+  @if (categories().length > 1 || selectedCategory()) {
+    <div class="tournamentCategoryFilter" aria-label="Filtrar torneo por categoría">
+      <span class="tournamentCategoryLabel">Categoría</span>
+      <div class="tournamentCategoryTabs">
+        @if (categories().length > 1) {
+          <button
+            type="button"
+            class="tournamentCategoryTab"
+            [class.is-active]="!selectedCategory()"
+            (click)="selectCategory('')"
+          >
+            Todas
+          </button>
+        }
+        @for (category of categories(); track category) {
+          <button
+            type="button"
+            class="tournamentCategoryTab"
+            [class.is-active]="selectedCategory() === category"
+            (click)="selectCategory(category)"
+          >
+            {{ category }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+
   <div class="tournamentsGrid">
     <article class="standingsCard">
       <div class="cardHeader">
         <svg lucideTrophy></svg>
         <h3>Tabla de posiciones</h3>
+        @if (selectedCategory()) { <span class="cardHeaderTag">{{ selectedCategory() }}</span> }
       </div>
 
       <ol class="standingsList">
@@ -133,6 +162,8 @@
             <span class="standingsName">{{ row.name }}</span>
             <span class="standingsPoints">{{ row.points }} pts</span>
           </li>
+        } @empty {
+          <li class="homeEmptyState">No hay posiciones para esta categoría.</li>
         }
       </ol>
 

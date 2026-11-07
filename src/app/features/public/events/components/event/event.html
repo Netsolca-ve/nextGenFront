@@ -31,7 +31,33 @@
             </ul>
             <div class="eventCategories">
                 <div class="eventCategoriesTitle"><svg lucideUsers></svg><span>Categorías</span></div>
-                <div class="eventCategoryChips">@for (category of categories(); track category) { <div class="eventCategoryChip"><strong>{{ category }}</strong></div> }</div>
+                <div class="eventCategoryChips">
+                    @if (categories().length > 1) {
+                        <button
+                            type="button"
+                            class="eventCategoryChip"
+                            [class.is-active]="!selectedCategory()"
+                            (click)="selectCategory('')"
+                        >
+                            <strong>Todas</strong>
+                            <span>Ver todas las categorías</span>
+                        </button>
+                    }
+                    @for (category of categories(); track category) {
+                        <button
+                            type="button"
+                            class="eventCategoryChip"
+                            [class.is-active]="selectedCategory() === category"
+                            (click)="selectCategory(category)"
+                        >
+                            <strong>{{ category }}</strong>
+                            <span>{{ selectedCategory() === category ? 'Categoría seleccionada' : 'Ver partidos y tabla' }}</span>
+                        </button>
+                    }
+                </div>
+                @if (categories().length > 1) {
+                    <small class="eventCategoryHint">Selecciona una categoría para filtrar los partidos y la tabla de posiciones.</small>
+                }
             </div>
         </article>
 
@@ -53,10 +79,13 @@
 
 <section class="eventCompetitionGrid">
     <article class="eventCard eventCompetitionCard">
-        <h2 class="eventCardTitle">Partidos del torneo</h2>
-        @if (matches().length) {
+        <h2 class="eventCardTitle">
+            Partidos del torneo
+            @if (selectedCategory()) { <span class="eventCardTag">{{ selectedCategory() }}</span> }
+        </h2>
+        @if (filteredMatches().length) {
             <div class="publicMatchList">
-                @for (match of matches(); track match.idPartido) {
+                @for (match of filteredMatches(); track match.idPartido) {
                     <div class="publicMatchRow" [routerLink]="['/match', matchSlug(match)]" role="link" tabindex="0">
                         <div><strong>{{ matchDate(match.fecha) }}</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
                         <span>{{ teamName(match, 'local') }} <b>{{ match.marcadorLocal ?? '-' }} - {{ match.marcadorVisitante ?? '-' }}</b> {{ teamName(match, 'away') }}</span>
@@ -64,14 +93,21 @@
                     </div>
                 }
             </div>
-        } @else { <p class="eventEmpty">Aún no hay partidos generados.</p> }
+        } @else {
+            <p class="eventEmpty">
+                {{ selectedCategory() ? 'Aún no hay partidos generados para la categoría ' + selectedCategory() + '.' : 'Aún no hay partidos generados.' }}
+            </p>
+        }
     </article>
 
     <article class="eventCard eventCompetitionCard">
-        <h2 class="eventCardTitle">Tabla de posiciones</h2>
-        @if (standings().length) {
+        <h2 class="eventCardTitle">
+            Tabla de posiciones
+            @if (selectedCategory()) { <span class="eventCardTag">{{ selectedCategory() }}</span> }
+        </h2>
+        @if (filteredStandings().length) {
             <div class="publicStandings">
-                @for (row of standings(); track row.idEquipo) {
+                @for (row of filteredStandings(); track row.idEquipo) {
                     <div class="publicStandingRow">
                         <b>{{ row.posicion }}</b>
                         <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
@@ -80,7 +116,11 @@
                     </div>
                 }
             </div>
-        } @else { <p class="eventEmpty">La tabla estará disponible cuando existan resultados.</p> }
+        } @else {
+            <p class="eventEmpty">
+                {{ selectedCategory() ? 'La tabla estará disponible cuando existan resultados para la categoría ' + selectedCategory() + '.' : 'La tabla estará disponible cuando existan resultados.' }}
+            </p>
+        }
     </article>
 </section>
 

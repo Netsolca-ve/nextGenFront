@@ -456,6 +456,61 @@
   height: 16px;
 }
 
+.tournamentCategoryFilter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0 18px;
+}
+
+.tournamentCategoryLabel {
+  color: #9d9ea7;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.tournamentCategoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tournamentCategoryTab {
+  padding: 7px 14px;
+  border: 1px solid rgba(0, 148, 221, 0.35);
+  border-radius: 999px;
+  background-color: rgba(0, 148, 221, 0.08);
+  color: #c2c2ba;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tournamentCategoryTab:hover {
+  border-color: rgba(0, 148, 221, 0.7);
+  background-color: rgba(0, 148, 221, 0.16);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.tournamentCategoryTab.is-active {
+  border-color: #0094dd;
+  background: linear-gradient(135deg, #0aa2ee, #0094dd);
+  color: white;
+  box-shadow: 0 6px 16px rgba(0, 148, 221, 0.25);
+}
+
 .tournamentsGrid {
   width: 100%;
   display: grid;
@@ -491,6 +546,19 @@
 .cardHeader h3 {
   font-size: 15px;
   font-weight: 700;
+}
+
+.cardHeaderTag {
+  margin-left: auto;
+  padding: 3px 9px;
+  border: 1px solid rgba(0, 148, 221, 0.35);
+  border-radius: 999px;
+  background-color: rgba(0, 148, 221, 0.1);
+  color: #7dd3fc;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .standingsList {

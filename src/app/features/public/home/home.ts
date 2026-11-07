@@ -10,7 +10,13 @@ import {
   LucideVolleyball,
 } from '@lucide/angular';
 import { Tournaments } from '../../../@core/services/tournaments';
-import { TournamentMatch } from '../../../@core/models/tournament.models';
+import {
+  AdminTournament,
+  getTournamentCategories,
+  sameCategory,
+  TournamentMatch,
+  uniqueCategories,
+} from '../../../@core/models/tournament.models';
 import { AdminTeam } from '../../../@core/models/team.models';
 import { Teams } from '../../../@core/services/teams';
 import { forkJoin } from 'rxjs';
@@ -28,6 +34,7 @@ interface StandingRow {
   name: string;
   points: number;
   logo: string;
+  category: string;
 }
 
 interface MatchTeam {
@@ -44,6 +51,7 @@ interface NextMatch {
   time: string;
   homeScore: number | null;
   awayScore: number | null;
+  category: string;
 }
 
 // Logo provisional mientras se cargan los escudos reales de cada equipo.
@@ -72,10 +80,14 @@ export class Home implements OnInit {
   timeLeft = signal<TimeLeft>({ dias: '00', horas: '00', minutos: '00', segundos: '00' });
 
   standings = signal<StandingRow[]>([]);
+  allStandings = signal<StandingRow[]>([]);
+  categories = signal<string[]>([]);
+  selectedCategory = signal('');
 
   nextMatch = signal<NextMatch | null>(null);
   nextMatches = signal<NextMatch[]>([]);
   firstDayMatches = signal<NextMatch[]>([]);
+  allMatches = signal<NextMatch[]>([]);
   scoreboardDragging = false;
   private scoreboardDragStartX = 0;
   private scoreboardScrollStart = 0;
@@ -96,7 +108,7 @@ export class Home implements OnInit {
         const tournamentId = res?.idTorneo ?? res?.id;
         if (tournamentId) {
           this.nextTournamentId.set(tournamentId);
-          this.loadTournamentData(tournamentId);
+          this.loadTournamentData(tournamentId, res);
         }
       },
       error: () => {
@@ -105,7 +117,10 @@ export class Home implements OnInit {
     });
   }
 
-  private loadTournamentData(tournamentId: string | number): void {
+  private loadTournamentData(
+    tournamentId: string | number,
+    tournament?: AdminTournament | null,
+  ): void {
     forkJoin({
       matches: this.tournamentService.getTournamentMatches(tournamentId),
       standings: this.tournamentService.getTournamentStandings(tournamentId),
@@ -113,35 +128,86 @@ export class Home implements OnInit {
     }).subscribe({
       next: ({ matches, standings, teams }) => {
         const teamList = Array.isArray(teams) ? teams : (teams.data ?? []);
-        this.standings.set(standings.map((row) => ({
+        const teamCategories = new Map<number, string>();
+        for (const team of teamList) {
+          const teamId = Number(team.idEquipo ?? team.id);
+          const category = team.categoria ?? team.category;
+          if (Number.isFinite(teamId) && category) {
+            teamCategories.set(teamId, category);
+          }
+        }
+
+        const allStandings = standings.map((row) => ({
           position: row.posicion,
           name: row.nombre,
           points: row.puntos,
           logo: row.logo ?? this.teamLogo(teamList, row.idEquipo),
-        })));
-        const upcoming = matches
+          category: row.categoria ?? teamCategories.get(Number(row.idEquipo)) ?? '',
+        }));
+        this.allStandings.set(allStandings);
+
+        const allMatches = matches
           .slice()
           .sort((a, b) => this.dateValue(a.fecha) - this.dateValue(b.fecha))
-          .map((match) => this.toNextMatch(match, teamList));
-        this.firstDayMatches.set(
-          matches
-            .slice()
-            .sort((a, b) => this.dateValue(a.fecha) - this.dateValue(b.fecha))
-            .map((match) => this.toNextMatch(match, teamList)),
-        );
-        this.nextMatches.set(upcoming.slice(0, 2));
-        this.nextMatch.set(upcoming[0] ?? null);
+          .map((match) => this.toNextMatch(match, teamList, teamCategories));
+        this.allMatches.set(allMatches);
+
+        const categories = uniqueCategories([
+          getTournamentCategories(tournament),
+          allStandings.map((row) => row.category),
+          allMatches.map((match) => match.category),
+        ]);
+        this.categories.set(categories);
+        const withData =
+          categories.find((category) =>
+            allMatches.some((match) => sameCategory(match.category, category)),
+          ) ??
+          categories.find((category) =>
+            allStandings.some((row) => sameCategory(row.category, category)),
+          );
+        this.selectedCategory.set(withData ?? categories[0] ?? '');
+        this.applyCategoryFilter();
       },
       error: () => {
         this.standings.set([]);
+        this.allStandings.set([]);
+        this.categories.set([]);
+        this.selectedCategory.set('');
         this.nextMatches.set([]);
         this.firstDayMatches.set([]);
+        this.allMatches.set([]);
         this.nextMatch.set(null);
       },
     });
   }
 
-  private toNextMatch(match: TournamentMatch, teams: AdminTeam[]): NextMatch {
+  selectCategory(category: string): void {
+    this.selectedCategory.set(category);
+    this.applyCategoryFilter();
+  }
+
+  private applyCategoryFilter(): void {
+    const category = this.selectedCategory();
+    const standings = category
+      ? this.allStandings().filter((row) => sameCategory(row.category, category))
+      : this.allStandings();
+    this.standings.set(
+      standings.map((row, index) => ({ ...row, position: index + 1 })),
+    );
+
+    const matches = category
+      ? this.allMatches().filter((match) => sameCategory(match.category, category))
+      : this.allMatches();
+    this.firstDayMatches.set(matches);
+    this.nextMatches.set(matches.slice(0, 2));
+    this.nextMatch.set(matches[0] ?? null);
+  }
+
+  private toNextMatch(
+    match: TournamentMatch,
+    teams: AdminTeam[],
+    teamCategories: Map<number, string>,
+  ): NextMatch {
     const date = new Date(match.fecha);
     return {
       idPartido: match.idPartido,
@@ -152,6 +218,13 @@ export class Home implements OnInit {
       time: Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }),
       homeScore: match.marcadorLocal,
       awayScore: match.marcadorVisitante,
+      category:
+        match.categoria ??
+        match.categoriaEquipoLocal ??
+        match.categoriaEquipoVisitante ??
+        teamCategories.get(Number(match.idEquipoLocal)) ??
+        teamCategories.get(Number(match.idEquipoVisitante)) ??
+        '',
     };
   }
 

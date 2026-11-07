@@ -147,6 +147,17 @@ function emptyTeam(name: string, color: string): MatchTeam {
   return { name, logo: '', color, lineup: [], bench: [], events: [] };
 }
 
+function formatMinute(value: number | string | null | undefined): string {
+  if (value === null || value === undefined || value === '') return '';
+  return `${value}'`;
+}
+
+/** Ordena por minuto y deja al final los eventos sin minuto. */
+function minuteOrder(event: { minute: string }): number {
+  const minute = Number.parseInt(event.minute, 10);
+  return Number.isFinite(minute) ? minute : Number.MAX_SAFE_INTEGER;
+}
+
 function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: MatchGoal[], substitutions: MatchSubstitution[], teams: AdminTeam[]): MatchView {
   const local = alignments.filter((alignment) => Number(alignment.idEquipo) === Number(match.idEquipoLocal));
   const away = alignments.filter((alignment) => Number(alignment.idEquipo) === Number(match.idEquipoVisitante));
@@ -174,18 +185,18 @@ function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: Mat
     })),
     events: [
       ...goals.filter((goal) => Number(goal.idEquipo) === Number(idEquipo)).map((goal) => ({
-        minute: `${goal.minuto}'`,
+        minute: formatMinute(goal.minuto),
         type: 'goal' as const,
         title: goal.esAutogol ? 'Autogol' : 'Gol',
         player: playerName(goal.idJugador),
       })),
       ...substitutions.filter((substitution) => Number(substitution.idEquipo) === Number(idEquipo)).map((substitution) => ({
-        minute: `${substitution.minuto}'`,
+        minute: formatMinute(substitution.minuto),
         type: 'sub' as const,
         title: 'Cambio',
         player: `${playerName(substitution.idJugadorSale)} por ${playerName(substitution.idJugadorEntra)}`,
       })),
-    ].sort((first, second) => Number.parseInt(first.minute, 10) - Number.parseInt(second.minute, 10)),
+    ].sort((first, second) => minuteOrder(first) - minuteOrder(second)),
   });
 
   return {

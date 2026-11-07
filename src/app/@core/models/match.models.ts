@@ -52,7 +52,7 @@ export interface MatchAlignment {
 export interface MatchIncident {
   id?: number;
   tipo: MatchEventType;
-  minuto: number | string;
+  minuto: number | string | null;
   idEquipo: number;
   idJugador?: number | null;
   descripcion?: string | null;
@@ -60,7 +60,7 @@ export interface MatchIncident {
 
 export interface MatchGoal {
   idGol?: number;
-  minuto: number | string;
+  minuto: number | string | null;
   esAutogol: boolean | number;
   idPartido?: number;
   idJugador: number;
@@ -70,7 +70,7 @@ export interface MatchGoal {
 
 export interface MatchSubstitution {
   idSustitucionPartido?: number;
-  minuto: number | string;
+  minuto: number | string | null;
   periodo: number | string;
   idPartido?: number;
   idEquipo: number;

@@ -78,14 +78,14 @@ export class EditMatch {
 
   readonly incidentForm = new FormGroup({
     tipo: new FormControl<MatchEventType>('yellow', { nonNullable: true }),
-    minuto: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    minuto: new FormControl('', { nonNullable: true }),
     idEquipo: new FormControl<number | null>(this.match.idEquipoLocal, Validators.required),
     idJugador: new FormControl<number | null>(null),
     descripcion: new FormControl('', { nonNullable: true }),
   });
 
   readonly goalForm = new FormGroup({
-    minuto: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    minuto: new FormControl('', { nonNullable: true }),
     idEquipo: new FormControl<number | null>(this.match.idEquipoLocal, Validators.required),
     idJugador: new FormControl<number | null>(null, Validators.required),
     idJugadorAsistencia: new FormControl<number | null>(null),
@@ -93,7 +93,7 @@ export class EditMatch {
   });
 
   readonly substitutionForm = new FormGroup({
-    minuto: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    minuto: new FormControl('', { nonNullable: true }),
     periodo: new FormControl('1', { nonNullable: true, validators: [Validators.required] }),
     idEquipo: new FormControl<number | null>(this.match.idEquipoLocal, Validators.required),
     idJugadorSale: new FormControl<number | null>(null, Validators.required),
@@ -164,14 +164,23 @@ export class EditMatch {
     this.alignments.update((items) => items.map((item) => item.idJugador === alignment.idJugador ? { ...item, esCapitan: !this.asBoolean(item.esCapitan) } : item));
   }
 
+  private parseMinute(value: string | number | null): number | null {
+    if (value === null || value === undefined || value === '') return null;
+    const minute = Number(value);
+    return Number.isFinite(minute) && minute >= 0 ? minute : null;
+  }
+
   addIncident(): void {
     if (this.incidentForm.invalid) {
       this.incidentForm.markAllAsTouched();
       return;
     }
 
-    const incident = this.incidentForm.getRawValue() as MatchIncident;
-    this.cards.update((items) => [...items, incident]);
+    const incident = this.incidentForm.getRawValue();
+    this.cards.update((items) => [
+      ...items,
+      { ...incident, minuto: this.parseMinute(incident.minuto) } as MatchIncident,
+    ]);
     this.incidentForm.reset({ tipo: 'yellow', minuto: '', idEquipo: this.match.idEquipoLocal, idJugador: null, descripcion: '' });
   }
 
@@ -181,7 +190,11 @@ export class EditMatch {
       return;
     }
 
-    this.goals.update((items) => [...items, this.goalForm.getRawValue() as MatchGoal]);
+    const goal = this.goalForm.getRawValue();
+    this.goals.update((items) => [
+      ...items,
+      { ...goal, minuto: this.parseMinute(goal.minuto) } as MatchGoal,
+    ]);
     this.goalForm.reset({ minuto: '', idEquipo: this.match.idEquipoLocal, idJugador: null, idJugadorAsistencia: null, esAutogol: false });
   }
 
@@ -191,7 +204,11 @@ export class EditMatch {
       return;
     }
 
-    this.substitutions.update((items) => [...items, this.substitutionForm.getRawValue() as MatchSubstitution]);
+    const substitution = this.substitutionForm.getRawValue();
+    this.substitutions.update((items) => [
+      ...items,
+      { ...substitution, minuto: this.parseMinute(substitution.minuto) } as MatchSubstitution,
+    ]);
     this.substitutionForm.reset({ minuto: '', periodo: '1', idEquipo: this.match.idEquipoLocal, idJugadorSale: null, idJugadorEntra: null });
   }
 

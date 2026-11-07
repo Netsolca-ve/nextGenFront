@@ -74,7 +74,7 @@
         <section class="fieldFull incidentsSection">
             <h3>Goles</h3>
             <div class="incidentForm goalForm" [formGroup]="goalForm">
-                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Minuto (opcional)</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Goleador</mat-label><mat-select formControlName="idJugador">@for (player of goalPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Asistencia</mat-label><mat-select formControlName="idJugadorAsistencia"><mat-option [value]="null">Sin asistencia</mat-option>@for (player of goalPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
@@ -82,12 +82,12 @@
                 <button mat-stroked-button type="button" (click)="addGoal()">Agregar gol</button>
             </div>
             <div class="incidentList">
-                @for (goal of goals(); track $index) { <span>Gol {{ goal.minuto }}' · {{ playerLabel(goal.idJugador) }}{{ goal.idJugadorAsistencia ? ' · Asistió ' + playerLabel(goal.idJugadorAsistencia) : '' }}{{ goal.esAutogol ? ' · Autogol' : '' }} <button type="button" (click)="removeIncident('goals', $index)">×</button></span> }
+                @for (goal of goals(); track $index) { <span>Gol @if (goal.minuto !== null && goal.minuto !== '') { {{ goal.minuto }}' · } {{ playerLabel(goal.idJugador) }}{{ goal.idJugadorAsistencia ? ' · Asistió ' + playerLabel(goal.idJugadorAsistencia) : '' }}{{ goal.esAutogol ? ' · Autogol' : '' }} <button type="button" (click)="removeIncident('goals', $index)">×</button></span> }
             </div>
 
             <h3>Cambios y tarjetas</h3>
             <div class="incidentForm substitutionForm" [formGroup]="substitutionForm">
-                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Minuto (opcional)</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Período</mat-label><mat-select formControlName="periodo"><mat-option value="1">1</mat-option><mat-option value="2">2</mat-option><mat-option value="3">3</mat-option><mat-option value="4">4</mat-option></mat-select></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Sale</mat-label><mat-select formControlName="idJugadorSale">@for (player of substitutionPlayers(); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
@@ -96,14 +96,14 @@
             </div>
             <div class="incidentForm cardForm" [formGroup]="incidentForm">
                 <mat-form-field appearance="outline"><mat-label>Tipo</mat-label><mat-select formControlName="tipo"><mat-option value="yellow">Tarjeta amarilla</mat-option><mat-option value="red">Tarjeta roja</mat-option></mat-select></mat-form-field>
-                <mat-form-field appearance="outline"><mat-label>Minuto</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Minuto (opcional)</mat-label><input matInput type="number" min="0" step="1" formControlName="minuto" placeholder="Ej. 14" /></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Equipo</mat-label><mat-select formControlName="idEquipo"><mat-option [value]="match.idEquipoLocal">{{ match.nombreEquipoLocal || 'Local' }}</mat-option><mat-option [value]="match.idEquipoVisitante">{{ match.nombreEquipoVisitante || 'Visitante' }}</mat-option></mat-select></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Jugador</mat-label><mat-select formControlName="idJugador">@for (player of playersForTeam(incidentForm.controls.idEquipo.value); track player.idJugador) { <mat-option [value]="player.idJugador">{{ playerLabel(player.idJugador) }}</mat-option> }</mat-select></mat-form-field>
                 <button mat-stroked-button type="button" (click)="addIncident()">Agregar</button>
             </div>
             <div class="incidentList">
-                @for (incident of cards(); track $index) { <span>{{ incident.tipo === 'yellow' ? 'Amarilla' : 'Roja' }} · {{ incident.minuto }}' · {{ teamName(incident.idEquipo) }} <button type="button" (click)="removeIncident('cards', $index)">×</button></span> }
-                @for (incident of substitutions(); track $index) { <span>Cambio · {{ incident.minuto }}' · {{ playerLabel(incident.idJugadorSale) }} por {{ playerLabel(incident.idJugadorEntra) }} <button type="button" (click)="removeIncident('substitutions', $index)">×</button></span> }
+                @for (incident of cards(); track $index) { <span>{{ incident.tipo === 'yellow' ? 'Amarilla' : 'Roja' }} · @if (incident.minuto !== null && incident.minuto !== '') { {{ incident.minuto }}' · }{{ teamName(incident.idEquipo) }} <button type="button" (click)="removeIncident('cards', $index)">×</button></span> }
+                @for (incident of substitutions(); track $index) { <span>Cambio · @if (incident.minuto !== null && incident.minuto !== '') { {{ incident.minuto }}' · }{{ playerLabel(incident.idJugadorSale) }} por {{ playerLabel(incident.idJugadorEntra) }} <button type="button" (click)="removeIncident('substitutions', $index)">×</button></span> }
             </div>
         </section>
     </mat-dialog-content>

@@ -52,7 +52,7 @@
       <ul class="eventList">
         @for (event of home.events; track $index) {
           <li class="eventItem">
-            <span class="eventMinute">{{ event.minute }}</span>
+            @if (event.minute) { <span class="eventMinute">{{ event.minute }}</span> }
 
             <span class="eventIcon">
               @switch (event.type) {
@@ -89,7 +89,7 @@
       <ul class="eventList">
         @for (event of away.events; track $index) {
           <li class="eventItem">
-            <span class="eventMinute">{{ event.minute }}</span>
+            @if (event.minute) { <span class="eventMinute">{{ event.minute }}</span> }
 
             <span class="eventIcon">
               @switch (event.type) {

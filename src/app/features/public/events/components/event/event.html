@@ -31,7 +31,7 @@
             </ul>
             <div class="eventCategories">
                 <div class="eventCategoriesTitle"><svg lucideUsers></svg><span>Categorías</span></div>
-                <div class="eventCategoryChips">
+                <!-- <div class="eventCategoryChips">
                     @if (categories().length > 1) {
                         <button
                             type="button"
@@ -57,7 +57,9 @@
                 </div>
                 @if (categories().length > 1) {
                     <small class="eventCategoryHint">Selecciona una categoría para filtrar los partidos y la tabla de posiciones.</small>
-                }
+                } -->
+                
+                {{ selectedCategory() }}
             </div>
         </article>
 

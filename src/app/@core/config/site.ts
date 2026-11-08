@@ -7,7 +7,7 @@
  */
 export const SITE = {
   name: 'NextGen',
-  url: 'https://next-gen-chris-projects-29c611e1.vercel.app',
+  url: 'https://www.nextgen.com.ve',
   title: 'NextGen | Formación y gestión deportiva',
   description:
     'Plataforma integral de formación, gestión y competencia deportiva: academias, torneos, partidos y estadísticas para atletas, clubes y organizaciones.',

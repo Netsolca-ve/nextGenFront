@@ -1,7 +1,7 @@
 <nav aria-label="Navegación principal">
   <div class="nav-container">
-    <a routerLink="/" class="logo" aria-label="NextGen - Inicio" (click)="closeMenu()">
-      <img src="/images/logo.png" alt="NextGen" />
+    <a routerLink="/" class="logo" aria-label="Next Gen - Inicio" (click)="closeMenu()">
+      <img src="/images/logo.png" alt="Next Gen Sport Ecosystem" />
     </a>
 
     <div class="nav-links" id="navLinks" [class.is-open]="menuOpen()">
@@ -14,8 +14,8 @@
       >
         INICIO
       </a>
-      <a routerLink="/" fragment="ecosystem" (click)="closeMenu()">ECOSISTEMA</a>
-      <a routerLink="/" fragment="academies" (click)="closeMenu()">ACADEMIAS</a>
+      <a routerLink="/" fragment="ecosystem" (click)="goToSection('ecosystem', $event)">ECOSISTEMA</a>
+      <a routerLink="/" fragment="academies" (click)="goToSection('academies', $event)">ACADEMIAS</a>
       <a
         routerLink="/events"
         routerLinkActive="active"
@@ -110,7 +110,7 @@
 
     <div class="footerBot">
       <p>
-        © 2026 Next Gen. Todos los derechos reservados. Desarrollado por
+        © 2026 Next Gen Sport Ecosystem. Todos los derechos reservados. Desarrollado por
         <a href="/about">Netsolca</a>
       </p>
     </div>

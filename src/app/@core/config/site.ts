@@ -6,11 +6,11 @@
  * `public/robots.txt` / `public/sitemap.xml` / `src/index.html`.
  */
 export const SITE = {
-  name: 'NextGen',
+  name: 'Next Gen Sport Ecosystem',
   url: 'https://www.nextgen.com.ve',
-  title: 'NextGen | Formación y gestión deportiva',
+  title: 'Next Gen Sport Ecosystem | Futsal, torneos y academias',
   description:
-    'Plataforma integral de formación, gestión y competencia deportiva: academias, torneos, partidos y estadísticas para atletas, clubes y organizaciones.',
+    'Next Gen Sport Ecosystem (Next Gen Futsal): torneos de futsal, academias deportivas, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones en Venezuela.',
   image: '/images/hero.jpg',
   locale: 'es_VE',
   instagram: 'https://www.instagram.com/nextgen.ven/',

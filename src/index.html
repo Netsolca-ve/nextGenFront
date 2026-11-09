@@ -2,49 +2,52 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>NextGen | Formación y gestión deportiva</title>
+    <title>Next Gen Sport Ecosystem | Futsal, torneos y academias</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <meta
       name="description"
-      content="Plataforma integral de formación, gestión y competencia deportiva: academias, torneos, partidos y estadísticas para atletas, clubes y organizaciones."
+      content="Next Gen Sport Ecosystem (Next Gen Futsal): torneos de futsal, academias deportivas, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones en Venezuela."
     />
     <meta name="author" content="Netsolca" />
+    <meta name="application-name" content="Next Gen Sport Ecosystem" />
+    <meta name="apple-mobile-web-app-title" content="Next Gen" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#0094DD" />
     <link rel="canonical" href="https://www.nextgen.com.ve/" />
 
     <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="NextGen" />
+    <meta property="og:site_name" content="Next Gen Sport Ecosystem" />
     <meta property="og:locale" content="es_VE" />
-    <meta property="og:title" content="NextGen | Formación y gestión deportiva" />
+    <meta property="og:title" content="Next Gen Sport Ecosystem | Futsal, torneos y academias" />
     <meta
       property="og:description"
-      content="Plataforma integral de formación, gestión y competencia deportiva: academias, torneos, partidos y estadísticas."
+      content="Torneos de futsal, academias deportivas, partidos en vivo y estadísticas en Venezuela."
     />
     <meta property="og:url" content="https://www.nextgen.com.ve/" />
     <meta
       property="og:image"
       content="https://www.nextgen.com.ve/images/hero.jpg"
     />
-    <meta property="og:image:alt" content="NextGen, formación y gestión deportiva" />
+    <meta property="og:image:alt" content="Next Gen Sport Ecosystem" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="NextGen | Formación y gestión deportiva" />
+    <meta name="twitter:title" content="Next Gen Sport Ecosystem | Futsal, torneos y academias" />
     <meta
       name="twitter:description"
-      content="Plataforma integral de formación, gestión y competencia deportiva."
+      content="Torneos de futsal, academias deportivas y estadísticas en Venezuela."
     />
     <meta
       name="twitter:image"
       content="https://www.nextgen.com.ve/images/hero.jpg"
     />
 
-    <link rel="icon" type="image/png" href="images/icon.png" />
-    <link rel="apple-touch-icon" href="images/icon.png" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -60,22 +63,33 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SportsOrganization",
-        "name": "NextGen",
-        "alternateName": "Next Gen",
-        "url": "https://www.nextgen.com.ve/",
-        "logo": "https://www.nextgen.com.ve/images/icon.png",
-        "description": "Plataforma integral de formación, gestión y competencia deportiva para atletas, clubes y organizaciones.",
-        "sameAs": ["https://www.instagram.com/nextgen.ven/"],
-        "telephone": "+584166687002",
-        "areaServed": {
-          "@type": "Country",
-          "name": "Venezuela"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "VE"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://www.nextgen.com.ve/#website",
+            "name": "Next Gen Sport Ecosystem",
+            "alternateName": ["Next Gen", "Next Gen Futsal", "NextGen Venezuela"],
+            "url": "https://www.nextgen.com.ve/",
+            "inLanguage": "es-VE",
+            "publisher": { "@id": "https://www.nextgen.com.ve/#organization" }
+          },
+          {
+            "@type": "SportsOrganization",
+            "@id": "https://www.nextgen.com.ve/#organization",
+            "name": "Next Gen Sport Ecosystem",
+            "alternateName": ["Next Gen", "Next Gen Futsal", "NextGen Venezuela"],
+            "url": "https://www.nextgen.com.ve/",
+            "logo": "https://www.nextgen.com.ve/images/icon.png",
+            "image": "https://www.nextgen.com.ve/images/hero.jpg",
+            "description": "Ecosistema deportivo en Venezuela: torneos de futsal, academias de formación, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones.",
+            "sport": ["Futsal", "Fútbol"],
+            "knowsAbout": ["Torneos de futsal", "Academias de futsal", "Academias de fútbol", "Formación deportiva juvenil", "Ligas y competencias deportivas", "Estadísticas deportivas"],
+            "sameAs": ["https://www.instagram.com/nextgen.ven/"],
+            "telephone": "+584166687002",
+            "areaServed": { "@type": "Country", "name": "Venezuela" },
+            "address": { "@type": "PostalAddress", "addressCountry": "VE" }
+          }
+        ]
       }
     </script>
   </head>

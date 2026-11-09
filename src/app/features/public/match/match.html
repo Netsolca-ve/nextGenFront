@@ -73,7 +73,7 @@
 
             <div class="eventText">
               <strong>{{ event.title }}</strong>
-              <span>{{ event.player }}</span>
+              @if (event.player) { <span>{{ event.player }}</span> }
             </div>
           </li>
         }
@@ -110,7 +110,7 @@
 
             <div class="eventText">
               <strong>{{ event.title }}</strong>
-              <span>{{ event.player }}</span>
+              @if (event.player) { <span>{{ event.player }}</span> }
             </div>
           </li>
         }
@@ -134,7 +134,7 @@
         <span class="pitchGoal pitchGoal--left"></span>
         <span class="pitchGoal pitchGoal--right"></span>
 
-        @for (player of home.lineup; track player.number) {
+        @for (player of home.lineup; track $index) {
           <div class="pitchPlayer" [style.left.%]="player.x" [style.top.%]="player.y">
             <svg class="jersey" viewBox="0 0 64 64" [attr.fill]="home.color" aria-hidden="true">
               <path
@@ -149,7 +149,7 @@
           </div>
         }
 
-        @for (player of away.lineup; track player.number) {
+        @for (player of away.lineup; track $index) {
           <div class="pitchPlayer" [style.left.%]="player.x" [style.top.%]="player.y">
             <svg class="jersey" viewBox="0 0 64 64" [attr.fill]="away.color" aria-hidden="true">
               <path
@@ -175,7 +175,7 @@
       </header>
 
       <ul class="benchList">
-        @for (player of home.bench; track player.number) {
+        @for (player of home.bench; track $index) {
           <li class="benchPlayer">
             <svg
               class="jersey jersey--sm"
@@ -206,7 +206,7 @@
       </header>
 
       <ul class="benchList">
-        @for (player of away.bench; track player.number) {
+        @for (player of away.bench; track $index) {
           <li class="benchPlayer">
             <svg
               class="jersey jersey--sm"

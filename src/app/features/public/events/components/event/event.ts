@@ -94,7 +94,7 @@ export class Event {
         this.tournament.set(tournament ?? null);
 
         this.seo.setPage(
-          `${this.tournamentName()} | NextGen`,
+          `${this.tournamentName()} | Next Gen Sport Ecosystem`,
           this.subtitle(),
         );
 
@@ -141,9 +141,9 @@ export class Event {
     });
   }
 
-  tournamentName(): string { return this.tournament()?.nombre ?? this.tournament()?.name ?? 'Torneo NextGen'; }
-  subtitle(): string { return this.tournament()?.description ?? 'Competencia deportiva NextGen.'; }
-  organizer(): string { return this.tournament()?.organizador ?? this.tournament()?.organizer ?? 'NextGen'; }
+  tournamentName(): string { return this.tournament()?.nombre ?? this.tournament()?.name ?? 'Torneo Next Gen'; }
+  subtitle(): string { return this.tournament()?.description ?? 'Competencia deportiva Next Gen.'; }
+  organizer(): string { return this.tournament()?.organizador ?? this.tournament()?.organizer ?? 'Next Gen'; }
   place(): string { return this.tournament()?.sede ?? this.tournament()?.place ?? 'Sede por definir'; }
   selectCategory(category: string): void { this.selectedCategory.set(category); }
   matchCategory(match: TournamentMatch): string {

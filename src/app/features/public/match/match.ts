@@ -2,8 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LucideArrowLeft, LucideArrowRightLeft, LucideGoal, LucideShirt } from '@lucide/angular';
 import { Matches } from '../../../@core/services/matches';
-import { AdminMatch, MatchAlignment, MatchGoal, MatchSubstitution } from '../../../@core/models/match.models';
-import { AdminTeam } from '../../../@core/models/team.models';
+import { AdminMatch, MatchAlignment, MatchGoal, MatchIncident, MatchSubstitution } from '../../../@core/models/match.models';
+import { AdminTeam, isGoalkeeper, positionLabel } from '../../../@core/models/team.models';
 import { Teams } from '../../../@core/services/teams';
 import { SeoService } from '../../../@core/services/seo';
 import { matchIdFromSlug } from '../../../@core/utils/match-slug';
@@ -69,11 +69,12 @@ export class Match {
         alignments: this.matchesService.getAlignments(idPartido),
         goals: this.matchesService.getGoals(idPartido),
         substitutions: this.matchesService.getSubstitutions(idPartido),
+        cards: this.matchesService.getCards(idPartido),
         teams: this.teamsService.getAllTeams(),
       }).subscribe({
-        next: ({ alignments, goals, substitutions, teams }) => {
+        next: ({ alignments, goals, substitutions, cards, teams }) => {
           const teamList = Array.isArray(teams) ? teams : (teams.data ?? []);
-          const view = toMatchView(current, alignments, goals, substitutions, teamList);
+          const view = toMatchView(current, alignments, goals, substitutions, teamList, cards);
           this.match.set(view);
           this.applySeo(view);
         },
@@ -87,7 +88,7 @@ export class Match {
   }
 
   private applySeo(view: MatchView): void {
-    const title = `${view.home.name} vs ${view.away.name} | NextGen`;
+    const title = `${view.home.name} vs ${view.away.name} | Next Gen Sport Ecosystem`;
     const description = `${view.tournament} · ${view.round}. Resultado, alineaciones, goles y sustituciones.`;
     this.seo.setPage(title, description);
   }
@@ -158,38 +159,49 @@ function minuteOrder(event: { minute: string }): number {
   return Number.isFinite(minute) ? minute : Number.MAX_SAFE_INTEGER;
 }
 
-function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: MatchGoal[], substitutions: MatchSubstitution[], teams: AdminTeam[]): MatchView {
+function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: MatchGoal[], substitutions: MatchSubstitution[], teams: AdminTeam[], cards: MatchIncident[] = []): MatchView {
   const local = alignments.filter((alignment) => Number(alignment.idEquipo) === Number(match.idEquipoLocal));
   const away = alignments.filter((alignment) => Number(alignment.idEquipo) === Number(match.idEquipoVisitante));
   const localTeam = teams.find((team) => Number(team.idEquipo ?? team.id) === Number(match.idEquipoLocal));
   const awayTeam = teams.find((team) => Number(team.idEquipo ?? team.id) === Number(match.idEquipoVisitante));
-  const playerName = (idJugador: number): string => {
+  const playerName = (idJugador: number | null | undefined, fallback?: { nombreJugador?: string | null; apellidoJugador?: string | null }): string => {
     const player = alignments.find((item) => Number(item.idJugador) === Number(idJugador));
-    return player?.nombreJugador ?? ([player?.nombre, player?.apellido].filter(Boolean).join(' ') || `Jugador #${idJugador}`);
+    if (player) return player.nombreJugador ?? ([player.nombre, player.apellido].filter(Boolean).join(' ') || `Jugador #${idJugador}`);
+    const fromApi = [fallback?.nombreJugador, fallback?.apellidoJugador].filter(Boolean).join(' ');
+    return fromApi || (idJugador ? `Jugador #${idJugador}` : '');
+  };
+  // Un autogol lo comete un jugador de un equipo pero suma al rival:
+  // se muestra del lado contrario y sin el nombre de quien lo hizo.
+  const goalBelongsTo = (goal: MatchGoal, idEquipo: number | null): boolean => {
+    const scoredBy = Number(goal.idEquipo);
+    return isTrue(goal.esAutogol) ? scoredBy !== Number(idEquipo) : scoredBy === Number(idEquipo);
   };
   const makeTeam = (name: string, logo: string, color: string, idEquipo: number | null, players: MatchAlignment[], side: 'home' | 'away'): MatchTeam => ({
     name,
     logo,
     color,
-    lineup: players.filter((player) => isTrue(player.esTitular)).map((player, index) => ({
-      number: player.numeroCamiseta ?? 0,
-      name: player.nombreJugador ?? [player.nombre, player.apellido].filter(Boolean).join(' '),
-      position: player.posicion ?? '',
-      x: side === 'home' ? 8 + index * 9 : 92 - index * 9,
-      y: [50, 27, 73, 38, 62][index] ?? 50,
-    })),
+    lineup: buildLineup(players.filter((player) => isTrue(player.esTitular)), side),
     bench: players.filter((player) => !isTrue(player.esTitular)).map((player) => ({
       number: player.numeroCamiseta ?? 0,
       name: player.nombreJugador ?? [player.nombre, player.apellido].filter(Boolean).join(' '),
-      position: player.posicion ?? '',
+      position: positionLabel(player.posicion),
     })),
     events: [
-      ...goals.filter((goal) => Number(goal.idEquipo) === Number(idEquipo)).map((goal) => ({
+      ...goals.filter((goal) => goalBelongsTo(goal, idEquipo)).map((goal) => ({
         minute: formatMinute(goal.minuto),
         type: 'goal' as const,
-        title: goal.esAutogol ? 'Autogol' : 'Gol',
-        player: playerName(goal.idJugador),
+        title: isTrue(goal.esAutogol) ? 'Autogol' : 'Gol',
+        player: isTrue(goal.esAutogol) ? '' : playerName(goal.idJugador, goal),
       })),
+      ...cards.filter((card) => Number(card.idEquipo) === Number(idEquipo) && cardType(card.tipo)).map((card) => {
+        const type = cardType(card.tipo)!;
+        return {
+          minute: formatMinute(card.minuto),
+          type,
+          title: type === 'yellow' ? 'Tarjeta amarilla' : 'Tarjeta roja',
+          player: card.idJugador ? playerName(card.idJugador, card) : (card.descripcion ?? ''),
+        };
+      }),
       ...substitutions.filter((substitution) => Number(substitution.idEquipo) === Number(idEquipo)).map((substitution) => ({
         minute: formatMinute(substitution.minuto),
         type: 'sub' as const,
@@ -226,6 +238,51 @@ function toMatchView(match: AdminMatch, alignments: MatchAlignment[], goals: Mat
   };
 }
 
+/** Portería de cada equipo (mitad izquierda = local). */
+const GOALKEEPER_SLOT = { x: 7, y: 50 };
+
+/**
+ * Formación fija para los jugadores de campo (rombo 1-2-1 de futsal),
+ * siempre igual sin importar el orden en que se marquen los titulares.
+ * Si hay más de 4 jugadores de campo se usan los huecos extra.
+ */
+const FIELD_SLOTS = [
+  { x: 19, y: 50 },
+  { x: 30, y: 22 },
+  { x: 30, y: 78 },
+  { x: 42, y: 50 },
+  { x: 40, y: 26 },
+  { x: 40, y: 74 },
+];
+
+function buildLineup(starters: MatchAlignment[], side: 'home' | 'away'): LineupPlayer[] {
+  const byNumber = (a: MatchAlignment, b: MatchAlignment) => (a.numeroCamiseta ?? 999) - (b.numeroCamiseta ?? 999);
+  const goalkeeperIndex = starters.findIndex((player) => isGoalkeeper(player.posicion));
+  const goalkeeper = goalkeeperIndex >= 0 ? starters[goalkeeperIndex] : null;
+  const fieldPlayers = starters.filter((_, index) => index !== goalkeeperIndex).sort(byNumber);
+  const mirror = (x: number) => (side === 'home' ? x : 100 - x);
+  const toPlayer = (player: MatchAlignment, slot: { x: number; y: number }, position: string): LineupPlayer => ({
+    number: player.numeroCamiseta ?? 0,
+    name: player.nombreJugador ?? [player.nombre, player.apellido].filter(Boolean).join(' '),
+    position,
+    x: mirror(slot.x),
+    y: slot.y,
+  });
+
+  return [
+    ...(goalkeeper ? [toPlayer(goalkeeper, GOALKEEPER_SLOT, 'Portero')] : []),
+    ...fieldPlayers.map((player, index) => toPlayer(player, FIELD_SLOTS[index] ?? { x: 36, y: 50 }, 'Jugador')),
+  ];
+}
+
+/** Normaliza el tipo de tarjeta que devuelva el backend. */
+function cardType(tipo: string | null | undefined): 'yellow' | 'red' | null {
+  const value = (tipo ?? '').toString().trim().toLowerCase();
+  if (['yellow', 'amarilla', 'tarjeta_amarilla', 'a'].includes(value)) return 'yellow';
+  if (['red', 'roja', 'tarjeta_roja', 'r'].includes(value)) return 'red';
+  return null;
+}
+
 /** Etiqueta en español de la fase de un partido. */
 function faseLabel(fase: string | null | undefined): string {
   const labels: Record<string, string> = {
@@ -237,6 +294,6 @@ function faseLabel(fase: string | null | undefined): string {
   return labels[fase ?? ''] ?? fase ?? '';
 }
 
-function isTrue(value: boolean | number | string): boolean {
+function isTrue(value: boolean | number | string | null | undefined): boolean {
   return value === true || value === 1 || value === '1' || value === 'true';
 }

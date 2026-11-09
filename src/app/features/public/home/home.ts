@@ -1,5 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { scrollToSection } from '../../../@core/utils/scroll-to-section';
 import {
   LucideArrowRight,
   LucideCalendarDays,
@@ -75,6 +77,16 @@ const TEAM_LOGO_PLACEHOLDER = '/images/almirantes.png';
 export class Home implements OnInit {
   private readonly tournamentService = inject(Tournaments);
   private readonly teamsService = inject(Teams);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
+
+  constructor() {
+    // Al llegar con /#ecosystem o /#academies desde otra página. El pequeño
+    // retraso deja que el router termine de llevar la página arriba primero.
+    this.route.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
+      if (fragment) setTimeout(() => scrollToSection(fragment), 60);
+    });
+  }
   nextTournament = signal<string>('');
   nextTournamentId = signal<string | number | null>(null);
   timeLeft = signal<TimeLeft>({ dias: '00', horas: '00', minutos: '00', segundos: '00' });

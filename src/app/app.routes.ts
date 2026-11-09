@@ -6,19 +6,19 @@ import { PublicLayout } from './layouts/public-layout/public-layout';
 export const routes: Routes = [
   {
     path: 'login',
-    title: 'Iniciar sesión | NextGen',
+    title: 'Iniciar sesión | Next Gen',
     data: { noindex: true },
     loadComponent: () => import('./auth/login/login').then((m) => m.Login),
   },
   {
     path: 'register',
-    title: 'Crear cuenta | NextGen',
+    title: 'Crear cuenta | Next Gen',
     data: { noindex: true },
     loadComponent: () => import('./auth/register/register').then((m) => m.Register),
   },
   {
     path: 'admin',
-    title: 'Panel de administración | NextGen',
+    title: 'Panel de administración | Next Gen',
     component: AdminLayout,
     canActivate: [authGuard],
     data: { noindex: true },
@@ -30,19 +30,19 @@ export const routes: Routes = [
       },
       {
         path: 'torneos',
-        title: 'Torneos | Administración NextGen',
+        title: 'Torneos | Administración Next Gen',
         loadComponent: () =>
           import('./features/admin/tournaments/admin-tournaments').then((m) => m.AdminTournaments),
       },
       {
         path: 'partidos',
-        title: 'Partidos | Administración NextGen',
+        title: 'Partidos | Administración Next Gen',
         loadComponent: () =>
           import('./features/admin/matches/admin-matches').then((m) => m.AdminMatches),
       },
       {
         path: 'equipos',
-        title: 'Equipos | Administración NextGen',
+        title: 'Equipos | Administración Next Gen',
         loadComponent: () => import('./features/admin/teams/admin-teams').then((m) => m.AdminTeams),
       },
       {
@@ -57,67 +57,67 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        title: 'NextGen | Formación y gestión deportiva',
+        title: 'Next Gen Sport Ecosystem | Futsal, torneos y academias',
         data: {
           description:
-            'Plataforma integral de formación, gestión y competencia deportiva: academias, torneos, partidos y estadísticas para atletas, clubes y organizaciones.',
+            'Next Gen Sport Ecosystem (Next Gen Futsal): torneos de futsal, academias deportivas, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones en Venezuela.',
         },
         loadComponent: () => import('./features/public/home/home').then((m) => m.Home),
       },
       {
         path: 'about-us',
-        title: 'Qué es NextGen | Formación y gestión deportiva',
+        title: 'Qué es Next Gen | Next Gen Sport Ecosystem',
         data: {
           description:
-            'NextGen centraliza los servicios y herramientas que atletas, clubes y organizaciones necesitan para profesionalizar su gestión y proyectar su talento.',
+            'Next Gen Sport Ecosystem centraliza los servicios y herramientas que atletas, clubes y organizaciones necesitan para profesionalizar su gestión y proyectar su talento.',
         },
         loadComponent: () => import('./features/public/about-us/about-us').then((m) => m.AboutUs),
       },
       {
         path: 'academies',
-        title: 'Academias deportivas | NextGen',
+        title: 'Academias de futsal y fútbol | Next Gen Sport Ecosystem',
         data: {
           description:
-            'Conoce las academias de NextGen: formación integral por etapas, desarrollo técnico y competencia para atletas en formación.',
+            'Conoce las academias de Next Gen en Venezuela: formación integral por etapas, desarrollo técnico y competencia para atletas en formación.',
         },
         loadComponent: () =>
           import('./features/public/academies/academies').then((m) => m.Academies),
       },
       {
         path: 'academies/almirantes',
-        title: 'Academia Almirantes | NextGen',
+        title: 'Academia Almirantes | Next Gen Sport Ecosystem',
         data: {
           description:
-            'Academia Almirantes de NextGen: formación basada en el modelo noruego, desarrollo integral por etapas y máxima participación.',
+            'Academia Almirantes de Next Gen: formación basada en el modelo noruego, desarrollo integral por etapas y máxima participación.',
         },
         loadComponent: () =>
           import('./features/public/academies/almirantes/almirantes').then((m) => m.Almirantes),
       },
       {
         path: 'events',
-        title: 'Eventos y torneos | NextGen',
+        title: 'Torneos de futsal y eventos | Next Gen Sport Ecosystem',
         data: {
           description:
-            'Calendario de torneos y eventos deportivos de NextGen: fechas, sedes, equipos participantes y resultados.',
+            'Calendario de torneos de futsal y eventos deportivos de Next Gen en Venezuela: fechas, sedes, equipos, posiciones y resultados.',
         },
         loadComponent: () => import('./features/public/events/events').then((m) => m.Events),
       },
       {
         path: 'events/:id',
-        title: 'Evento | NextGen',
+        title: 'Torneo | Next Gen Sport Ecosystem',
         data: {
           description:
-            'Detalle del evento: partidos, calendario, posiciones y equipos participantes del torneo NextGen.',
+            'Detalle del evento: partidos, calendario, posiciones y equipos participantes del torneo Next Gen.',
         },
         loadComponent: () =>
           import('./features/public/events/components/event/event').then((m) => m.Event),
       },
       {
         path: 'match/:slug',
-        title: 'Partido | NextGen',
+        title: 'Partido | Next Gen Sport Ecosystem',
         data: {
           description:
-            'Resultado, alineaciones, goles y sustituciones del partido en el torneo NextGen.',
+            'Resultado, alineaciones, goles y sustituciones del partido en el torneo de futsal Next Gen.',
         },
         loadComponent: () => import('./features/public/match/match').then((m) => m.Match),
       },

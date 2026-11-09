@@ -46,6 +46,13 @@ export class Teams {
     );
   }
 
+  updatePlayer(idJugador: number, player: Partial<CreatePlayerInput>) {
+    return this.http.put<{ message: string }>(
+      `${this.api}/teams/players/${idJugador}`,
+      player,
+    );
+  }
+
   deletePlayer(idJugador: number) {
     return this.http.delete<{ message: string }>(`${this.api}/teams/players/${idJugador}`);
   }

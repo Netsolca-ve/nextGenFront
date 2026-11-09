@@ -1,17 +1,18 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { LucideImagePlus, LucideUsers, LucideX } from '@lucide/angular';
+import { LucideImagePlus, LucidePencil, LucideUsers, LucideX } from '@lucide/angular';
 import {
   AdminTeam,
   CreatePlayerInput,
   IDENTIFICATION_TYPES,
   PLAYER_POSITIONS,
+  positionLabel,
   TeamPlayer,
 } from '../../../../../@core/models/team.models';
 import { ImageUpload } from '../../../../../@core/services/image-upload';
@@ -35,6 +36,7 @@ function optional(value: string): string | undefined {
     MatSelectModule,
     ReactiveFormsModule,
     LucideImagePlus,
+    LucidePencil,
     LucideUsers,
     LucideX,
   ],
@@ -49,6 +51,7 @@ export class TeamPlayers {
 
   readonly identificationTypes = IDENTIFICATION_TYPES;
   readonly positions = PLAYER_POSITIONS;
+  readonly positionLabel = positionLabel;
   readonly assetUrl = assetUrl;
   readonly players = signal<TeamPlayer[]>([]);
   readonly loading = signal(true);
@@ -56,6 +59,10 @@ export class TeamPlayers {
   readonly uploadingPhoto = signal(false);
   readonly photoPreview = signal<string | null>(null);
   readonly error = signal(false);
+  readonly editingPlayer = signal<TeamPlayer | null>(null);
+
+  private readonly formSection = viewChild<ElementRef<HTMLElement>>('formSection');
+  private readonly firstInput = viewChild<ElementRef<HTMLInputElement>>('firstInput');
 
   readonly form = new FormGroup({
     nombre: new FormControl('', {
@@ -86,7 +93,7 @@ export class TeamPlayers {
       nonNullable: true,
       validators: [Validators.maxLength(255)],
     }),
-    posicion: new FormControl('', {
+    posicion: new FormControl<string>('Jugador', {
       nonNullable: true,
       validators: [Validators.maxLength(50)],
     }),
@@ -138,7 +145,7 @@ export class TeamPlayers {
     input.value = '';
   }
 
-  addPlayer(): void {
+  submitPlayer(): void {
     if (this.submitting() || this.uploadingPhoto()) {
       return;
     }
@@ -148,16 +155,42 @@ export class TeamPlayers {
       return;
     }
 
-    const idEquipo = this.team.idEquipo ?? this.team.id;
+    const editing = this.editingPlayer();
 
-    if (idEquipo === undefined || idEquipo === null || idEquipo === '') {
-      this.error.set(true);
-      this.notifications.error('No se encontró el equipo para añadir jugadores.');
-      return;
+    if (editing) {
+      this.updatePlayer(editing);
+    } else {
+      this.addPlayer();
     }
+  }
 
+  editPlayer(player: TeamPlayer): void {
+    this.editingPlayer.set(player);
+    this.form.patchValue({
+      nombre: player.nombre ?? '',
+      apellido: player.apellido ?? '',
+      tipoIdentificacion: player.tipoIdentificacion || 'V',
+      identificacion: player.identificacion ?? '',
+      fechaNacimiento: (player.fechaNacimiento ?? '').slice(0, 10),
+      numeroCamiseta: player.numeroCamiseta,
+      foto: player.foto ?? '',
+      posicion: positionLabel(player.posicion),
+    });
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+    this.photoPreview.set(player.foto || null);
+
+    this.formSection()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => this.firstInput()?.nativeElement.focus({ preventScroll: true }), 300);
+  }
+
+  cancelEdit(): void {
+    this.resetForm();
+  }
+
+  private buildPayload(): CreatePlayerInput {
     const raw = this.form.getRawValue();
-    const payload: CreatePlayerInput = {
+    return {
       nombre: raw.nombre.trim(),
       apellido: raw.apellido.trim(),
       tipoIdentificacion: optional(raw.tipoIdentificacion),
@@ -167,6 +200,39 @@ export class TeamPlayers {
       foto: optional(raw.foto),
       posicion: optional(raw.posicion),
     };
+  }
+
+  private updatePlayer(player: TeamPlayer): void {
+    this.submitting.set(true);
+    this.error.set(false);
+
+    this.teams.updatePlayer(player.idJugador, this.buildPayload()).subscribe({
+      next: (response) => {
+        this.submitting.set(false);
+        this.notifications.success(response?.message || 'Jugador actualizado.');
+        this.resetForm();
+        this.loadPlayers();
+      },
+      error: (requestError: unknown) => {
+        this.submitting.set(false);
+        this.error.set(true);
+        this.notifications.error(
+          getErrorMessage(requestError, 'No se pudo actualizar el jugador.'),
+        );
+      },
+    });
+  }
+
+  private addPlayer(): void {
+    const idEquipo = this.team.idEquipo ?? this.team.id;
+
+    if (idEquipo === undefined || idEquipo === null || idEquipo === '') {
+      this.error.set(true);
+      this.notifications.error('No se encontró el equipo para añadir jugadores.');
+      return;
+    }
+
+    const payload = this.buildPayload();
 
     this.submitting.set(true);
     this.error.set(false);
@@ -197,6 +263,9 @@ export class TeamPlayers {
 
     this.teams.deletePlayer(player.idJugador).subscribe({
       next: (response) => {
+        if (this.editingPlayer()?.idJugador === player.idJugador) {
+          this.resetForm();
+        }
         this.notifications.success(response.message || 'Jugador retirado de la plantilla.');
         this.loadPlayers();
       },
@@ -242,10 +311,11 @@ export class TeamPlayers {
       fechaNacimiento: '',
       numeroCamiseta: null,
       foto: '',
-      posicion: '',
+      posicion: 'Jugador',
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
     this.photoPreview.set(null);
+    this.editingPlayer.set(null);
   }
 }

@@ -7,7 +7,21 @@ export const IDENTIFICATION_TYPES = [
   { value: 'J', label: 'J - RIF' },
 ] as const;
 
-export const PLAYER_POSITIONS = ['Portero', 'Cierre', 'Ala', 'Pívot'] as const;
+export const PLAYER_POSITIONS = ['Portero', 'Jugador'] as const;
+
+/** true si la posición guardada corresponde a un portero. */
+export function isGoalkeeper(posicion: string | null | undefined): boolean {
+  const value = (posicion ?? '').trim().toLowerCase();
+  return ['portero', 'arquero', 'gk', 'goalkeeper'].includes(value);
+}
+
+/**
+ * Solo distinguimos Portero / Jugador. Las posiciones antiguas
+ * (Cierre, Ala, Pívot...) se muestran como "Jugador".
+ */
+export function positionLabel(posicion: string | null | undefined): 'Portero' | 'Jugador' {
+  return isGoalkeeper(posicion) ? 'Portero' : 'Jugador';
+}
 
 export interface AcademyOption {
   idAcademia: number;

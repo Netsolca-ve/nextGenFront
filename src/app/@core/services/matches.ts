@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { map } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import {
   AdminMatch,
@@ -8,6 +8,7 @@ import {
   MatchAlignmentCreate,
   MatchAlignmentUpdate,
   MatchGoal,
+  MatchIncident,
   MatchSubstitution,
   MatchUpdateInput,
 } from '../models/match.models';
@@ -53,6 +54,16 @@ export class Matches {
 
   createGoal(idPartido: number, payload: MatchGoal) {
     return this.http.post<{ message?: string }>(`${this.api}/matches/${idPartido}/goles`, payload);
+  }
+
+  /** Tarjetas del partido. Si el backend aún no expone la ruta, devuelve []. */
+  getCards(idPartido: number) {
+    return this.http
+      .get<MatchIncident[] | { data?: MatchIncident[] }>(`${this.api}/matches/${idPartido}/tarjetas`)
+      .pipe(
+        map((response) => (Array.isArray(response) ? response : (response.data ?? []))),
+        catchError(() => of<MatchIncident[]>([])),
+      );
   }
 
   getSubstitutions(idPartido: number) {

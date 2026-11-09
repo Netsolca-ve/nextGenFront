@@ -11,20 +11,25 @@
         <p class="dialogError">No se pudo completar la gestión de la plantilla.</p>
     }
 
-    <section class="rosterForm">
+    <section class="rosterForm" [class.isEditing]="editingPlayer()" #formSection>
         <header class="rosterSectionHead">
             <div>
-                <strong>Agregar jugador</strong>
-                <small>Completa los datos y añádelo a la plantilla.</small>
+                @if (editingPlayer(); as editing) {
+                    <strong>Editar jugador</strong>
+                    <small>Modificando a {{ editing.nombre }} {{ editing.apellido }}.</small>
+                } @else {
+                    <strong>Agregar jugador</strong>
+                    <small>Completa los datos y añádelo a la plantilla.</small>
+                }
             </div>
             <span class="rosterCount">{{ players().length }} en plantilla</span>
         </header>
 
-        <form [formGroup]="form" (ngSubmit)="addPlayer()" novalidate>
+        <form [formGroup]="form" (ngSubmit)="submitPlayer()" novalidate>
             <div class="playerFormGrid">
                 <mat-form-field appearance="outline">
                     <mat-label>Nombre</mat-label>
-                    <input matInput formControlName="nombre" maxlength="100" />
+                    <input matInput formControlName="nombre" maxlength="100" #firstInput />
                     @if (showError('nombre')) {
                         <mat-error>El nombre es obligatorio.</mat-error>
                     }
@@ -76,7 +81,7 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Posición</mat-label>
-                    <mat-select formControlName="posicion" placeholder="Selecciona una posición">
+                    <mat-select formControlName="posicion">
                         @for (position of positions; track position) {
                             <mat-option [value]="position">{{ position }}</mat-option>
                         }
@@ -117,14 +122,30 @@
 
             <div class="rosterFormActions">
                 <span>Los campos con * son obligatorios.</span>
-                <button
-                    mat-flat-button
-                    class="dialogSubmit"
-                    type="submit"
-                    [disabled]="submitting() || uploadingPhoto()"
-                >
-                    {{ submitting() ? 'Añadiendo...' : 'Añadir jugador' }}
-                </button>
+                <div class="rosterFormButtons">
+                    @if (editingPlayer()) {
+                        <button
+                            mat-button
+                            type="button"
+                            (click)="cancelEdit()"
+                            [disabled]="submitting()"
+                        >
+                            Cancelar
+                        </button>
+                    }
+                    <button
+                        mat-flat-button
+                        class="dialogSubmit"
+                        type="submit"
+                        [disabled]="submitting() || uploadingPhoto()"
+                    >
+                        @if (editingPlayer()) {
+                            {{ submitting() ? 'Guardando...' : 'Guardar cambios' }}
+                        } @else {
+                            {{ submitting() ? 'Añadiendo...' : 'Añadir jugador' }}
+                        }
+                    </button>
+                </div>
             </div>
         </form>
     </section>
@@ -144,7 +165,10 @@
         } @else {
             <div class="playerRows">
                 @for (player of players(); track player.idJugador) {
-                    <article class="playerRow">
+                    <article
+                        class="playerRow"
+                        [class.isEditing]="editingPlayer()?.idJugador === player.idJugador"
+                    >
                         @if (player.foto) {
                             <img
                                 class="playerAvatar"
@@ -159,7 +183,7 @@
                             <strong>{{ player.nombre }} {{ player.apellido }}</strong>
                             <small>
                                 #{{ player.numeroCamiseta ?? '—' }}
-                                · {{ player.posicion || 'Sin posición' }}
+                                · {{ positionLabel(player.posicion) }}
                                 · {{ player.fechaNacimiento | date: 'dd/MM/yyyy' }}
                             </small>
                             <small>
@@ -168,16 +192,26 @@
                             </small>
                         </div>
 
-                        <button
-                            mat-button
-                            type="button"
-                            class="removePlayer"
-                            [attr.aria-label]="'Quitar a ' + player.nombre + ' ' + player.apellido"
-                            (click)="removePlayer(player)"
-                        >
-                            <svg lucideX></svg>
-                            Quitar
-                        </button>
+                        <div class="playerActions">
+                            <button
+                                type="button"
+                                class="playerIconBtn editPlayer"
+                                [attr.aria-label]="'Editar a ' + player.nombre + ' ' + player.apellido"
+                                title="Editar"
+                                (click)="editPlayer(player)"
+                            >
+                                <svg lucidePencil></svg>
+                            </button>
+                            <button
+                                type="button"
+                                class="playerIconBtn removePlayer"
+                                [attr.aria-label]="'Quitar a ' + player.nombre + ' ' + player.apellido"
+                                title="Eliminar"
+                                (click)="removePlayer(player)"
+                            >
+                                <svg lucideX></svg>
+                            </button>
+                        </div>
                     </article>
                 }
             </div>

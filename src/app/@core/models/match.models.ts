@@ -51,11 +51,15 @@ export interface MatchAlignment {
 
 export interface MatchIncident {
   id?: number;
-  tipo: MatchEventType;
+  idTarjeta?: number;
+  /** El backend puede devolver 'yellow'/'red' o 'amarilla'/'roja'. */
+  tipo: MatchEventType | string;
   minuto: number | string | null;
   idEquipo: number;
   idJugador?: number | null;
   descripcion?: string | null;
+  nombreJugador?: string | null;
+  apellidoJugador?: string | null;
 }
 
 export interface MatchGoal {
@@ -66,6 +70,8 @@ export interface MatchGoal {
   idJugador: number;
   idJugadorAsistencia?: number | null;
   idEquipo: number;
+  nombreJugador?: string | null;
+  apellidoJugador?: string | null;
 }
 
 export interface MatchSubstitution {

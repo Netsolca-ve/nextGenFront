@@ -63,8 +63,8 @@ export const TOURNAMENTS: Tournament[] = [
         statusClass: 'open',
         dateShort: '15 - 16 NOV 2026',
         dateLong: '15 - 16 de Noviembre de 2026',
-        place: 'Sede NextGen - Club Bella Vista',
-        organizer: 'NextGen',
+        place: 'Sede Next Gen - Club Bella Vista',
+        organizer: 'Next Gen',
         categoryLabel: '1v1',
         categories: [{ name: '1v1', years: 'Individual' }],
         expectations: [
@@ -86,8 +86,8 @@ export const TOURNAMENTS: Tournament[] = [
         statusClass: 'finished',
         dateShort: '22 - 23 NOV 2026',
         dateLong: '22 - 23 de Noviembre de 2026',
-        place: 'Sede NextGen - Club Bella Vista',
-        organizer: 'NextGen',
+        place: 'Sede Next Gen - Club Bella Vista',
+        organizer: 'Next Gen',
         categoryLabel: 'Equipos',
         categories: [{ name: '5v5', years: 'Equipos' }],
         expectations: [
@@ -109,8 +109,8 @@ export const TOURNAMENTS: Tournament[] = [
         statusClass: 'open',
         dateShort: '29 - 30 NOV 2026',
         dateLong: '29 - 30 de Noviembre de 2026',
-        place: 'Sede NextGen - Club Bella Vista',
-        organizer: 'NextGen',
+        place: 'Sede Next Gen - Club Bella Vista',
+        organizer: 'Next Gen',
         categoryLabel: '5v5',
         categories: [{ name: '5v5', years: 'Equipos' }],
         expectations: [

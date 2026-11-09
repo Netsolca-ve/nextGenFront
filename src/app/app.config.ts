@@ -8,9 +8,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
+      // El salto a secciones (#ecosystem, #academies) lo hace scrollToSection
+      // para que respete scroll-margin-top; Angular aquí solo vuelve arriba.
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
-        anchorScrolling: 'enabled',
       }),
       withViewTransitions()
     ),

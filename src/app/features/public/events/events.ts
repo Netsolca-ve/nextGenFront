@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { scrollToSection } from '../../../@core/utils/scroll-to-section';
 import {
   LucideArrowRight,
   LucideCalendarDays,
@@ -53,6 +54,12 @@ interface PublicTournament {
 })
 export class Events {
   private readonly service = inject(Tournaments);
+
+  goToTournaments(event: Event): void {
+    event.preventDefault();
+    history.replaceState(history.state, '', '/events#torneos');
+    scrollToSection('torneos');
+  }
   readonly tournaments = signal<PublicTournament[]>([]);
   readonly loading = signal(true);
 
@@ -78,16 +85,16 @@ export class Events {
       mark: (tournament.nombre ?? tournament.name ?? 'NG').slice(0, 3).toUpperCase(),
       // Los torneos por anunciarse siempre muestran su imagen de "Próximamente"
       image: comingSoon ? PROXIMAMENTE_BANNER : tournament.banner ?? tournament.image ?? DEFAULT_EVENT_BANNER,
-      brand: tournament.organizador ?? tournament.organizer ?? 'NextGen',
-      name: tournament.nombre ?? tournament.name ?? 'Torneo NextGen',
-      subtitle: tournament.description ?? 'Competencia deportiva NextGen.',
+      brand: tournament.organizador ?? tournament.organizer ?? 'Next Gen',
+      name: tournament.nombre ?? tournament.name ?? 'Torneo Next Gen',
+      subtitle: tournament.description ?? 'Competencia deportiva Next Gen.',
       status: comingSoon ? 'Próximamente' : this.statusLabel(estado),
       statusClass: this.statusClass(estado),
       comingSoon,
       dateShort: this.dateRange(start, end),
       dateLong: this.dateRange(start, end),
       place: tournament.sede ?? tournament.place ?? 'Sede por definir',
-      organizer: tournament.organizador ?? tournament.organizer ?? 'NextGen',
+      organizer: tournament.organizador ?? tournament.organizer ?? 'Next Gen',
       categoryLabel: categories.join(' · '),
       categories: categories.map((name) => ({ name, years: '' })),
       expectations: [],

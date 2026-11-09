@@ -20,7 +20,7 @@ import {
 } from '../../../../../@core/models/match.models';
 import { Matches } from '../../../../../@core/services/matches';
 import { Teams } from '../../../../../@core/services/teams';
-import { TeamPlayer } from '../../../../../@core/models/team.models';
+import { positionLabel, TeamPlayer } from '../../../../../@core/models/team.models';
 import { Notifications } from '../../../../../@core/services/notifications';
 import { getErrorMessage } from '../../../../../@core/utils/http-error';
 
@@ -46,6 +46,7 @@ export class EditMatch {
   private readonly teams = inject(Teams);
   private readonly notifications = inject(Notifications);
   readonly match = inject(MAT_DIALOG_DATA) as AdminMatch;
+  readonly positionLabel = positionLabel;
 
   readonly alignments = signal<MatchAlignment[]>([]);
   readonly cards = signal<MatchIncident[]>([]);
@@ -112,10 +113,11 @@ export class EditMatch {
       alignments: this.matches.getAlignments(this.match.idPartido),
       goals: this.matches.getGoals(this.match.idPartido),
       substitutions: this.matches.getSubstitutions(this.match.idPartido),
+      cards: this.matches.getCards(this.match.idPartido),
       localPlayers,
       awayPlayers,
     }).subscribe({
-      next: ({ alignments, goals, substitutions, localPlayers: home, awayPlayers: away }) => {
+      next: ({ alignments, goals, substitutions, cards, localPlayers: home, awayPlayers: away }) => {
         this.alignments.set([
           ...this.mergePlayers(home, this.match.idEquipoLocal ?? 0, alignments),
           ...this.mergePlayers(away, this.match.idEquipoVisitante ?? 0, alignments),
@@ -123,6 +125,7 @@ export class EditMatch {
         this.initialAlignmentState = this.alignmentState();
         this.goals.set(goals);
         this.substitutions.set(substitutions);
+        this.cards.set(cards);
         this.loading.set(false);
       },
       error: (requestError: unknown) => {
@@ -134,8 +137,8 @@ export class EditMatch {
   }
 
   teamName(idEquipo: number): string {
-    if (idEquipo === this.match.idEquipoLocal) return this.match.nombreEquipoLocal ?? 'Local';
-    if (idEquipo === this.match.idEquipoVisitante) return this.match.nombreEquipoVisitante ?? 'Visitante';
+    if (Number(idEquipo) === Number(this.match.idEquipoLocal)) return this.match.nombreEquipoLocal ?? 'Local';
+    if (Number(idEquipo) === Number(this.match.idEquipoVisitante)) return this.match.nombreEquipoVisitante ?? 'Visitante';
     return 'Equipo';
   }
 
@@ -218,8 +221,24 @@ export class EditMatch {
     if (type === 'substitutions') this.substitutions.update((items) => items.filter((_, itemIndex) => itemIndex !== index));
   }
 
+  /** Tarjetas agregadas en este diálogo y aún no guardadas. */
+  private newCards(): MatchIncident[] {
+    return this.cards().filter((card) => !card.id && !card.idTarjeta);
+  }
+
+  isAutoGoal(goal: MatchGoal): boolean {
+    return this.asBoolean(goal.esAutogol);
+  }
+
+  /** Equipo al que suma el gol (en un autogol, el rival del jugador). */
+  goalBeneficiary(goal: MatchGoal): string {
+    if (!this.isAutoGoal(goal)) return this.teamName(Number(goal.idEquipo));
+    const rival = Number(goal.idEquipo) === Number(this.match.idEquipoLocal) ? this.match.idEquipoVisitante : this.match.idEquipoLocal;
+    return this.teamName(Number(rival));
+  }
+
   playerLabel(idJugador: number | null | undefined): string {
-    const player = this.alignments().find((item) => item.idJugador === idJugador);
+    const player = this.alignments().find((item) => Number(item.idJugador) === Number(idJugador));
     return player ? this.playerName(player) : 'Seleccionar jugador';
   }
 
@@ -247,7 +266,7 @@ export class EditMatch {
       marcadorPenalesVisitante: values.marcadorPenalesVisitante ?? null,
       status: values.status,
       fecha: values.fecha,
-      tarjetas: this.cards(),
+      tarjetas: this.newCards(),
     };
     const alignments = this.alignmentPayload();
     const existingAlignments = alignments.filter((alignment) => alignment.idAlineacionPartido > 0);
@@ -262,7 +281,7 @@ export class EditMatch {
     const newSubstitutions = this.substitutions().filter((substitution) => !substitution.idSustitucionPartido).map(({ idSustitucionPartido, idPartido, ...substitution }) => this.matches.createSubstitution(this.match.idPartido, substitution));
     const requests = [];
 
-    if (this.form.dirty || this.cards().length > 0) {
+    if (this.form.dirty || this.newCards().length > 0) {
       requests.push(this.matches.updateMatch(this.match.idPartido, payload));
     }
     if (this.alignmentState() !== this.initialAlignmentState) {
@@ -329,7 +348,7 @@ export class EditMatch {
     });
   }
 
-  private playersForTeam(idEquipo: number | null): MatchAlignment[] {
+  playersForTeam(idEquipo: number | null): MatchAlignment[] {
     return this.teamAlignments(idEquipo ?? 0);
   }
 

@@ -29,6 +29,9 @@ export interface AdminMatch {
   colorLocal?: string | null;
   colorVisitante?: string | null;
   categoria?: string;
+  /** Categoría de cada equipo del partido (define la categoría del partido). */
+  categoriaEquipoLocal?: string | null;
+  categoriaEquipoVisitante?: string | null;
   torneo?: { nombre?: string; categoria?: string };
   equipoLocal?: { nombre?: string; logo?: string; colorLocal?: string };
   equipoVisitante?: { nombre?: string; logo?: string; colorVisitante?: string };

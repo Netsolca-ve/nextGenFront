@@ -23,6 +23,7 @@ import { Matches } from '../../../../../@core/services/matches';
 import { Teams } from '../../../../../@core/services/teams';
 import { Tournaments } from '../../../../../@core/services/tournaments';
 import { AdminTeam, positionLabel, TeamPlayer } from '../../../../../@core/models/team.models';
+import { normalizeCategory, sameCategory } from '../../../../../@core/models/tournament.models';
 import { Notifications } from '../../../../../@core/services/notifications';
 import { getErrorMessage } from '../../../../../@core/utils/http-error';
 import {
@@ -233,7 +234,7 @@ export class EditMatch {
       inscritos:
         idTorneo > 0
           ? this.tournaments.getTournamentTeams(idTorneo)
-          : of<Array<{ idEquipo: number; nombre?: string }>>([]),
+          : of<Array<{ idEquipo: number; nombre?: string; categoria?: string }>>([]),
       todas: this.teams.getAllTeams(),
     }).subscribe({
       next: ({ inscritos, todas }) => {
@@ -243,11 +244,32 @@ export class EditMatch {
           return equipo?.nombre || equipo?.name || undefined;
         };
 
+        const categoriaDe = (id: number): string | undefined => {
+          const inscrito = inscritos.find((item) => Number(item.idEquipo) === id);
+          const equipo = todasLista.find((item) => Number(item.idEquipo ?? item.id) === id);
+          return inscrito?.categoria || equipo?.categoria || equipo?.category || undefined;
+        };
+
+        // Categoría del partido: la de sus equipos actuales; si aún no tiene
+        // equipos, la del torneo cuando este tiene una sola categoría.
+        const idLocal = Number(this.match.idEquipoLocal ?? 0);
+        const idVisitante = Number(this.match.idEquipoVisitante ?? 0);
+        const categoriaTorneo = this.match.categoria ?? this.match.torneo?.categoria ?? '';
+        const categoriaPartido =
+          this.match.categoriaEquipoLocal ||
+          this.match.categoriaEquipoVisitante ||
+          (idLocal > 0 ? categoriaDe(idLocal) : undefined) ||
+          (idVisitante > 0 ? categoriaDe(idVisitante) : undefined) ||
+          (categoriaTorneo.includes(',') ? '' : categoriaTorneo);
+        const filtrarCategoria = Boolean(normalizeCategory(categoriaPartido));
+
         const opciones: TeamOption[] = [];
-        const agregar = (id: number, nombre?: string): void => {
+        const agregar = (id: number, nombre?: string, forzar = false): void => {
           const equipoId = Number(id);
           if (!Number.isFinite(equipoId) || equipoId <= 0) return;
           if (opciones.some((option) => option.id === equipoId)) return;
+          // Solo equipos de la misma categoría (evita meter un SUB-12 en un SUB-9)
+          if (!forzar && filtrarCategoria && !sameCategory(categoriaDe(equipoId), categoriaPartido)) return;
           opciones.push({ id: equipoId, nombre: nombre || nombreDe(equipoId) || `Equipo ${equipoId}` });
         };
 
@@ -263,8 +285,8 @@ export class EditMatch {
         }
 
         // Los dos equipos del partido siempre figuran, aunque no estén inscritos
-        agregar(Number(this.match.idEquipoLocal ?? 0), this.match.nombreEquipoLocal);
-        agregar(Number(this.match.idEquipoVisitante ?? 0), this.match.nombreEquipoVisitante);
+        agregar(idLocal, this.match.nombreEquipoLocal, true);
+        agregar(idVisitante, this.match.nombreEquipoVisitante, true);
 
         this.teamOptions.set(opciones);
       },

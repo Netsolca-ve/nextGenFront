@@ -100,3 +100,29 @@
 		width: 100%;
 	}
 }
+
+.tournamentActions {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px;
+}
+
+.tournamentActions button {
+    flex: 1;
+}
+
+.tournamentActions svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+.tournamentActions .deleteButton {
+    --mat-button-outlined-label-text-color: #f87171;
+    --mat-button-outlined-outline-color: rgba(239, 68, 68, 0.35);
+    color: #f87171;
+}
+
+.tournamentActions .deleteButton:hover {
+    background: rgba(239, 68, 68, 0.08);
+}

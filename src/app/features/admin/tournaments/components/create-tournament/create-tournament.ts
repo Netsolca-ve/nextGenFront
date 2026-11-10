@@ -93,6 +93,8 @@ export class CreateTournament {
   readonly diasJuego = signal<string[]>([]);
   /** Día elegido en el datepicker de "Agregar día de juego". */
   readonly nuevoDia = new FormControl<DateValue>(null);
+  /** Calendario al abrir la edición (ver calendarSignature). */
+  private initialCalendar = '';
   readonly cruces = signal<CruceConfig[]>([
     { fase: 'FINAL', nombre: 'Gran Final', local: 'POSICION_1', visitante: 'POSICION_2' },
     {
@@ -364,9 +366,28 @@ export class CreateTournament {
     return this.form.controls.tipoTorneo.value !== 'ROUND_ROBIN';
   }
 
+  /**
+   * Huella de lo que define el calendario. Al editar, si no cambia, los
+   * partidos ya generados no se tocan y no hace falta validar los días.
+   */
+  private calendarSignature(): string {
+    const raw = this.form.getRawValue();
+    return JSON.stringify([
+      toDateOnly(raw.startDate),
+      toDateOnly(raw.endDate),
+      this.diasJuego(),
+      toTimeOnly(raw.horaInicioJornada),
+      raw.tiemposPorPartido,
+      raw.duracionTiempoMinutos,
+      raw.duracionDescansoMinutos,
+      raw.tipoTorneo,
+    ]);
+  }
+
   /** Motivo por el que las fechas o los días de juego no sirven ('' si están bien). */
   private calendarError(): string {
     if (this.esProximamente()) return '';
+    if (this.isEdit && this.calendarSignature() === this.initialCalendar) return '';
 
     const inicio = toDateOnly(this.form.controls.startDate.value);
     const fin = toDateOnly(this.form.controls.endDate.value);
@@ -632,6 +653,7 @@ export class CreateTournament {
     );
     this.bannerUrl.set(tournament.banner ?? null);
     this.bannerName.set(tournament.banner ? 'Banner actual' : '');
+    this.initialCalendar = this.calendarSignature();
   }
 
   private loadTeams(): void {

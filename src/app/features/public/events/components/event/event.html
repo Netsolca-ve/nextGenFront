@@ -31,35 +31,7 @@
             </ul>
             <div class="eventCategories">
                 <div class="eventCategoriesTitle"><svg lucideUsers></svg><span>Categorías</span></div>
-                <!-- <div class="eventCategoryChips">
-                    @if (categories().length > 1) {
-                        <button
-                            type="button"
-                            class="eventCategoryChip"
-                            [class.is-active]="!selectedCategory()"
-                            (click)="selectCategory('')"
-                        >
-                            <strong>Todas</strong>
-                            <span>Ver todas las categorías</span>
-                        </button>
-                    }
-                    @for (category of categories(); track category) {
-                        <button
-                            type="button"
-                            class="eventCategoryChip"
-                            [class.is-active]="selectedCategory() === category"
-                            (click)="selectCategory(category)"
-                        >
-                            <strong>{{ category }}</strong>
-                            <span>{{ selectedCategory() === category ? 'Categoría seleccionada' : 'Ver partidos y tabla' }}</span>
-                        </button>
-                    }
-                </div>
-                @if (categories().length > 1) {
-                    <small class="eventCategoryHint">Selecciona una categoría para filtrar los partidos y la tabla de posiciones.</small>
-                } -->
-                
-                {{ selectedCategory() }}
+                <p class="eventCategoryList">{{ categories().length ? categories().join(' · ') : (current.categoria || 'Por definir') }}</p>
             </div>
         </article>
 
@@ -79,6 +51,26 @@
     </div>
 </section>
 
+@if (categories().length > 1) {
+    <section class="eventCategoryFilter" aria-label="Elegir categoría">
+        <div class="eventCategoriesTitle"><svg lucideUsers></svg><span>Categoría</span></div>
+        <div class="eventCategoryChips">
+            @for (category of categories(); track category) {
+                <button
+                    type="button"
+                    class="eventCategoryChip"
+                    [class.is-active]="selectedCategory() === category"
+                    [attr.aria-pressed]="selectedCategory() === category"
+                    (click)="selectCategory(category)"
+                >
+                    <strong>{{ category }}</strong>
+                    <span>{{ selectedCategory() === category ? 'Viendo partidos y tabla' : 'Ver partidos y tabla' }}</span>
+                </button>
+            }
+        </div>
+    </section>
+}
+
 <section class="eventCompetitionGrid">
     <article class="eventCard eventCompetitionCard">
         <h2 class="eventCardTitle">
@@ -89,7 +81,7 @@
             <div class="publicMatchList">
                 @for (match of filteredMatches(); track match.idPartido) {
                     <div class="publicMatchRow" [routerLink]="['/match', matchSlug(match)]" role="link" tabindex="0">
-                        <div><strong>{{ matchDate(match.fecha) }}@if (matchTime(match.fecha)) { · {{ matchTime(match.fecha) }} }</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
+                        <div><strong>{{ matchDate(match.fecha) }}@if (matchTime(match.fecha)) { · {{ matchTime(match.fecha) }} }</strong><small>{{ faseLabel(match.fase) }}@if (match.fase === 'GRUPO') { · Jornada {{ match.numeroRonda ?? '-' }} }</small></div>
                         <span>{{ teamName(match, 'local') }} <b>{{ match.marcadorLocal ?? '-' }} - {{ match.marcadorVisitante ?? '-' }}</b> {{ teamName(match, 'away') }}</span>
                         <small>{{ matchStatus(match?.status) }}</small>
                     </div>

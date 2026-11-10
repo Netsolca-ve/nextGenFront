@@ -116,16 +116,7 @@
     <div class="tournamentCategoryFilter" aria-label="Filtrar torneo por categoría">
       <span class="tournamentCategoryLabel">Categoría</span>
       <div class="tournamentCategoryTabs">
-        @if (categories().length > 1) {
-          <button
-            type="button"
-            class="tournamentCategoryTab"
-            [class.is-active]="!selectedCategory()"
-            (click)="selectCategory('')"
-          >
-            Todas
-          </button>
-        }
+        <!-- Una categoría a la vez: cada una tiene su propia tabla -->
         @for (category of categories(); track category) {
           <button
             type="button"

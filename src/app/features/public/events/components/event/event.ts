@@ -162,7 +162,16 @@ export class Event {
   matchDate(value: string): string { return this.formatDate(value); }
   /** Hora programada del partido ('' si la fecha no tiene hora). */
   matchTime(value: string): string { return formatDisplayTime(value); }
-  teamName(match: TournamentMatch, side: 'local' | 'away'): string { return side === 'local' ? (match.nombreEquipoLocal ?? `Equipo ${match.idEquipoLocal ?? '-'}`) : (match.nombreEquipoVisitante ?? `Equipo ${match.idEquipoVisitante ?? '-'}`); }
+  teamName(match: TournamentMatch, side: 'local' | 'away'): string {
+    const id = side === 'local' ? match.idEquipoLocal : match.idEquipoVisitante;
+    const name = side === 'local' ? match.nombreEquipoLocal : match.nombreEquipoVisitante;
+    // Final y tercer lugar quedan sin equipos hasta terminar la fase de grupos
+    return name ?? (id ? `Equipo ${id}` : 'Por definir');
+  }
+  faseLabel(fase: string | null | undefined): string {
+    const labels: Record<string, string> = { GRUPO: 'Fase de grupos', TERCER_LUGAR: 'Tercer lugar', FINAL: 'Final' };
+    return labels[String(fase ?? '').toUpperCase()] ?? (fase || 'Partido');
+  }
   matchStatus(status: string | null): string {
     const value = (status ?? '').trim().toLowerCase();
     if (['finalizado', 'finalizada', 'finished', 'fin'].includes(value)) return 'Finalizado';

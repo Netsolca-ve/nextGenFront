@@ -131,6 +131,9 @@
         </mat-form-field>
 
         <h3 class="sectionTitle fieldFull">Calendario de partidos</h3>
+        @if (isEdit) {
+            <p class="fieldHint fieldFull">Los partidos ya generados no cambian al editar el nombre, la sede, el banner u otros datos. Solo se reprograman si cambias fechas, días, hora de inicio o duración, y se generan de nuevo si cambias equipos o el tipo de torneo (solo si aún no hay resultados).</p>
+        }
 
         <div class="sectionBlock fieldFull">
             <div class="blockGrid">

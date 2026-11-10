@@ -31,6 +31,17 @@
                         <p>{{ displayDate(tournament.startDate || tournament.fecha_inicio) || 'Fecha por definir' }}</p>
                         <span class="tournamentStatus">{{ tournament.estado || tournament.status || 'Próximo' }}</span>
                     </mat-card-content>
+                    <mat-card-actions class="tournamentActions">
+                        <button mat-stroked-button type="button" (click)="$event.stopPropagation(); openUpdateDialog(tournament)"><svg lucidePencil></svg> Editar</button>
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            class="deleteButton"
+                            (click)="$event.stopPropagation(); openDeleteDialog(tournament)"
+                            (keydown.enter)="$event.stopPropagation()"
+                            [attr.aria-label]="'Eliminar torneo ' + (tournament.name || tournament.nombre)"
+                        ><svg lucideTrash2></svg> Eliminar</button>
+                    </mat-card-actions>
                 </mat-card>
             } @empty {
                 <div class="adminEmptyState">Aún no hay torneos creados.</div>

@@ -509,3 +509,19 @@
     .publicStandingRow { grid-template-columns: 24px minmax(0, 1fr) auto; }
     .publicStandingRow small { display: none; }
 }
+
+.eventCategoryList {
+    margin: 0;
+    font-size: 15px;
+    color: #e5e7eb;
+}
+
+/* Selector de categoría junto a los partidos y la tabla */
+.eventCategoryFilter {
+    width: min(1200px, 90%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 auto;
+    padding-top: 18px;
+}

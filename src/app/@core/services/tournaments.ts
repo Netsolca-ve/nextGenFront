@@ -45,4 +45,9 @@ export class Tournaments {
     updateTournament(id: string | number, tournament: TournamentInput) {
         return this.http.put(`${this.api}/tournaments/${id}`, tournament);
     }
+
+    /** Elimina el torneo con todos sus partidos e inscripciones. */
+    deleteTournament(id: string | number) {
+        return this.http.delete<{ idTorneo?: number; message?: string }>(`${this.api}/tournaments/${id}`);
+    }
 }

@@ -1,19 +1,24 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideImagePlus, LucideTrophy } from '@lucide/angular';
 import { forkJoin, of } from 'rxjs';
 import {
+  CategoriaEquiposInput,
   CRITERIOS_DESEMPATE,
   AdminTournament,
   CruceConfig,
   DEFINICIONES_EMPATE,
   isProximamente,
+  normalizeCategory,
+  sameCategory,
   TORNEO_ESTATOS,
   TORNEO_TIPOS,
   TournamentInput,
@@ -27,15 +32,25 @@ import { Tournaments } from '../../../../../@core/services/tournaments';
 import { ImageUpload } from '../../../../../@core/services/image-upload';
 import { Notifications } from '../../../../../@core/services/notifications';
 import { getErrorMessage } from '../../../../../@core/utils/http-error';
+import {
+  DateValue,
+  formatDisplayDate,
+  formatDisplayDayDate,
+  toDateOnly,
+  toLocalDate,
+  toTimeOnly,
+} from '../../../../../@core/utils/datetime';
 
 @Component({
   imports: [
     MatButtonModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatTimepickerModule,
     ReactiveFormsModule,
     LucideImagePlus,
     LucideTrophy,
@@ -71,11 +86,13 @@ export class CreateTournament {
 
   readonly teams = signal<AdminTeam[]>([]);
   readonly loadingTeams = signal(true);
-  readonly selectedTeams = signal<number[]>([]);
+  /** Equipos elegidos por categoría: `{ 'SUB 9': [1,2,3,4] }` (clave = etiqueta de la categoría). */
+  readonly teamsByCategory = signal<Record<string, number[]>>({});
   readonly teamsError = signal(false);
 
   readonly diasJuego = signal<string[]>([]);
-  readonly canchas = signal<string[]>(['Cancha Principal']);
+  /** Día elegido en el datepicker de "Agregar día de juego". */
+  readonly nuevoDia = new FormControl<DateValue>(null);
   readonly cruces = signal<CruceConfig[]>([
     { fase: 'FINAL', nombre: 'Gran Final', local: 'POSICION_1', visitante: 'POSICION_2' },
     {
@@ -91,8 +108,9 @@ export class CreateTournament {
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
     organizer: new FormControl('Next Gen', { nonNullable: true, validators: [Validators.required] }),
     place: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    startDate: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    endDate: new FormControl(''),
+    // Fechas y hora: string del backend al cargar, Date al elegir en el picker
+    startDate: new FormControl<DateValue>('', { nonNullable: true, validators: [Validators.required] }),
+    endDate: new FormControl<DateValue>(''),
     status: new FormControl('PROGRAMADO', { nonNullable: true }),
     description: new FormControl('', { nonNullable: true }),
 
@@ -101,7 +119,7 @@ export class CreateTournament {
       nonNullable: true,
       validators: [Validators.required, Validators.min(4)],
     }),
-    horaInicioJornada: new FormControl('08:30', {
+    horaInicioJornada: new FormControl<DateValue>('08:30', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -163,10 +181,17 @@ export class CreateTournament {
       if (this.formError()) this.formError.set('');
     });
 
-    // Si se reduce la cantidad de equipos, se recorta la selección actual.
+    // Si se reduce la cantidad de equipos por categoría, se recorta cada selección.
     this.form.controls.totalEquipos.valueChanges.subscribe((max) => {
       const limit = typeof max === 'number' && max > 0 ? max : 0;
-      this.selectedTeams.update((selected) => selected.slice(0, limit));
+      this.teamsByCategory.update((map) => {
+        const next: Record<string, number[]> = {};
+        for (const [categoria, equipos] of Object.entries(map)) {
+          next[categoria] = equipos.slice(0, limit);
+        }
+        return next;
+      });
+      this.teamsError.set(false);
     });
 
     this.loadTeams();
@@ -182,8 +207,10 @@ export class CreateTournament {
     const validators = this.esProximamente() ? [] : [Validators.required];
     this.form.controls.place.setValidators(validators);
     this.form.controls.startDate.setValidators(validators);
+    this.form.controls.endDate.setValidators(validators);
     this.form.controls.place.updateValueAndValidity({ emitEvent: false });
     this.form.controls.startDate.updateValueAndValidity({ emitEvent: false });
+    this.form.controls.endDate.updateValueAndValidity({ emitEvent: false });
   }
 
   showError(controlName: string): boolean {
@@ -196,76 +223,180 @@ export class CreateTournament {
   }
 
   toggleCategory(category: string): void {
+    const activa = this.selectedCategories().includes(category);
+
     this.selectedCategories.update((selected) =>
-      selected.includes(category)
-        ? selected.filter((item) => item !== category)
-        : [...selected, category],
+      activa ? selected.filter((item) => item !== category) : [...selected, category],
     );
+
+    // Al quitar una categoría se descartan sus equipos elegidos.
+    if (activa) {
+      this.teamsByCategory.update((map) => {
+        if (!(category in map)) return map;
+        const next = { ...map };
+        delete next[category];
+        return next;
+      });
+    }
+
     this.categoryError.set(false);
+    this.teamsError.set(false);
   }
 
-  isTeamSelected(team: AdminTeam): boolean {
-    return this.selectedTeams().includes(this.teamId(team));
+  /** Equipos por categoría del torneo (cantidad exigida para poder guardar). */
+  equiposPorCategoria(): number {
+    return Number(this.form.controls.totalEquipos.value) || 0;
   }
 
-  isTeamDisabled(team: AdminTeam): boolean {
-    return (
-      !this.isTeamSelected(team) &&
-      this.selectedTeams().length >= (Number(this.form.controls.totalEquipos.value) || 0)
+  /** Selección actual de una categoría. */
+  selectionFor(category: string): number[] {
+    return this.teamsByCategory()[category] ?? [];
+  }
+
+  /** Equipos elegidos en una categoría (para el contador "n / total"). */
+  selectedCount(category: string): number {
+    return this.selectionFor(category).length;
+  }
+
+  /**
+   * Equipos disponibles en una categoría: los de esa categoría, los que todavía
+   * no tienen categoría cargada y los de categorías que el formulario no
+   * conoce (p. ej. SUB-10), que pueden inscribirse en la que haga falta.
+   */
+  teamsForCategory(category: string): AdminTeam[] {
+    const claveCategoria = normalizeCategory(category);
+
+    return this.teams().filter((team) => {
+      const claveEquipo = normalizeCategory(team.categoria);
+      if (!claveEquipo) return true;
+      if (claveEquipo === claveCategoria) return true;
+      return !this.categories.some((known) => normalizeCategory(known) === claveEquipo);
+    });
+  }
+
+  /** Categorías seleccionadas que no tienen exactamente "Equipos por categoría" equipos. */
+  private invalidSelectionCategories(): string[] {
+    const max = this.equiposPorCategoria();
+    return this.selectedCategories().filter((category) => this.selectionFor(category).length !== max);
+  }
+
+  isTeamSelected(category: string, team: AdminTeam): boolean {
+    return this.selectionFor(category).includes(this.teamId(team));
+  }
+
+  /** Un equipo no se puede elegir si la categoría está llena o ya está en otra categoría. */
+  isTeamDisabled(category: string, team: AdminTeam): boolean {
+    if (this.isTeamSelected(category, team)) {
+      return false;
+    }
+
+    const id = this.teamId(team);
+
+    if (this.selectionFor(category).length >= this.equiposPorCategoria()) {
+      return true;
+    }
+
+    // El backend no admite un equipo inscrito en dos categorías a la vez.
+    return this.selectedCategories().some(
+      (otra) => otra !== category && this.selectionFor(otra).includes(id),
     );
   }
 
-  toggleTeam(team: AdminTeam): void {
+  toggleTeam(category: string, team: AdminTeam): void {
     const id = this.teamId(team);
 
     if (!Number.isFinite(id)) {
       return;
     }
 
-    const selected = this.selectedTeams();
-    const max = Number(this.form.controls.totalEquipos.value) || 0;
+    const selected = this.selectionFor(category);
+    const max = this.equiposPorCategoria();
 
     if (selected.includes(id)) {
-      this.selectedTeams.set(selected.filter((item) => item !== id));
+      this.teamsByCategory.update((map) => ({ ...map, [category]: selected.filter((item) => item !== id) }));
       this.teamsError.set(false);
       return;
     }
 
-    if (selected.length >= max) {
+    const enOtraCategoria = this.selectedCategories().some(
+      (otra) => otra !== category && this.selectionFor(otra).includes(id),
+    );
+
+    if (selected.length >= max || enOtraCategoria) {
       this.teamsError.set(true);
       return;
     }
 
-    this.selectedTeams.set([...selected, id]);
+    this.teamsByCategory.update((map) => ({ ...map, [category]: [...selected, id] }));
     this.teamsError.set(false);
   }
 
-  addDia(input: HTMLInputElement): void {
-    const value = input.value;
+  addDia(): void {
+    // Fecha inválida o fuera del rango inicio-cierre: el datepicker ya la marca
+    if (this.nuevoDia.invalid) {
+      this.nuevoDia.markAsTouched();
+      return;
+    }
+
+    const value = toDateOnly(this.nuevoDia.value);
 
     if (value && !this.diasJuego().includes(value)) {
       this.diasJuego.update((dias) => [...dias, value].sort());
     }
 
-    input.value = '';
+    this.nuevoDia.reset(null);
+  }
+
+  /** "sáb 05/12/2026" para los chips de días de juego. */
+  displayDia(dia: string): string {
+    return formatDisplayDayDate(dia);
+  }
+
+  /** Explica para qué se usa cada día de juego. */
+  diasHint(): string {
+    return this.tieneFinales()
+      ? 'El último día se juegan solo el tercer lugar y la final; los anteriores, la fase de grupos.'
+      : 'Los partidos se reparten entre estos días.';
+  }
+
+  /** El formato "todos contra todos" puro no tiene tercer lugar ni final. */
+  private tieneFinales(): boolean {
+    return this.form.controls.tipoTorneo.value !== 'ROUND_ROBIN';
+  }
+
+  /** Motivo por el que las fechas o los días de juego no sirven ('' si están bien). */
+  private calendarError(): string {
+    if (this.esProximamente()) return '';
+
+    const inicio = toDateOnly(this.form.controls.startDate.value);
+    const fin = toDateOnly(this.form.controls.endDate.value);
+    if (!inicio || !fin) return 'Indica la fecha de inicio y la de cierre del torneo.';
+    if (fin < inicio) return 'La fecha de cierre no puede ser anterior a la de inicio.';
+
+    const minimo = this.tieneFinales() ? 2 : 1;
+    if (this.diasJuego().length < minimo) {
+      return this.tieneFinales()
+        ? 'Agrega al menos 2 días de juego: los de la fase de grupos y el último para el tercer lugar y la final.'
+        : 'Agrega al menos un día de juego.';
+    }
+
+    const fuera = this.diasJuego().find((dia) => dia < inicio || dia > fin);
+    return fuera
+      ? `El día ${formatDisplayDate(fuera)} está fuera de las fechas del torneo. Quítalo o cambia las fechas.`
+      : '';
+  }
+
+  /** Límites de los datepickers: los días de juego van entre inicio y cierre. */
+  minDia(): Date | null {
+    return toLocalDate(this.form.controls.startDate.value);
+  }
+
+  maxDia(): Date | null {
+    return toLocalDate(this.form.controls.endDate.value);
   }
 
   removeDia(dia: string): void {
     this.diasJuego.update((dias) => dias.filter((item) => item !== dia));
-  }
-
-  addCancha(input: HTMLInputElement): void {
-    const value = input.value.trim();
-
-    if (value && !this.canchas().includes(value)) {
-      this.canchas.update((lista) => [...lista, value]);
-    }
-
-    input.value = '';
-  }
-
-  removeCancha(cancha: string): void {
-    this.canchas.update((lista) => lista.filter((item) => item !== cancha));
   }
 
   addCruce(): void {
@@ -328,15 +459,26 @@ export class CreateTournament {
       return;
     }
 
-    const totalEquipos = Number(this.form.controls.totalEquipos.value) || 0;
-    const equiposInvalidos = this.selectedTeams().length !== totalEquipos;
+    const maxEquipos = this.equiposPorCategoria();
+    const grupos: CategoriaEquiposInput[] = this.selectedCategories().map((categoria) => ({
+      categoria,
+      equiposIds: this.selectionFor(categoria),
+    }));
+    const incompletas = this.invalidSelectionCategories();
+    const equiposInvalidos = incompletas.length > 0;
     const faltanCategorias = !this.selectedCategories().length;
 
     if (this.form.invalid || faltanCategorias || equiposInvalidos) {
       this.form.markAllAsTouched();
       this.categoryError.set(faltanCategorias);
       this.teamsError.set(equiposInvalidos);
-      this.formError.set(this.blockedMessage(totalEquipos, faltanCategorias, equiposInvalidos));
+      this.formError.set(this.blockedMessage(maxEquipos, incompletas, faltanCategorias));
+      return;
+    }
+
+    const errorCalendario = this.calendarError();
+    if (errorCalendario) {
+      this.formError.set(errorCalendario);
       return;
     }
 
@@ -349,10 +491,13 @@ export class CreateTournament {
       categoria: this.selectedCategories().join(', '),
       banner: this.bannerUrl(),
       // Sin fecha (p. ej. estado "Próximamente") se envía null, nunca vacío
-      fechaInicio: raw.startDate || null,
-      fechaFin: raw.endDate || null,
+      fechaInicio: toDateOnly(raw.startDate) || null,
+      fechaFin: toDateOnly(raw.endDate) || null,
       status: raw.status,
-      equiposIds: this.selectedTeams(),
+      // Lista plana (unión de todas las categorías) para torneos antiguos +
+      // grupos por categoría para el fixture independiente de cada una.
+      equiposIds: [...new Set(grupos.flatMap((grupo) => grupo.equiposIds))],
+      categorias: grupos,
       duracionTiempoMinutos: raw.duracionTiempoMinutos,
       duracionDescansoMinutos: raw.duracionDescansoMinutos,
       formato_config: {
@@ -363,8 +508,7 @@ export class CreateTournament {
         totalEquipos: raw.totalEquipos,
         categoriasHabilitadas: this.selectedCategories(),
         diasJuego: this.diasJuego(),
-        canchas: this.canchas(),
-        horaInicioJornada: raw.horaInicioJornada,
+        horaInicioJornada: toTimeOnly(raw.horaInicioJornada),
         tiemposPorPartido: raw.tiemposPorPartido,
         duracionTiempoMinutos: raw.duracionTiempoMinutos,
         duracionDescansoMinutos: raw.duracionDescansoMinutos,
@@ -414,9 +558,13 @@ export class CreateTournament {
   }
 
   /** Motivo visible junto al botón cuando no se puede guardar todavía. */
-  private blockedMessage(totalEquipos: number, faltanCategorias: boolean, equiposInvalidos: boolean): string {
-    if (equiposInvalidos) {
-      return `Selecciona exactamente ${totalEquipos} equipos antes de guardar.`;
+  private blockedMessage(
+    maxEquipos: number,
+    incompletas: string[],
+    faltanCategorias: boolean,
+  ): string {
+    if (incompletas.length) {
+      return `Selecciona exactamente ${maxEquipos} equipos en: ${incompletas.join(', ')}.`;
     }
     if (faltanCategorias) {
       return 'Selecciona al menos una categoría.';
@@ -476,7 +624,6 @@ export class CreateTournament {
     }
 
     this.diasJuego.set([...(config.diasJuego ?? [])]);
-    this.canchas.set(config.canchas?.length ? [...config.canchas] : [...base.canchas]);
     this.cruces.set(faseDefinitoria.cruces.map((cruce) => ({ ...cruce })));
     this.criteriosDesempate.set(
       config.criteriosDesempate?.length
@@ -503,8 +650,10 @@ export class CreateTournament {
       next: ({ teams, inscritos }) => {
         const data = teams as AdminTeam[] | { data?: AdminTeam[] };
         this.teams.set(Array.isArray(data) ? data : (data.data ?? []));
-        this.selectedTeams.set(
-          inscritos.map((equipo) => Number(equipo.idEquipo)).filter((id) => Number.isFinite(id)),
+        this.teamsByCategory.set(
+          this.restoreSelection(
+            inscritos.map((equipo) => Number(equipo.idEquipo)).filter((id) => Number.isFinite(id)),
+          ),
         );
         this.loadingTeams.set(false);
       },
@@ -513,5 +662,60 @@ export class CreateTournament {
         this.loadingTeams.set(false);
       },
     });
+  }
+
+  /**
+   * Reparte los equipos inscritos entre las categorías seleccionadas al editar:
+   * primero se respeta el agrupamiento guardado (gruposPorCategoria); si no
+   * existe (torneo antiguo de fixture único) se agrupa por la categoría de cada
+   * equipo. Lo que no encaje en ninguna categoría va a la primera seleccionada
+   * para que no se pierda al guardar.
+   */
+  private restoreSelection(inscritosIds: number[]): Record<string, number[]> {
+    const seleccionadas = this.selectedCategories();
+    const inscritos = new Set(inscritosIds);
+    const resultado: Record<string, number[]> = {};
+
+    for (const categoria of seleccionadas) {
+      resultado[categoria] = [];
+    }
+
+    if (!seleccionadas.length || !inscritos.size) {
+      return resultado;
+    }
+
+    const config = this.tournament ? parseFormatoConfig(this.tournament.formato_config) : {};
+    const guardados = Array.isArray(config.gruposPorCategoria) ? config.gruposPorCategoria : [];
+    const asignados = new Set<number>();
+
+    const agregar = (categoria: string, ids: number[]): void => {
+      if (!(categoria in resultado)) return;
+      for (const id of ids) {
+        if (!inscritos.has(id) || asignados.has(id)) continue;
+        resultado[categoria].push(id);
+        asignados.add(id);
+      }
+    };
+
+    if (guardados.length) {
+      // 1. Agrupamiento por categoría guardado por el backend
+      for (const grupo of guardados) {
+        const categoria = seleccionadas.find((cat) => sameCategory(cat, grupo.categoria));
+        if (categoria) agregar(categoria, grupo.equiposIds ?? []);
+      }
+    } else {
+      // 2. Torneo antiguo (fixture único): agrupar por la categoría del equipo
+      for (const equipo of this.teams()) {
+        const id = this.teamId(equipo);
+        if (!inscritos.has(id)) continue;
+        const categoria = seleccionadas.find((cat) => sameCategory(equipo.categoria, cat));
+        if (categoria) agregar(categoria, [id]);
+      }
+    }
+
+    // 3. Equipos sin categoría conocida: a la primera categoría seleccionada
+    agregar(seleccionadas[0], [...inscritos].filter((id) => !asignados.has(id)));
+
+    return resultado;
   }
 }

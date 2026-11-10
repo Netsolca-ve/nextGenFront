@@ -34,13 +34,18 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Fecha de inicio{{ esProximamente() ? ' (opcional)' : '' }}</mat-label>
-            <input matInput type="date" formControlName="startDate" />
-            @if (showError('startDate')) { <mat-error>Selecciona una fecha.</mat-error> }
+            <input matInput [matDatepicker]="startPicker" formControlName="startDate" placeholder="dd/mm/aaaa" />
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker" />
+            <mat-datepicker #startPicker />
+            @if (showError('startDate')) { <mat-error>Selecciona una fecha (dd/mm/aaaa).</mat-error> }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-            <mat-label>Fecha de cierre</mat-label>
-            <input matInput type="date" formControlName="endDate" />
+            <mat-label>Fecha de cierre{{ esProximamente() ? ' (opcional)' : '' }}</mat-label>
+            <input matInput [matDatepicker]="endPicker" [min]="minDia()" formControlName="endDate" placeholder="dd/mm/aaaa" />
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker" />
+            <mat-datepicker #endPicker />
+            @if (showError('endDate')) { <mat-error>Selecciona la fecha de cierre (dd/mm/aaaa).</mat-error> }
         </mat-form-field>
 
         <label class="uploadField">
@@ -77,6 +82,9 @@
                 }
             </div>
             @if (categoryError()) { <small class="fieldError">Selecciona al menos una categoría.</small> }
+            @if (selectedCategories().length) {
+                <small class="fieldHint">Cada categoría genera su propio fixture: sus equipos juegan solo entre sí.</small>
+            }
         </div>
 
         <h3 class="sectionTitle fieldFull">Formato del torneo</h3>
@@ -91,14 +99,16 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-            <mat-label>Total de equipos</mat-label>
+            <mat-label>Equipos por categoría</mat-label>
             <input matInput type="number" formControlName="totalEquipos" min="4" placeholder="4" />
             @if (showError('totalEquipos')) { <mat-error>Mínimo 4 equipos.</mat-error> }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Hora de inicio de jornada</mat-label>
-            <input matInput type="time" formControlName="horaInicioJornada" />
+            <input matInput [matTimepicker]="horaPicker" formControlName="horaInicioJornada" placeholder="8:30 a. m." />
+            <mat-timepicker-toggle matIconSuffix aria-label="Elegir hora" [for]="horaPicker" />
+            <mat-timepicker #horaPicker interval="15m" />
             @if (showError('horaInicioJornada')) { <mat-error>Indica la hora de inicio.</mat-error> }
         </mat-form-field>
 
@@ -124,20 +134,15 @@
 
         <div class="sectionBlock fieldFull">
             <div class="blockGrid">
-                <div class="addField">
+                <div class="addField fieldFull">
                     <mat-form-field appearance="outline">
                         <mat-label>Agregar día de juego</mat-label>
-                        <input matInput type="date" #diaInput />
+                        <input matInput [matDatepicker]="diaPicker" [min]="minDia()" [max]="maxDia()" [formControl]="nuevoDia" placeholder="dd/mm/aaaa" />
+                        <mat-datepicker-toggle matIconSuffix [for]="diaPicker" />
+                        <mat-datepicker #diaPicker />
+                        @if (nuevoDia.invalid) { <mat-error>Elige un día entre el inicio y el cierre del torneo.</mat-error> }
                     </mat-form-field>
-                    <button mat-stroked-button type="button" (click)="addDia(diaInput)">Agregar</button>
-                </div>
-
-                <div class="addField">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Agregar cancha</mat-label>
-                        <input matInput type="text" #canchaInput maxlength="60" placeholder="Cancha Principal" />
-                    </mat-form-field>
-                    <button mat-stroked-button type="button" (click)="addCancha(canchaInput)">Agregar</button>
+                    <button mat-stroked-button type="button" (click)="addDia()">Agregar</button>
                 </div>
 
                 <div class="chipGroup fieldFull">
@@ -145,25 +150,13 @@
                     <div class="chipList">
                         @for (dia of diasJuego(); track dia) {
                             <button type="button" class="chip" (click)="removeDia(dia)">
-                                {{ dia }} <span class="chipRemove">&times;</span>
+                                {{ displayDia(dia) }} <span class="chipRemove">&times;</span>
                             </button>
                         } @empty {
-                            <small class="fieldHint">Sin días definidos: se usará la fecha de inicio del torneo.</small>
+                            <small class="fieldHint">Agrega los días en que se juega, entre la fecha de inicio y la de cierre.</small>
                         }
                     </div>
-                </div>
-
-                <div class="chipGroup fieldFull">
-                    <span class="fieldLabel">Canchas ({{ canchas().length }})</span>
-                    <div class="chipList">
-                        @for (cancha of canchas(); track cancha) {
-                            <button type="button" class="chip" (click)="removeCancha(cancha)">
-                                {{ cancha }} <span class="chipRemove">&times;</span>
-                            </button>
-                        } @empty {
-                            <small class="fieldHint">Agrega al menos una cancha.</small>
-                        }
-                    </div>
+                    <small class="fieldHint">{{ diasHint() }}</small>
                 </div>
             </div>
         </div>
@@ -300,39 +293,52 @@
         <div class="sectionBlock fieldFull">
             <div class="teamsHead">
                 <span class="fieldLabel">
-                    Selecciona {{ form.controls.totalEquipos.value || 0 }} equipos
-                    ({{ selectedTeams().length }} / {{ form.controls.totalEquipos.value || 0 }})
+                    Selecciona {{ form.controls.totalEquipos.value || 0 }} equipos por categoría
                 </span>
                 @if (loadingTeams()) {
                     <small class="fieldHint">Cargando equipos...</small>
                 }
             </div>
 
-            <div class="categoryList">
-                @for (team of teams(); track team.idEquipo ?? team.id) {
-                    <button
-                        mat-stroked-button
-                        type="button"
-                        [class.is-active]="isTeamSelected(team)"
-                        [disabled]="isTeamDisabled(team)"
-                        (click)="toggleTeam(team)"
-                    >
-                        {{ team.nombre || team.name || 'Equipo' }}
-                        @if (team.categoria) {
-                            <small>{{ team.categoria }}</small>
-                        }
-                    </button>
-                } @empty {
-                    @if (!loadingTeams()) {
-                        <small class="fieldHint">No hay equipos registrados. Crea los equipos primero.</small>
-                    }
-                }
-            </div>
+            @for (category of selectedCategories(); track category) {
+                <div class="categoryField">
+                    <span class="fieldLabel">
+                        {{ category }} ({{ selectedCount(category) }} / {{ form.controls.totalEquipos.value || 0 }})
+                    </span>
 
-            @if (teamsError()) {
-                <small class="fieldError">
-                    Selecciona exactamente {{ form.controls.totalEquipos.value || 0 }} equipos.
-                </small>
+                    <div class="categoryList">
+                        @for (team of teamsForCategory(category); track team.idEquipo ?? team.id) {
+                            <button
+                                mat-stroked-button
+                                type="button"
+                                [class.is-active]="isTeamSelected(category, team)"
+                                [disabled]="isTeamDisabled(category, team)"
+                                (click)="toggleTeam(category, team)"
+                            >
+                                {{ team.nombre || team.name || 'Equipo' }}
+                                @if (team.categoria) {
+                                    <small>{{ team.categoria }}</small>
+                                }
+                            </button>
+                        } @empty {
+                            @if (!loadingTeams()) {
+                                <small class="fieldHint">
+                                    {{ teams().length ? 'No hay equipos disponibles para esta categoría.' : 'No hay equipos registrados. Crea los equipos primero.' }}
+                                </small>
+                            }
+                        }
+                    </div>
+
+                    @if (teamsError() && selectedCount(category) !== (form.controls.totalEquipos.value || 0)) {
+                        <small class="fieldError">
+                            {{ category }}: selecciona exactamente {{ form.controls.totalEquipos.value || 0 }} equipos.
+                        </small>
+                    }
+                </div>
+            } @empty {
+                @if (!loadingTeams()) {
+                    <small class="fieldHint">Selecciona una categoría arriba para inscribir sus equipos.</small>
+                }
             }
         </div>
     </mat-dialog-content>

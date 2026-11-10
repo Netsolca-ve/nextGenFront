@@ -39,7 +39,11 @@
             </label>
             <label class="adminField">
                 <span>Fecha</span>
-                <input type="date" lang="es-VE" [ngModel]="dateFilter()" (ngModelChange)="dateFilter.set($event)" />
+                <div class="dateFilterInput">
+                    <input [matDatepicker]="filterPicker" placeholder="dd/mm/aaaa" [ngModel]="dateFilter()" (ngModelChange)="dateFilter.set($event)" />
+                    <mat-datepicker-toggle [for]="filterPicker" />
+                    <mat-datepicker #filterPicker />
+                </div>
             </label>
         </div>
 
@@ -49,13 +53,16 @@
             <div class="matchList">
                 @for (match of filteredMatches(); track match.idPartido) {
                     <article class="matchRow">
-                        <div class="matchRowDate"><strong>{{ matchDate(match) }}</strong><span>Ronda {{ match.numeroRonda ?? '-' }}</span></div>
+                        <div class="matchRowDate"><strong>{{ matchDate(match) }}@if (matchTime(match)) { <small> · {{ matchTime(match) }}</small> }</strong><span>Ronda {{ match.numeroRonda ?? '-' }}</span></div>
                         <div class="matchRowTeams">
                             <strong>{{ teamName(match, 'local') }} {{ match.marcadorLocal ?? 0 }} - {{ match.marcadorVisitante ?? 0 }} {{ teamName(match, 'away') }}</strong>
                             <span>{{ tournament(match) || 'Torneo sin definir' }} · {{ category(match) || 'Categoría sin definir' }} · {{ faseLabel(match.fase) }}</span>
                         </div>
                         <span class="matchStatus">{{ statusLabel(match.status) }}</span>
-                        <button mat-stroked-button type="button" (click)="openEditDialog(match)"><svg lucidePencil></svg> Editar</button>
+                        <div class="matchRowActions">
+                            <button mat-stroked-button type="button" (click)="openEditDialog(match)"><svg lucidePencil></svg> Editar</button>
+                            <button mat-stroked-button type="button" class="deleteButton" (click)="openDeleteDialog(match)" [attr.aria-label]="'Eliminar partido ' + teamName(match, 'local') + ' vs ' + teamName(match, 'away')"><svg lucideTrash2></svg> Eliminar</button>
+                        </div>
                     </article>
                 } @empty {
                     <div class="adminEmptyState">No hay partidos con esos filtros.</div>

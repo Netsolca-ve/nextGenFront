@@ -28,6 +28,7 @@ import {
 import { Tournaments } from '../../../../../@core/services/tournaments';
 import { SeoService } from '../../../../../@core/services/seo';
 import { matchSlug } from '../../../../../@core/utils/match-slug';
+import { formatDisplayTime } from '../../../../../@core/utils/datetime';
 import { Teams } from '../../../../../@core/services/teams';
 import { AdminTeam } from '../../../../../@core/models/team.models';
 
@@ -155,8 +156,12 @@ export class Event {
     const end = this.formatDate(tournament?.fechaFin ?? tournament?.fecha_fin);
     return start && end ? `${start} - ${end}` : start || end || 'Fecha por definir';
   }
-  time(): string { return parseFormatoConfig(this.tournament()?.formato_config).horaInicioJornada ?? 'Por definir'; }
+  time(): string {
+    return formatDisplayTime(parseFormatoConfig(this.tournament()?.formato_config).horaInicioJornada) || 'Por definir';
+  }
   matchDate(value: string): string { return this.formatDate(value); }
+  /** Hora programada del partido ('' si la fecha no tiene hora). */
+  matchTime(value: string): string { return formatDisplayTime(value); }
   teamName(match: TournamentMatch, side: 'local' | 'away'): string { return side === 'local' ? (match.nombreEquipoLocal ?? `Equipo ${match.idEquipoLocal ?? '-'}`) : (match.nombreEquipoVisitante ?? `Equipo ${match.idEquipoVisitante ?? '-'}`); }
   matchStatus(status: string | null): string {
     const value = (status ?? '').trim().toLowerCase();

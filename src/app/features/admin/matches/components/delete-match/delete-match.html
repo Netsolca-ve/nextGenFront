@@ -1,0 +1,22 @@
+<header mat-dialog-title class="dialogHeader">
+    <span class="dialogIcon"><svg lucideTrash2></svg></span>
+    <span>
+        <strong>Eliminar partido</strong>
+        <small>Esta acción no se puede deshacer</small>
+    </span>
+</header>
+
+<mat-dialog-content class="dialogContent">
+    <div class="matchSummary">
+        <strong>{{ data.title }}</strong>
+        @if (data.subtitle) { <span>{{ data.subtitle }}</span> }
+    </div>
+    <p>Se eliminarán también sus goles, cambios y alineaciones registradas.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close [disabled]="deleting()">Cancelar</button>
+    <button mat-flat-button class="dialogDanger" type="button" (click)="confirm()" [disabled]="deleting()">
+        {{ deleting() ? 'Eliminando...' : 'Sí, eliminar' }}
+    </button>
+</mat-dialog-actions>

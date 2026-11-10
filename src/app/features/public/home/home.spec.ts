@@ -32,4 +32,24 @@ describe('Home', () => {
       expect(svg.outerHTML).toMatch(/(stroke|color)="#0094DD"/);
     }
   });
+
+  it('muestra el nombre del torneo encima de "PRIMER PARTIDO" y "PRÓXIMO PARTIDO"', () => {
+    component.tournamentName.set('Copa NextGen 2026');
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const nombres = Array.from(el.querySelectorAll('.cardTournamentName')).map(
+      (node) => node.textContent?.trim(),
+    );
+    // Las tres tarjetas (tabla, primer partido y próximo partido)
+    expect(nombres).toHaveLength(3);
+    expect(nombres.every((texto) => texto === 'Copa NextGen 2026')).toBe(true);
+  });
+
+  it('no pinta el nombre del torneo si todavía no hay datos', () => {
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.cardTournamentName').length).toBe(0);
+  });
 });

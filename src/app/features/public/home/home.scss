@@ -536,6 +536,27 @@
   color: #e8eefc;
 }
 
+/* Encabezado común de las tarjetas: nombre del torneo + título de la tarjeta */
+.cardTournament {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.cardTournamentName {
+  color: #7dd3fc;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* La tarjeta del primer partido es centrada: el encabezado también */
+.firstMatchCard .cardTournament {
+  align-items: center;
+}
+
 .cardHeader svg {
   width: 18px;
   height: 18px;

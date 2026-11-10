@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +21,7 @@ import { Notifications } from '../../../../../@core/services/notifications';
 import { Teams } from '../../../../../@core/services/teams';
 import { assetUrl } from '../../../../../@core/utils/asset-url';
 import { getErrorMessage } from '../../../../../@core/utils/http-error';
+import { DateValue, toDateOnly } from '../../../../../@core/utils/datetime';
 
 function optional(value: string): string | undefined {
   const trimmed = value.trim();
@@ -30,6 +32,7 @@ function optional(value: string): string | undefined {
   imports: [
     DatePipe,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -53,6 +56,7 @@ export class TeamPlayers {
   readonly positions = PLAYER_POSITIONS;
   readonly positionLabel = positionLabel;
   readonly assetUrl = assetUrl;
+  readonly today = new Date();
   readonly players = signal<TeamPlayer[]>([]);
   readonly loading = signal(true);
   readonly submitting = signal(false);
@@ -78,7 +82,7 @@ export class TeamPlayers {
       nonNullable: true,
       validators: [Validators.maxLength(50)],
     }),
-    fechaNacimiento: new FormControl('', {
+    fechaNacimiento: new FormControl<DateValue>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -195,7 +199,7 @@ export class TeamPlayers {
       apellido: raw.apellido.trim(),
       tipoIdentificacion: optional(raw.tipoIdentificacion),
       identificacion: optional(raw.identificacion),
-      fechaNacimiento: raw.fechaNacimiento,
+      fechaNacimiento: toDateOnly(raw.fechaNacimiento),
       numeroCamiseta: Number(raw.numeroCamiseta),
       foto: optional(raw.foto),
       posicion: optional(raw.posicion),

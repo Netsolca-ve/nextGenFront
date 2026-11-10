@@ -1,0 +1,85 @@
+:host {
+    display: block;
+    color: #e6ebf2;
+}
+
+.dialogHeader {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 16px;
+}
+
+.dialogHeader > span:last-child {
+    display: grid;
+    gap: 4px;
+}
+
+.dialogHeader strong {
+    color: white;
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.dialogHeader small {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
+.dialogIcon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 11px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.dialogIcon svg {
+    width: 21px;
+    height: 21px;
+}
+
+.dialogContent {
+    display: grid;
+    gap: 14px;
+}
+
+.matchSummary {
+    display: grid;
+    gap: 5px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.matchSummary strong {
+    color: white;
+    font-size: 15px;
+}
+
+.matchSummary span,
+.dialogContent p {
+    color: #9aa3b1;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+mat-dialog-actions {
+    gap: 10px;
+    padding-top: 12px;
+}
+
+.dialogDanger {
+    min-width: 132px;
+    border-radius: 8px;
+    background: #dc2626 !important;
+    color: white !important;
+}
+
+.dialogDanger:disabled {
+    opacity: 0.6;
+}

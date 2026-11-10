@@ -12,12 +12,31 @@
 .matchStatus { padding: 5px 9px; border: 1px solid rgba(0,148,221,.25); border-radius: 999px; color: #7dd3fc; white-space: nowrap; }
 .matchRow button { white-space: nowrap; }
 .matchRow button svg { width: 16px; vertical-align: middle; }
+.matchRowActions { display: flex; gap: 8px; }
+.matchRow .deleteButton { --mat-button-outlined-label-text-color: #f87171; --mat-button-outlined-outline-color: rgba(239,68,68,.35); color: #f87171; }
+.matchRow .deleteButton:hover { background: rgba(239,68,68,.08); }
 @media (max-width: 800px) {
     .matchFilters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .matchRow { grid-template-columns: 64px minmax(0, 1fr) auto; }
     .matchStatus { display: none; }
+    .matchRowActions { flex-direction: column; }
 }
 
 @media (max-width: 560px) {
     .matchFilters { grid-template-columns: 1fr; }
+}
+
+/* Filtro de fecha: el botón del calendario va dentro del input */
+.dateFilterInput {
+    position: relative;
+
+    input { padding-right: 48px; }
+
+    mat-datepicker-toggle {
+        position: absolute;
+        top: 50%;
+        right: 2px;
+        transform: translateY(-50%);
+        color: #8f97a5;
+    }
 }

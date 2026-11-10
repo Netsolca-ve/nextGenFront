@@ -79,7 +79,6 @@ export interface TournamentFormatConfig {
   totalEquipos: number;
   categoriasHabilitadas: string[];
   diasJuego: string[];
-  canchas: string[];
   horaInicioJornada: string;
   tiemposPorPartido: number;
   duracionTiempoMinutos: number;
@@ -89,6 +88,16 @@ export interface TournamentFormatConfig {
     faseDefinitoria: FaseDefinitoriaConfig;
   };
   criteriosDesempate: string[];
+  /** Equipos inscritos por categoría (los gestiona el backend al guardar). */
+  gruposPorCategoria?: Array<{ categoria: string; equiposIds: number[] }>;
+  /** true cuando cada categoría tiene su propio fixture. */
+  fixturesPorCategoria?: boolean;
+}
+
+/** Agrupación de equipos por categoría enviada a POST/PUT /tournaments. */
+export interface CategoriaEquiposInput {
+  categoria: string;
+  equiposIds: number[];
 }
 
 /** Payload enviado a POST/PUT /tournaments */
@@ -100,6 +109,8 @@ export interface TournamentInput {
   fechaFin?: string | null;
   status?: string;
   equiposIds: number[];
+  /** Fixture independiente por categoría (un solo torneo con varias categorías). */
+  categorias?: CategoriaEquiposInput[];
   duracionTiempoMinutos?: number;
   duracionDescansoMinutos?: number;
   formato_config: Partial<TournamentFormatConfig>;
@@ -111,7 +122,6 @@ export function createDefaultFormatoConfig(): TournamentFormatConfig {
     totalEquipos: 4,
     categoriasHabilitadas: [],
     diasJuego: [],
-    canchas: ['Cancha Principal'],
     horaInicioJornada: '08:30',
     tiemposPorPartido: 2,
     duracionTiempoMinutos: 20,
@@ -160,29 +170,34 @@ export function parseFormatoConfig(value: unknown): Partial<TournamentFormatConf
   return typeof value === 'object' ? (value as Partial<TournamentFormatConfig>) : {};
 }
 
-/** Normaliza fechas que llegan como Date/ISO de MySQL a 'YYYY-MM-DD'. */
+/** Normaliza fechas que llegan del backend a 'YYYY-MM-DD' SIN correr un día. */
 export function toDateInput(value: unknown): string {
   if (!value) {
     return '';
   }
 
+  // El string ya trae la fecha guardada ('YYYY-MM-DD' o con hora): se usa
+  // tal cual. Antes se pasaba por new Date() + getters locales y, con el
+  // formato ISO-Z de MySQL, la fecha "retrocedía un día" (y se guardaba así).
   const raw = String(value).trim();
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
-    return raw;
+  const ymd = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (ymd) {
+    return `${ymd[1]}-${ymd[2]}-${ymd[3]}`;
   }
 
-  const date = value instanceof Date ? value : new Date(raw);
-
-  if (Number.isNaN(date.getTime())) {
-    return raw.slice(0, 10);
+  const dmy = raw.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+  if (dmy) {
+    return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
   }
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
-  return `${year}-${month}-${day}`;
+  return raw.slice(0, 10);
 }
 
 /** Fila devuelta por GET /tournaments (aliases en ES/EN por compatibilidad). */

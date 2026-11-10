@@ -23,6 +23,7 @@ import { AdminTeam } from '../../../@core/models/team.models';
 import { Teams } from '../../../@core/services/teams';
 import { forkJoin } from 'rxjs';
 import { matchSlug } from '../../../@core/utils/match-slug';
+import { dateTimestamp, formatDisplayDate, formatDisplayTime, toLocalDate } from '../../../@core/utils/datetime';
 
 interface TimeLeft {
   dias: string;
@@ -89,6 +90,8 @@ export class Home implements OnInit {
   }
   nextTournament = signal<string>('');
   nextTournamentId = signal<string | number | null>(null);
+  /** Nombre del torneo próximo: encabezado de las tarjetas de partidos. */
+  tournamentName = signal<string>('');
   timeLeft = signal<TimeLeft>({ dias: '00', horas: '00', minutos: '00', segundos: '00' });
 
   standings = signal<StandingRow[]>([]);
@@ -111,9 +114,12 @@ export class Home implements OnInit {
     this.tournamentService.getNearestTournament().subscribe({
       next: (res: any) => {
         this.nextTournament.set(res?.nombre?.toUpperCase() || 'Sin eventos próximos');
+        this.tournamentName.set(res?.nombre ?? '');
 
         if (res?.fechaInicio) {
-          this.targetDate = new Date(res.fechaInicio);
+          // Fecha guardada 'YYYY-MM-DD': se toma en hora local (no en UTC,
+          // que habría mostrado el evento un día antes)
+          this.targetDate = toLocalDate(res.fechaInicio) ?? new Date();
           this.startCountdown();
         }
 
@@ -220,14 +226,14 @@ export class Home implements OnInit {
     teams: AdminTeam[],
     teamCategories: Map<number, string>,
   ): NextMatch {
-    const date = new Date(match.fecha);
     return {
       idPartido: match.idPartido,
       slug: matchSlug(match.idPartido, match.nombreEquipoLocal, match.nombreEquipoVisitante),
       home: { name: match.nombreEquipoLocal ?? 'Local', logo: match.logoEquipoLocal ?? this.teamLogo(teams, match.idEquipoLocal) },
       away: { name: match.nombreEquipoVisitante ?? 'Visitante', logo: match.logoEquipoVisitante ?? this.teamLogo(teams, match.idEquipoVisitante) },
-      date: Number.isNaN(date.getTime()) ? match.fecha : date.toLocaleDateString('es-VE'),
-      time: Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }),
+      // Se leen directo del string guardado: sin new Date(), que restaba un día
+      date: formatDisplayDate(match.fecha) || match.fecha,
+      time: formatDisplayTime(match.fecha),
       homeScore: match.marcadorLocal,
       awayScore: match.marcadorVisitante,
       category:
@@ -246,8 +252,7 @@ export class Home implements OnInit {
   }
 
   private dateValue(value: string): number {
-    const timestamp = new Date(value).getTime();
-    return Number.isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
+    return dateTimestamp(value);
   }
 
   private dateKey(value: string): string {

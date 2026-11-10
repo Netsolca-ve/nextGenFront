@@ -106,6 +106,22 @@
     color: #38bdf8;
 }
 
+.sectionHeading small {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
+.dialogError,
+.fieldError {
+    color: #f87171;
+    font-size: 12px;
+}
+
+.fieldHint {
+    color: #9aa3b1;
+    font-size: 12px;
+}
+
 .teamRoster {
     display: grid;
     gap: 8px;

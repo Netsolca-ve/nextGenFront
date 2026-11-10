@@ -12,6 +12,7 @@ import {
   toDateInput,
 } from '../../../@core/models/tournament.models';
 import { Tournaments } from '../../../@core/services/tournaments';
+import { formatDisplayDate } from '../../../@core/utils/datetime';
 import { CreateTournament } from './components/create-tournament/create-tournament';
 
 export type { AdminTournament };
@@ -33,6 +34,8 @@ export class AdminTournaments {
 
   readonly tournaments = signal<AdminTournament[]>([]);
   readonly loading = signal(true);
+  /** Fecha de la tarjeta en dd/mm/aaaa. */
+  readonly displayDate = formatDisplayDate;
 
   constructor() {
     this.loadTournaments();

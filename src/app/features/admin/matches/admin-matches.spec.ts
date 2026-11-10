@@ -5,6 +5,7 @@ import { Matches } from '../../../@core/services/matches';
 import { Notifications } from '../../../@core/services/notifications';
 import { Tournaments } from '../../../@core/services/tournaments';
 import { AdminMatches } from './admin-matches';
+import { provideVenezuelaDates } from '../../../@core/utils/ve-date-adapter';
 
 describe('AdminMatches', () => {
   let component: AdminMatches;
@@ -14,6 +15,7 @@ describe('AdminMatches', () => {
     await TestBed.configureTestingModule({
       imports: [AdminMatches],
       providers: [
+        ...provideVenezuelaDates(),
         { provide: Matches, useValue: { getAllMatches: () => of([]) } },
         { provide: Tournaments, useValue: { getAllTournaments: () => of([]) } },
         { provide: MatDialog, useValue: {} },

@@ -38,6 +38,10 @@ export class Matches {
     return this.http.put<{ message?: string }>(`${this.api}/matches/${id}`, payload);
   }
 
+  deleteMatch(id: number) {
+    return this.http.delete<{ idPartido?: number; message?: string }>(`${this.api}/matches/${id}`);
+  }
+
   updateAlignments(id: number, payload: MatchAlignmentUpdate[]) {
     return this.http.put<{ message?: string }>(`${this.api}/matches/${id}/alineaciones`, payload);
   }

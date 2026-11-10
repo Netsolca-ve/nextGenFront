@@ -94,9 +94,54 @@ export interface MatchUpdateInput {
   status?: MatchStatus | null;
   ganador?: number | null;
   fecha?: string;
+  /** Reemplazo de equipos a última hora (solo se envían si cambiaron). */
+  idEquipoLocal?: number | null;
+  idEquipoVisitante?: number | null;
   tieneTiempoExtra?: boolean | number | null;
   tieneTandaPenales?: boolean | number | null;
-  tarjetas?: MatchIncident[];
+  /** Registros nuevos: se guardan con el resultado en una sola transacción. */
+  tarjetas?: MatchCardInput[];
+  alineaciones?: MatchAlignmentChange[];
+  nuevasAlineaciones?: MatchAlignmentNew[];
+  goles?: MatchGoalInput[];
+  sustituciones?: MatchSubstitutionInput[];
+}
+
+export interface MatchCardInput {
+  tipo: string;
+  minuto: number | null;
+  idEquipo: number;
+  idJugador: number;
+  descripcion: string | null;
+}
+
+export interface MatchAlignmentChange {
+  idAlineacionPartido: number;
+  esTitular: boolean;
+  esCapitan: boolean;
+  numeroCamiseta: number;
+  posicion: string | null;
+}
+
+export type MatchAlignmentNew = Omit<MatchAlignmentChange, 'idAlineacionPartido'> & {
+  idEquipo: number;
+  idJugador: number;
+};
+
+export interface MatchGoalInput {
+  minuto: number | null;
+  esAutogol: boolean;
+  idEquipo: number;
+  idJugador: number;
+  idJugadorAsistencia: number | null;
+}
+
+export interface MatchSubstitutionInput {
+  minuto: number | null;
+  periodo: number;
+  idEquipo: number;
+  idJugadorSale: number;
+  idJugadorEntra: number;
 }
 
 export interface MatchAlignmentUpdate {

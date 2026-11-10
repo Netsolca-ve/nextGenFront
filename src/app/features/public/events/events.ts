@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { scrollToSection } from '../../../@core/utils/scroll-to-section';
+import { formatDisplayTime } from '../../../@core/utils/datetime';
 import {
   LucideArrowRight,
   LucideCalendarDays,
@@ -98,7 +99,7 @@ export class Events {
       categoryLabel: categories.join(' · '),
       categories: categories.map((name) => ({ name, years: '' })),
       expectations: [],
-      time: config.horaInicioJornada ?? 'Por definir',
+      time: formatDisplayTime(config.horaInicioJornada) || 'Por definir',
     };
   }
 

@@ -28,7 +28,7 @@
                     </mat-card-header>
                     <mat-card-content>
                         <p>{{ tournament.place || tournament.sede || 'Sede por definir' }}</p>
-                        <p>{{ tournament.startDate || tournament.fecha_inicio || 'Fecha por definir' }}</p>
+                        <p>{{ displayDate(tournament.startDate || tournament.fecha_inicio) || 'Fecha por definir' }}</p>
                         <span class="tournamentStatus">{{ tournament.estado || tournament.status || 'Próximo' }}</span>
                     </mat-card-content>
                 </mat-card>

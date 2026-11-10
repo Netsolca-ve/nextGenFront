@@ -2,6 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideVenezuelaDates } from './@core/utils/ve-date-adapter';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,8 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions()
     ),
     provideHttpClient(),
+    // Fechas dd/mm/aaaa y horas 12 h en toda la app, sin depender del idioma
+    // del navegador de cada cliente
+    provideVenezuelaDates(),
   ]
 };

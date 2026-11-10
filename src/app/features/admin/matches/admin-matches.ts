@@ -1,23 +1,28 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LucidePencil, LucideSwords } from '@lucide/angular';
+import { LucidePencil, LucideSwords, LucideTrash2 } from '@lucide/angular';
 import { AdminMatch } from '../../../@core/models/match.models';
 import { AdminTournament } from '../../../@core/models/tournament.models';
 import { Matches } from '../../../@core/services/matches';
 import { Tournaments } from '../../../@core/services/tournaments';
 import { Notifications } from '../../../@core/services/notifications';
 import { getErrorMessage } from '../../../@core/utils/http-error';
+import { formatDisplayTime } from '../../../@core/utils/datetime';
+import { DeleteMatch, DeleteMatchData } from './components/delete-match/delete-match';
 import { EditMatch } from './components/edit-match/edit-match';
 
 @Component({
   imports: [
     FormsModule,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     LucidePencil,
     LucideSwords,
+    LucideTrash2,
   ],
   selector: 'app-admin-matches',
   styleUrl: './admin-matches.scss',
@@ -35,7 +40,8 @@ export class AdminMatches {
   readonly search = signal('');
   readonly tournamentFilter = signal('');
   readonly categoryFilter = signal('');
-  readonly dateFilter = signal('');
+  /** Día del filtro: Date al elegirlo en el datepicker, null si está vacío. */
+  readonly dateFilter = signal<Date | null>(null);
 
   readonly filteredMatches = computed(() => {
     const query = this.search().trim().toLowerCase();
@@ -109,6 +115,39 @@ export class AdminMatches {
       .subscribe((saved) => saved && this.loadMatches());
   }
 
+  openDeleteDialog(match: AdminMatch): void {
+    const local = this.teamName(match, 'local');
+    const away = this.teamName(match, 'away');
+    const time = this.matchTime(match);
+    const data: DeleteMatchData = {
+      idPartido: match.idPartido,
+      title: `${local} ${match.marcadorLocal ?? 0} - ${match.marcadorVisitante ?? 0} ${away}`,
+      subtitle: [
+        `${this.matchDate(match)}${time ? ` · ${time}` : ''}`,
+        this.tournament(match),
+        this.faseLabel(match.fase),
+      ]
+        .filter(Boolean)
+        .join(' · '),
+    };
+
+    this.dialog
+      .open(DeleteMatch, {
+        data,
+        width: 'min(460px, calc(100vw - 32px))',
+        maxWidth: 'calc(100vw - 32px)',
+        autoFocus: 'first-tabbable',
+      })
+      .afterClosed()
+      .subscribe((deleted) => {
+        if (!deleted) return;
+        // Se quita de la lista al instante y se recarga por si la fase
+        // definitoria se reacomodó en el backend.
+        this.matches.update((items) => items.filter((item) => item.idPartido !== match.idPartido));
+        this.loadMatches();
+      });
+  }
+
   teamName(match: AdminMatch, side: 'local' | 'away'): string {
     if (side === 'local') return match.nombreEquipoLocal ?? match.equipoLocal?.nombre ?? `Equipo ${match.idEquipoLocal ?? '-'}`;
     return match.nombreEquipoVisitante ?? match.equipoVisitante?.nombre ?? `Equipo ${match.idEquipoVisitante ?? '-'}`;
@@ -126,6 +165,11 @@ export class AdminMatches {
     const value = this.toIsoDate(match.fecha);
     const [year, month, day] = value.split('-');
     return year && month && day ? `${day}/${month}/${year}` : 'Sin fecha';
+  }
+
+  /** Hora programada del partido ('' si no tiene). */
+  matchTime(match: AdminMatch): string {
+    return formatDisplayTime(match.fecha);
   }
 
   private toIsoDate(value: unknown): string {

@@ -3,25 +3,44 @@ import { inject, Service } from '@angular/core';
 import { Observable, from, map, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 
+export type ImageFolder = 'teams' | 'players' | 'tournaments';
+
 const SUPPORTED_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_DIMENSION = 600;
+
+/**
+ * Lado mayor con el que se envía cada tipo de imagen. El backend la vuelve a
+ * redimensionar y convertir a WebP; aquí solo se evita mandar archivos enormes.
+ */
+const MAX_DIMENSION: Record<ImageFolder, number> = {
+  teams: 512,
+  players: 800,
+  tournaments: 1600,
+};
 
 @Service()
 export class ImageUpload {
   private readonly http = inject(HttpClient);
   private readonly api = environment.api;
 
-  upload(file: File, folder: 'teams' | 'players' | 'tournaments'): Observable<string> {
-    return from(this.prepare(file)).pipe(
+  /**
+   * Sube la imagen a R2 (carpeta temporal) y devuelve su URL pública para la
+   * vista previa. Al guardar el equipo, jugador o torneo con esa URL, el
+   * backend la mueve a su nombre definitivo (ej. `equipos/{slug}.webp`).
+   */
+  upload(file: File, folder: ImageFolder): Observable<string> {
+    return from(this.prepare(file, MAX_DIMENSION[folder])).pipe(
       switchMap((image) =>
-        this.http.post<{ url: string }>(`${this.api}/uploads/image`, { image, folder }),
+        this.http.post<{ key: string; url: string }>(`${this.api}/uploads/image`, {
+          image,
+          folder,
+        }),
       ),
       map((response) => response.url),
     );
   }
 
-  private async prepare(file: File): Promise<string> {
+  private async prepare(file: File, maxDimension: number): Promise<string> {
     if (!SUPPORTED_TYPES.includes(file.type)) {
       throw new Error('Selecciona una imagen PNG, JPG o WebP.');
     }
@@ -32,7 +51,7 @@ export class ImageUpload {
 
     const dataUrl = await this.readAsDataUrl(file);
     const image = await this.loadImage(dataUrl);
-    const scale = Math.min(1, MAX_DIMENSION / Math.max(image.width, image.height));
+    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
 
     if (scale === 1 && file.size <= 300_000) {
       return dataUrl;
@@ -50,8 +69,8 @@ export class ImageUpload {
 
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-    const outputType = file.type === 'image/png' ? 'image/png' : 'image/webp';
-    return canvas.toDataURL(outputType, 0.9);
+    // WebP conserva la transparencia de los PNG y pesa menos
+    return canvas.toDataURL('image/webp', 0.9);
   }
 
   private readAsDataUrl(file: File): Promise<string> {

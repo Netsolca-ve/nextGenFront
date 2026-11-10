@@ -89,7 +89,7 @@
             <div class="publicMatchList">
                 @for (match of filteredMatches(); track match.idPartido) {
                     <div class="publicMatchRow" [routerLink]="['/match', matchSlug(match)]" role="link" tabindex="0">
-                        <div><strong>{{ matchDate(match.fecha) }}</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
+                        <div><strong>{{ matchDate(match.fecha) }}@if (matchTime(match.fecha)) { · {{ matchTime(match.fecha) }} }</strong><small>{{ match.fase }} · Ronda {{ match.numeroRonda ?? '-' }}</small></div>
                         <span>{{ teamName(match, 'local') }} <b>{{ match.marcadorLocal ?? '-' }} - {{ match.marcadorVisitante ?? '-' }}</b> {{ teamName(match, 'away') }}</span>
                         <small>{{ matchStatus(match?.status) }}</small>
                     </div>

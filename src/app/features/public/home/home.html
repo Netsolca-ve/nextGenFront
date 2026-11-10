@@ -142,10 +142,15 @@
 
   <div class="tournamentsGrid">
     <article class="standingsCard">
-      <div class="cardHeader">
-        <svg lucideTrophy></svg>
-        <h3>Tabla de posiciones</h3>
-        @if (selectedCategory()) { <span class="cardHeaderTag">{{ selectedCategory() }}</span> }
+      <div class="cardTournament">
+        @if (tournamentName()) {
+          <strong class="cardTournamentName">{{ tournamentName() }}</strong>
+        }
+        <div class="cardHeader">
+          <svg lucideTrophy></svg>
+          <h3>Tabla de posiciones</h3>
+          @if (selectedCategory()) { <span class="cardHeaderTag">{{ selectedCategory() }}</span> }
+        </div>
       </div>
 
       <ol class="standingsList">
@@ -174,9 +179,14 @@
     </article>
 
     <article class="liveCard firstMatchCard">
-      <span class="liveBadge">
-        PRIMER PARTIDO
-      </span>
+      <div class="cardTournament">
+        @if (tournamentName()) {
+          <strong class="cardTournamentName">{{ tournamentName() }}</strong>
+        }
+        <span class="liveBadge">
+          PRIMER PARTIDO
+        </span>
+      </div>
 
       @if (nextMatch(); as first) {
       <div class="liveBoard">
@@ -217,9 +227,14 @@
   </div>
 
   <article class="nextMatchCard">
-    <div class="cardHeader">
-      <svg lucideCalendarDays></svg>
-      <h3>PRÓXIMO PARTIDO</h3>
+    <div class="cardTournament">
+      @if (tournamentName()) {
+        <strong class="cardTournamentName">{{ tournamentName() }}</strong>
+      }
+      <div class="cardHeader">
+        <svg lucideCalendarDays></svg>
+        <h3>PRÓXIMO PARTIDO</h3>
+      </div>
     </div>
 
     @if (nextMatches().length > 1) {

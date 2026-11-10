@@ -33,7 +33,9 @@ export class Tournaments {
 
     /** Equipos inscritos en un torneo (para precargar la edición). */
     getTournamentTeams(id: string | number) {
-        return this.http.get<{ idEquipo: number }[]>(`${this.api}/tournaments/${id}/equipos`);
+        return this.http.get<Array<{ idEquipo: number; nombre?: string; siglas?: string; categoria?: string }>>(
+            `${this.api}/tournaments/${id}/equipos`,
+        );
     }
 
     createTournament(tournament: TournamentInput) {

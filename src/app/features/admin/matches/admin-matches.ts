@@ -5,7 +5,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { LucidePencil, LucideSwords, LucideTrash2 } from '@lucide/angular';
 import { AdminMatch } from '../../../@core/models/match.models';
-import { AdminTournament } from '../../../@core/models/tournament.models';
+import { AdminTournament, normalizeCategory, uniqueCategories } from '../../../@core/models/tournament.models';
 import { Matches } from '../../../@core/services/matches';
 import { Tournaments } from '../../../@core/services/tournaments';
 import { Notifications } from '../../../@core/services/notifications';
@@ -46,28 +46,23 @@ export class AdminMatches {
   readonly filteredMatches = computed(() => {
     const query = this.search().trim().toLowerCase();
     const tournament = this.tournamentFilter();
-    const category = this.categoryFilter().trim().toLowerCase();
+    const category = normalizeCategory(this.categoryFilter());
     const date = this.toIsoDate(this.dateFilter());
 
     return this.matches().filter((match) => {
       const teams = `${this.teamName(match, 'local')} ${this.teamName(match, 'away')}`.toLowerCase();
       const matchTournament = String(match.idTorneo);
-      const matchCategories = this.category(match).split(',').map((item) => item.trim().toLowerCase()).filter(Boolean);
+      const matchCategories = this.matchCategories(match).map((item) => normalizeCategory(item));
       return (!query || teams.includes(query)) && (!tournament || matchTournament === tournament) && (!category || matchCategories.includes(category)) && (!date || this.toIsoDate(match.fecha) === date);
     });
   });
 
   /** Categorías reales presentes en los partidos (p. ej. "SUB 9", "SUB 12"). */
-  readonly categories = computed(() => {
-    const values = new Set<string>();
-    for (const match of this.matches()) {
-      for (const part of this.category(match).split(',')) {
-        const value = part.trim();
-        if (value) values.add(value);
-      }
-    }
-    return [...values].sort();
-  });
+  readonly categories = computed(() =>
+    uniqueCategories(this.matches().map((match) => this.matchCategories(match))).sort((a, b) =>
+      a.localeCompare(b, 'es', { numeric: true }),
+    ),
+  );
 
   constructor() {
     this.loadMatches();
@@ -153,8 +148,20 @@ export class AdminMatches {
     return match.nombreEquipoVisitante ?? match.equipoVisitante?.nombre ?? `Equipo ${match.idEquipoVisitante ?? '-'}`;
   }
 
+  /**
+   * Categoría del partido. Un torneo puede tener varias categorías
+   * ("SUB 9, SUB 12"), así que manda la de los equipos que lo juegan; la del
+   * torneo solo se usa si el partido aún no tiene equipos.
+   */
   category(match: AdminMatch): string {
-    return match.categoria ?? match.torneo?.categoria ?? '';
+    return this.matchCategories(match).join(', ');
+  }
+
+  private matchCategories(match: AdminMatch): string[] {
+    const deEquipos = uniqueCategories([[match.categoriaEquipoLocal ?? '', match.categoriaEquipoVisitante ?? '']]);
+    if (deEquipos.length) return deEquipos;
+    const torneo = match.categoria ?? match.torneo?.categoria ?? '';
+    return uniqueCategories([torneo.split(',')]);
   }
 
   tournament(match: AdminMatch): string {

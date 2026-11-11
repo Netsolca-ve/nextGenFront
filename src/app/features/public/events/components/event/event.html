@@ -129,7 +129,7 @@
                         <div class="publicStandingRow publicScorerRow">
                             <b>{{ row.posicion }}</b>
                             <span class="publicStandingTeam">
-                                <span class="publicTeamLogo"><img [src]="row.foto || row.logoEquipo || '/images/almirantes.png'" [alt]="row.nombre + ' ' + row.apellido" /></span>
+                                <span class="publicTeamLogo"><img [src]="row.logoEquipo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombreEquipo" /></span>
                                 <span class="publicScorerName">{{ row.nombre }} {{ row.apellido }}<small>{{ row.nombreEquipo }}</small></span>
                             </span>
                             <strong>{{ row.goles }} {{ row.goles === 1 ? 'gol' : 'goles' }}</strong>

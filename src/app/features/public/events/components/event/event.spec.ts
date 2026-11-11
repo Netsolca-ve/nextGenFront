@@ -19,6 +19,7 @@ describe('Event', () => {
           provide: ActivatedRoute,
           useValue: {
             paramMap: of(convertToParamMap({ id: 'futsal-cup' })),
+            snapshot: { queryParamMap: convertToParamMap({}) },
           },
         },
       ],
@@ -53,12 +54,18 @@ describe('Event con varias categorías', () => {
     { idJugador: 12, nombre: 'Juan', apellido: 'Díaz', idEquipo: 5, nombreEquipo: 'Halcones', categoria: 'SUB 12', goles: 1 },
   ];
 
-  async function render() {
+  async function render(query: Record<string, string> = {}) {
     await TestBed.configureTestingModule({
       imports: [Event],
       providers: [
         provideRouter([]),
-        { provide: ActivatedRoute, useValue: { paramMap: of(convertToParamMap({ id: '11' })) } },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({ id: '11' })),
+            snapshot: { queryParamMap: convertToParamMap(query) },
+          },
+        },
         {
           provide: Tournaments,
           useValue: {
@@ -111,5 +118,13 @@ describe('Event con varias categorías', () => {
     // La final sin equipos se muestra como "Por definir"
     expect(partidos).toContain('Final');
     expect(partidos).toContain('Por definir');
+  });
+
+  it('abre con la categoría pedida en ?categoria (desde "Ver tabla completa")', async () => {
+    const fixture = await render({ categoria: 'SUB 12' });
+    const el = fixture.nativeElement as HTMLElement;
+
+    expect(el.querySelector('.eventCategoryChip.is-active strong')?.textContent).toBe('SUB 12');
+    expect(texts(el, '.publicStandingRow').join(' ')).toContain('Halcones');
   });
 });

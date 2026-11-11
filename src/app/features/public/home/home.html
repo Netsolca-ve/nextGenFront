@@ -170,7 +170,12 @@
         }
       </ol>
 
-      <a routerLink="/events" class="cardLink">
+      <a
+        class="cardLink"
+        [routerLink]="nextTournamentId() ? ['/events', nextTournamentId()] : ['/events']"
+        [queryParams]="selectedCategory() ? { categoria: selectedCategory() } : {}"
+        fragment="posiciones"
+      >
         VER TABLA COMPLETA
         <svg lucideArrowRight></svg>
       </a>

@@ -5,6 +5,9 @@
         <span class="eventHeroBrand">{{ organizer() }}</span>
         <h1 class="eventHeroTitle">Torneo <span>{{ tournamentName() }}</span></h1>
         <p class="eventHeroSubtitle">{{ subtitle() }}</p>
+        <button type="button" class="eventShareBtn" (click)="share()" [attr.aria-label]="'Compartir ' + tournamentName()">
+            <svg lucideShare2></svg> Compartir
+        </button>
     </div>
 </section>
 
@@ -50,6 +53,9 @@
         </article>
     </div>
 </section>
+
+<!-- Destino de "Ver tabla completa" del home (#posiciones) -->
+<div id="posiciones" class="eventAnchor"></div>
 
 @if (categories().length > 1) {
     <section class="eventCategoryFilter" aria-label="Elegir categoría">
@@ -145,10 +151,6 @@
     </div>
 </section>
 
-<section class="eventActions">
-    <a routerLink="/events" class="eventBackBtn"><svg lucideArrowLeft></svg> Volver a Eventos</a>
-    <a [href]="'https://wa.me/?text=' + shareUrl" target="_blank" rel="noopener noreferrer" class="eventRegisterBtn">Compartir evento <svg lucideArrowRight></svg></a>
-</section>
 } @else if (loading()) {
     <section class="eventEmpty">Cargando torneo...</section>
 } @else {

@@ -70,6 +70,41 @@
     color: #0aa2ee;
 }
 
+/* Compartir: pequeño, junto al título del torneo */
+.eventShareBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(17, 17, 17, 0.35);
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.eventShareBtn:hover {
+    background-color: rgba(0, 148, 221, 0.25);
+    border-color: #0aa2ee;
+}
+
+.eventShareBtn:focus-visible {
+    outline: 2px solid #0aa2ee;
+    outline-offset: 3px;
+}
+
+.eventShareBtn svg {
+    width: 18px;
+    height: 18px;
+}
+
 .eventHeroSubtitle {
     max-width: 560px;
     font-size: 20px;
@@ -338,73 +373,6 @@
     height: auto;
 }
 
-.eventRegisterBtn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 15px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #0aa2ee, #0094dd);
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    box-shadow: 0 10px 24px rgba(0, 148, 221, 0.35);
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-.eventRegisterBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(0, 148, 221, 0.5);
-}
-
-.eventRegisterBtn svg {
-    width: 18px;
-    height: 18px;
-}
-
-.eventActions {
-    width: min(1200px, 90%);
-    margin: 0 auto;
-    padding: 10px 0 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.eventBackBtn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 22px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 999px;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    transition:
-        background-color 0.25s ease,
-        border-color 0.25s ease,
-        transform 0.25s ease;
-}
-
-.eventBackBtn:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: white;
-    transform: translateX(-3px);
-}
-
-.eventBackBtn svg {
-    width: 18px;
-    height: 18px;
-}
-
 .eventShare {
     display: flex;
     justify-content: start;
@@ -458,11 +426,6 @@
 
     .eventDetailsGrid {
         grid-template-columns: minmax(0, 1fr);
-    }
-
-    .eventActions {
-        flex-direction: column;
-        align-items: start;
     }
 }
 
@@ -545,3 +508,8 @@
 .publicScorerRow { grid-template-columns: 28px minmax(0, 1fr) auto; }
 .publicScorerName { display: flex; flex-direction: column; min-width: 0; }
 .publicScorerName small { display: block; color: #8b93a1; font-size: 12px; }
+
+/* Ancla de #posiciones: deja aire para el menú fijo */
+.eventAnchor {
+    scroll-margin-top: 100px;
+}

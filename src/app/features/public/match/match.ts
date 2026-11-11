@@ -88,7 +88,7 @@ export class Match {
   }
 
   private applySeo(view: MatchView): void {
-    const title = `${view.home.name} vs ${view.away.name} | Next Gen Sport Ecosystem`;
+    const title = `${view.home.name} vs ${view.away.name} | Next Gen Venezuela`;
     const description = `${view.tournament} · ${view.round}. Resultado, alineaciones, goles y sustituciones.`;
     this.seo.setPage(title, description);
   }

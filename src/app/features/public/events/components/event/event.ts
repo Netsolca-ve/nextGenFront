@@ -2,8 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {
-  LucideArrowLeft,
-  LucideArrowRight,
+  LucideShare2,
   LucideCalendarDays,
   LucideCheck,
   LucideClock,
@@ -30,14 +29,14 @@ import { Tournaments } from '../../../../../@core/services/tournaments';
 import { SeoService } from '../../../../../@core/services/seo';
 import { matchSlug } from '../../../../../@core/utils/match-slug';
 import { formatDisplayTime } from '../../../../../@core/utils/datetime';
+import { scrollToSection } from '../../../../../@core/utils/scroll-to-section';
 import { Teams } from '../../../../../@core/services/teams';
 import { AdminTeam } from '../../../../../@core/models/team.models';
 
 @Component({
   imports: [
     RouterLink,
-    LucideArrowLeft,
-    LucideArrowRight,
+    LucideShare2,
     LucideCalendarDays,
     LucideCheck,
     LucideClock,
@@ -109,7 +108,7 @@ export class Event {
         this.tournament.set(tournament ?? null);
 
         this.seo.setPage(
-          `${this.tournamentName()} | Next Gen Sport Ecosystem`,
+          `${this.tournamentName()} | Next Gen Venezuela`,
           this.subtitle(),
         );
 
@@ -155,8 +154,16 @@ export class Event {
           categories.find((category) =>
             standings.some((standing) => sameCategory(standing.categoria, category)),
           );
-        this.selectedCategory.set(withData ?? categories[0] ?? '');
+        // ?categoria=SUB 9 (desde "Ver tabla completa" del home) manda sobre la elegida por defecto
+        const pedida = this.route.snapshot.queryParamMap.get('categoria');
+        const desdeUrl = pedida ? categories.find((category) => sameCategory(category, pedida)) : undefined;
+        this.selectedCategory.set(desdeUrl ?? withData ?? categories[0] ?? '');
         this.loading.set(false);
+
+        // Con #posiciones se baja directo a las tablas cuando ya están pintadas
+        if (this.route.snapshot.fragment === 'posiciones') {
+          setTimeout(() => scrollToSection('posiciones'), 60);
+        }
       },
       error: () => this.loading.set(false),
     });
@@ -254,9 +261,21 @@ export class Event {
     return `url("${banner || DEFAULT_EVENT_BANNER}")`;
   }
 
-  get shareUrl(): string {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://nextgen.ven';
-    return encodeURIComponent(`${origin}/events/${this.eventId()}`);
+  /**
+   * En el celular abre el menú de compartir del teléfono (WhatsApp, Instagram,
+   * copiar enlace...); donde no existe, abre WhatsApp con el enlace.
+   */
+  share(): void {
+    const url = `${window.location.origin}/events/${this.eventId()}`;
+    const title = this.tournamentName();
+
+    if (navigator.share) {
+      // Si el usuario cierra el menú, share() rechaza: no es un error
+      navigator.share({ title, text: `Torneo ${title} en Next Gen`, url }).catch(() => undefined);
+      return;
+    }
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(`Torneo ${title}: ${url}`)}`, '_blank', 'noopener');
   }
 
   private formatDate(value: unknown): string {

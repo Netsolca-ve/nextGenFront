@@ -738,6 +738,7 @@
 }
 
 .planInfoItem{
+    width: 100%;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -745,6 +746,7 @@
 }
 
 .planInfoItem .icon{
+    flex-shrink: 0;
     width: 30px;
     height: 30px;
     color: #0094DD;
@@ -923,7 +925,9 @@
     align-items: start;
     flex-direction: column;
     gap: 5px;
-    width: 70%;
+    /* Toma todo el ancho que deja el ícono (con 70% el texto se partía) */
+    flex: 1;
+    min-width: 0;
 }
 
 .planInfoItem2 .planInfoItemTxt span{
@@ -1066,14 +1070,7 @@
     color: #0094DD;
 }
 
-.planInfoItemTxt{
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    flex-direction: column;
-    gap: 5px;
-    width: 70%;
-}
+
 
 .planInfoItem3 .planInfoItemTxt span{
     color: #0094DD;

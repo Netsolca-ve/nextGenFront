@@ -47,6 +47,12 @@ describe('Event con varias categorías', () => {
     { idPartido: 3, fase: 'FINAL', numeroRonda: 3, categoria: 'SUB 12', idEquipoLocal: null, idEquipoVisitante: null, fecha: '2026-12-13 10:00:00', status: 'programado' },
   ];
 
+  const scorers = [
+    { idJugador: 10, nombre: 'Ana', apellido: 'Pérez', idEquipo: 1, nombreEquipo: 'Leones', categoria: 'SUB 9', goles: 3 },
+    { idJugador: 11, nombre: 'Luis', apellido: 'Gómez', idEquipo: 2, nombreEquipo: 'Tigres', categoria: 'SUB 9', goles: 3 },
+    { idJugador: 12, nombre: 'Juan', apellido: 'Díaz', idEquipo: 5, nombreEquipo: 'Halcones', categoria: 'SUB 12', goles: 1 },
+  ];
+
   async function render() {
     await TestBed.configureTestingModule({
       imports: [Event],
@@ -61,6 +67,7 @@ describe('Event con varias categorías', () => {
             ),
             getTournamentMatches: vi.fn(() => of(matches)),
             getTournamentStandings: vi.fn(() => of(standings)),
+            getTournamentScorers: vi.fn(() => of(scorers)),
           },
         },
         { provide: Teams, useValue: { getAllTeams: vi.fn(() => of([])) } },
@@ -85,8 +92,16 @@ describe('Event con varias categorías', () => {
     expect(texts(el, '.publicStandingRow').join(' ')).toContain('Leones');
     expect(texts(el, '.publicStandingRow').join(' ')).not.toContain('Halcones');
 
+    // Goleadores de SUB 9: empatados en goles comparten el puesto 1
+    expect(texts(el, '.publicScorerRow')).toEqual([
+      '1Ana PérezLeones3 goles',
+      '1Luis GómezTigres3 goles',
+    ]);
+
     chips[1].click();
     fixture.detectChanges();
+
+    expect(texts(el, '.publicScorerRow')).toEqual(['1Juan DíazHalcones1 gol']);
 
     const tabla = texts(el, '.publicStandingRow').join(' ');
     expect(tabla).toContain('Halcones');

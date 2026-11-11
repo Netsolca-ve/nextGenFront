@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { map } from 'rxjs';
-import { AdminTournament, TournamentInput, TournamentMatch, TournamentStanding } from '../models/tournament.models';
+import { catchError, map, of } from 'rxjs';
+import { AdminTournament, TournamentInput, TournamentMatch, TournamentScorer, TournamentStanding } from '../models/tournament.models';
 
 @Service()
 export class Tournaments {
@@ -29,6 +29,13 @@ export class Tournaments {
 
     getTournamentStandings(id: string | number) {
         return this.http.get<TournamentStanding[]>(`${this.api}/tournaments/${id}/posiciones`);
+    }
+
+    /** Máximos goleadores del torneo. Si falla, el evento se muestra igual sin ellos. */
+    getTournamentScorers(id: string | number) {
+        return this.http
+            .get<TournamentScorer[]>(`${this.api}/tournaments/${id}/goleadores`)
+            .pipe(catchError(() => of<TournamentScorer[]>([])));
     }
 
     /** Equipos inscritos en un torneo (para precargar la edición). */

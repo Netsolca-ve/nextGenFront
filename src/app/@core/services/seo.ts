@@ -50,7 +50,7 @@ export class SeoService {
     const path = (this.router.url.split(/[?#]/)[0] || '/').replace(/\/+$/, '') || '/';
 
     this.current = {
-      title: typeof data['title'] === 'string' ? data['title'] : SITE.title,
+      title: typeof data['title'] === 'string' ? data['title'] : this.routeTitle() ?? SITE.title,
       description:
         typeof data['description'] === 'string' ? data['description'] : SITE.description,
       noindex: data['noindex'] === true,
@@ -88,6 +88,19 @@ export class SeoService {
     this.meta.updateTag({ name: 'twitter:image', content: image });
 
     this.setCanonical(canonical);
+  }
+
+  /** `title` de la ruta activa más profunda (las rutas lo definen con `title:`, no en `data`). */
+  private routeTitle(): string | undefined {
+    let route = this.router.routerState.snapshot.root;
+    let title = route.title;
+
+    while (route.firstChild) {
+      route = route.firstChild;
+      title = route.title ?? title;
+    }
+
+    return title;
   }
 
   /** Junta los `data` de todas las rutas activas (padre → hijo). */

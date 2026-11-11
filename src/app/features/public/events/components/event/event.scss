@@ -525,3 +525,24 @@
     margin: 0 auto;
     padding-top: 18px;
 }
+
+/* Columna derecha: tabla de posiciones y goleadores, cada lista con su scroll */
+.eventSideColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.publicStandings,
+.publicScorers {
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.publicScorers { display: grid; gap: 8px; }
+.publicScorerRow { grid-template-columns: 28px minmax(0, 1fr) auto; }
+.publicScorerName { display: flex; flex-direction: column; min-width: 0; }
+.publicScorerName small { display: block; color: #8b93a1; font-size: 12px; }
+.publicScorerRow .publicTeamLogo { width: 32px; height: 32px; border-radius: 50%; }

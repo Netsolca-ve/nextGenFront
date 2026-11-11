@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, inject } from '@angular/core';
+import { Component, OnDestroy, ElementRef, afterNextRender, inject } from '@angular/core';
 import {
   LucideGoal,
   LucideMapPin,
@@ -27,7 +27,7 @@ import {
     LucideUserGroup,
     LucideTarget,
     LucideUser,
-    LucideDumbbell,
+    // LucideDumbbell,
     LucideSportShoe,
     LucideWhistle
   ],
@@ -35,11 +35,16 @@ import {
   styleUrl: './almirantes.scss',
   templateUrl: './almirantes.html',
 })
-export class Almirantes implements AfterViewInit, OnDestroy {
+export class Almirantes implements OnDestroy {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private carouselTimer?: ReturnType<typeof setInterval>;
 
-  ngAfterViewInit(): void {
+  constructor() {
+    // Solo en el navegador: en el prerender no hay carrusel que animar
+    afterNextRender(() => this.setupCarousels());
+  }
+
+  private setupCarousels(): void {
     this.host.querySelectorAll('.siteImg').forEach((site) => {
         const carousel = site.querySelector('.carousel') as HTMLElement;
         const images = site.querySelectorAll('img');

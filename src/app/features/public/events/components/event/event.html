@@ -94,28 +94,55 @@
         }
     </article>
 
-    <article class="eventCard eventCompetitionCard">
-        <h2 class="eventCardTitle">
-            Tabla de posiciones
-            @if (selectedCategory()) { <span class="eventCardTag">{{ selectedCategory() }}</span> }
-        </h2>
-        @if (filteredStandings().length) {
-            <div class="publicStandings">
-                @for (row of filteredStandings(); track row.idEquipo) {
-                    <div class="publicStandingRow">
-                        <b>{{ row.posicion }}</b>
-                        <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
-                        <small>{{ row.partidosJugados }} PJ · {{ row.diferenciaGoles }} DG</small>
-                        <strong>{{ row.puntos }} pts</strong>
-                    </div>
-                }
-            </div>
-        } @else {
-            <p class="eventEmpty">
-                {{ selectedCategory() ? 'La tabla estará disponible cuando existan resultados para la categoría ' + selectedCategory() + '.' : 'La tabla estará disponible cuando existan resultados.' }}
-            </p>
-        }
-    </article>
+    <div class="eventSideColumn">
+        <article class="eventCard eventCompetitionCard">
+            <h2 class="eventCardTitle">
+                Tabla de posiciones
+                @if (selectedCategory()) { <span class="eventCardTag">{{ selectedCategory() }}</span> }
+            </h2>
+            @if (filteredStandings().length) {
+                <div class="publicStandings">
+                    @for (row of filteredStandings(); track row.idEquipo) {
+                        <div class="publicStandingRow">
+                            <b>{{ row.posicion }}</b>
+                            <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
+                            <small>{{ row.partidosJugados }} PJ · {{ row.diferenciaGoles }} DG</small>
+                            <strong>{{ row.puntos }} pts</strong>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <p class="eventEmpty">
+                    {{ selectedCategory() ? 'La tabla estará disponible cuando existan resultados para la categoría ' + selectedCategory() + '.' : 'La tabla estará disponible cuando existan resultados.' }}
+                </p>
+            }
+        </article>
+
+        <article class="eventCard eventCompetitionCard">
+            <h2 class="eventCardTitle">
+                Máximos goleadores
+                @if (selectedCategory()) { <span class="eventCardTag">{{ selectedCategory() }}</span> }
+            </h2>
+            @if (filteredScorers().length) {
+                <div class="publicScorers">
+                    @for (row of filteredScorers(); track row.idJugador + '-' + row.idEquipo) {
+                        <div class="publicStandingRow publicScorerRow">
+                            <b>{{ row.posicion }}</b>
+                            <span class="publicStandingTeam">
+                                <span class="publicTeamLogo"><img [src]="row.foto || row.logoEquipo || '/images/almirantes.png'" [alt]="row.nombre + ' ' + row.apellido" /></span>
+                                <span class="publicScorerName">{{ row.nombre }} {{ row.apellido }}<small>{{ row.nombreEquipo }}</small></span>
+                            </span>
+                            <strong>{{ row.goles }} {{ row.goles === 1 ? 'gol' : 'goles' }}</strong>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <p class="eventEmpty">
+                    {{ selectedCategory() ? 'Aún no hay goles registrados en la categoría ' + selectedCategory() + '.' : 'Aún no hay goles registrados.' }}
+                </p>
+            }
+        </article>
+    </div>
 </section>
 
 <section class="eventActions">

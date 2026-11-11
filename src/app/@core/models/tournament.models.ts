@@ -104,6 +104,7 @@ export interface CategoriaEquiposInput {
 export interface TournamentInput {
   nombre: string;
   categoria: string;
+  sede?: string | null;
   banner?: string | null;
   fechaInicio?: string | null;
   fechaFin?: string | null;
@@ -209,7 +210,7 @@ export interface AdminTournament {
   organizer?: string;
   organizador?: string;
   place?: string;
-  sede?: string;
+  sede?: string | null;
   startDate?: string;
   fechaInicio?: string;
   fecha_inicio?: string;
@@ -303,6 +304,18 @@ export interface TournamentMatch {
   nombreEquipoVisitante?: string;
   logoEquipoLocal?: string | null;
   logoEquipoVisitante?: string | null;
+}
+
+export interface TournamentScorer {
+  idJugador: number;
+  nombre: string;
+  apellido: string;
+  foto?: string | null;
+  idEquipo: number;
+  nombreEquipo?: string | null;
+  logoEquipo?: string | null;
+  categoria?: string | null;
+  goles: number;
 }
 
 export interface TournamentStanding {

@@ -24,7 +24,7 @@
 
     <div class="nextMatch">
       <div class="matchInfo">
-        <span>PRÓXIMO EVENTO</span>
+        <span>{{ eventLabel() }}</span>
 
         <div class="teams">
           <!-- <strong>TITANES</strong>
@@ -36,31 +36,38 @@
 
       <div class="separator"></div>
 
-      <div class="countdown">
-        <div class="time">
-          <strong>{{ timeLeft().dias }}</strong>
-          <span>DÍAS</span>
+      @if (eventState() === 'EN_CURSO' || eventState() === 'FINALIZADO') {
+        <div class="eventStatus" [class.is-live]="eventState() === 'EN_CURSO'">
+          <strong>{{ eventState() === 'EN_CURSO' ? 'EN CURSO' : 'FINALIZADO' }}</strong>
+          @if (eventDates()) { <span>{{ eventDates() }}</span> }
         </div>
+      } @else {
+        <div class="countdown">
+          <div class="time">
+            <strong>{{ timeLeft().dias }}</strong>
+            <span>DÍAS</span>
+          </div>
 
-        <div class="time">
-          <strong>{{ timeLeft().horas }}</strong>
-          <span>HRS</span>
-        </div>
+          <div class="time">
+            <strong>{{ timeLeft().horas }}</strong>
+            <span>HRS</span>
+          </div>
 
-        <div class="time">
-          <strong>{{ timeLeft().minutos }}</strong>
-          <span>MIN</span>
-        </div>
+          <div class="time">
+            <strong>{{ timeLeft().minutos }}</strong>
+            <span>MIN</span>
+          </div>
 
-        <div class="time">
-          <strong>{{ timeLeft().segundos }}</strong>
-          <span>SEG</span>
+          <div class="time">
+            <strong>{{ timeLeft().segundos }}</strong>
+            <span>SEG</span>
+          </div>
         </div>
-      </div>
+      }
     </div>
 
     <div class="hero-actions">
-      <a routerLink="/events" class="primary-button">VER TORNEO</a>
+      <a routerLink="/events" class="primary-button">VER TORNEOS</a>
       <a [routerLink]="nextTournamentId() ? ['/events', nextTournamentId()] : ['/events']" class="secondary-button">VER CALENDARIO</a>
     </div>
   </div>

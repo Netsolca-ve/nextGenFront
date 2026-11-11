@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { scrollToSection } from '../../../@core/utils/scroll-to-section';
@@ -17,6 +17,7 @@ import {
   getTournamentCategories,
   sameCategory,
   TournamentMatch,
+  parseFormatoConfig,
   uniqueCategories,
 } from '../../../@core/models/tournament.models';
 import { AdminTeam } from '../../../@core/models/team.models';
@@ -88,11 +89,23 @@ export class Home implements OnInit {
       if (fragment) setTimeout(() => scrollToSection(fragment), 60);
     });
   }
-  nextTournament = signal<string>('');
+  nextTournament = signal<string>('Cargando...');
   nextTournamentId = signal<string | number | null>(null);
   /** Nombre del torneo próximo: encabezado de las tarjetas de partidos. */
   tournamentName = signal<string>('');
   timeLeft = signal<TimeLeft>({ dias: '00', horas: '00', minutos: '00', segundos: '00' });
+  /**
+   * Estado del torneo destacado (lo calcula el backend por fechas): contador
+   * si es próximo, "en curso" mientras se juega y "finalizado" si ya no hay
+   * otro torneo por venir.
+   */
+  eventState = signal<'PROXIMO' | 'EN_CURSO' | 'FINALIZADO' | 'PROXIMAMENTE' | null>(null);
+  eventDates = signal('');
+  eventLabel = computed(() => {
+    const labels = { EN_CURSO: 'EVENTO EN CURSO', FINALIZADO: 'EVENTO FINALIZADO', PROXIMAMENTE: 'PRÓXIMAMENTE' };
+    const state = this.eventState();
+    return state && state !== 'PROXIMO' ? labels[state] : 'PRÓXIMO EVENTO';
+  });
 
   standings = signal<StandingRow[]>([]);
   allStandings = signal<StandingRow[]>([]);
@@ -116,10 +129,19 @@ export class Home implements OnInit {
         this.nextTournament.set(res?.nombre?.toUpperCase() || 'Sin eventos próximos');
         this.tournamentName.set(res?.nombre ?? '');
 
-        if (res?.fechaInicio) {
-          // Fecha guardada 'YYYY-MM-DD': se toma en hora local (no en UTC,
-          // que habría mostrado el evento un día antes)
-          this.targetDate = toLocalDate(res.fechaInicio) ?? new Date();
+        this.eventState.set(res?.estadoCalendario ?? null);
+        this.eventDates.set(
+          [formatDisplayDate(res?.fechaInicio), formatDisplayDate(res?.fechaFin)]
+            .filter(Boolean)
+            .join(' – '),
+        );
+
+        if (res?.fechaInicio && res?.estadoCalendario === 'PROXIMO') {
+          // Cuenta hasta la hora de inicio de la jornada del primer día. Fecha
+          // guardada 'YYYY-MM-DD': se toma en hora local (no en UTC, que habría
+          // mostrado el evento un día antes)
+          const hora = parseFormatoConfig(res.formato_config).horaInicioJornada ?? '00:00';
+          this.targetDate = toLocalDate(`${res.fechaInicio} ${hora}`) ?? new Date();
           this.startCountdown();
         }
 
@@ -279,6 +301,8 @@ export class Home implements OnInit {
     if (distance <= 0) {
       this.timeLeft.set({ dias: '00', horas: '00', minutos: '00', segundos: '00' });
       if (this.timerSubscription) clearInterval(this.timerSubscription);
+      // Empezó el torneo con la página abierta
+      if (this.eventState() === 'PROXIMO') this.eventState.set('EN_CURSO');
       return;
     }
 

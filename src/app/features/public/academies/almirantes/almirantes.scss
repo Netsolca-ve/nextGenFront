@@ -127,7 +127,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    gap: 10px;
+    gap: 20px;
     background-color: #1B232F;
     border: 1px solid #0094DD;
     padding: 20px;
@@ -708,6 +708,7 @@
 .price{
     width: 100%;
     height: auto;
+    border-bottom: 1px solid #0094DD;
 }
 
 .price h3{
@@ -715,7 +716,7 @@
     color: #0094DD;
     font-weight: 700;
     font-style: italic;
-    border-bottom: 1px solid #0094DD;
+    margin-bottom: 10px;;
 }
 
 .planInfo{
@@ -827,6 +828,12 @@
     border-bottom: 1px solid #0094DD;
     gap: 24px;
     padding-bottom: 20px;
+}
+
+.monthly, .regular{
+    flex-direction: column;
+    display: flex;
+    gap: 10px;
 }
 
 .plan2 .price2 .monthly,

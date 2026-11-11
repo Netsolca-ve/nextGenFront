@@ -22,6 +22,7 @@ import {
   sameCategory,
   toDateInput,
   TournamentMatch,
+  TournamentScorer,
   TournamentStanding,
   uniqueCategories,
 } from '../../../../../@core/models/tournament.models';
@@ -61,6 +62,18 @@ export class Event {
   readonly selectedCategory = signal('');
   readonly filteredMatches = computed(() => this.filterMatchesByCategory(this.matches()));
   readonly filteredStandings = computed(() => this.filterStandingsByCategory(this.standings()));
+  readonly scorers = signal<TournamentScorer[]>([]);
+  /** Goleadores de la categoría elegida; empatados en goles comparten posición. */
+  readonly filteredScorers = computed(() => {
+    const category = this.selectedCategory();
+    const rows = category
+      ? this.scorers().filter((row) => sameCategory(row.categoria, category))
+      : this.scorers();
+    return rows.map((row) => ({
+      ...row,
+      posicion: rows.findIndex((other) => other.goles === row.goles) + 1,
+    }));
+  });
   readonly loading = signal(true);
   readonly eventId = signal('');
 
@@ -77,6 +90,7 @@ export class Event {
       tournaments: this.service.getAllTournaments(),
       matches: this.service.getTournamentMatches(id),
       standings: this.service.getTournamentStandings(id),
+      scorers: this.service.getTournamentScorers(id),
       teams: this.teamsService.getAllTeams(),
     }).subscribe({
       next: (result) => {
@@ -117,6 +131,12 @@ export class Event {
           categoria: standing.categoria ?? teamCategories.get(Number(standing.idEquipo)) ?? null,
         }));
         this.standings.set(standings);
+        this.scorers.set(
+          result.scorers.map((scorer) => ({
+            ...scorer,
+            logoEquipo: scorer.logoEquipo ?? this.teamLogo(teams, scorer.idEquipo),
+          })),
+        );
 
         const categories = uniqueCategories([
           getTournamentCategories(tournament),

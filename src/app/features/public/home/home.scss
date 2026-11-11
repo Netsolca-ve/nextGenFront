@@ -304,6 +304,56 @@
   color: #777;
   font-size: 8px;
 }
+/* Torneo en curso o finalizado: reemplaza al contador */
+.eventStatus {
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 16px;
+  background: #1b1b1d;
+  border-radius: 3px;
+  text-align: left;
+}
+
+.eventStatus strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c2c2ba;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.eventStatus span {
+  color: #777;
+  font-size: 11px;
+}
+
+.eventStatus.is-live strong {
+  color: #22c55e;
+}
+
+.eventStatus.is-live strong::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: eventLivePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes eventLivePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventStatus.is-live strong::before { animation: none; }
+}
+
 .hero-actions {
   display: flex;
   gap: 14px;
@@ -848,40 +898,50 @@
   font-size: 20px;
 }
 
+/*
+ * Banner de la academia: logo y texto centrados en vertical con aire arriba y
+ * abajo; la foto de los niños va pegada al borde inferior. Tamaños fluidos
+ * con clamp() para que no se monten los textos entre 900 px y 1920 px.
+ */
 .almirantes {
   width: 96%;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(16px, 2vw, 32px);
+  /* Sin relleno a la derecha: la foto de los niños va pegada al borde */
+  padding-left: clamp(20px, 3vw, 48px);
   background-color: #0094dd;
-  height: auto;
   background-image: url('/images/fondo.png');
   background-size: cover;
   background-position: center;
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   border-radius: 20px;
+  overflow: hidden;
 }
 
 .almirantesLogo {
-  width: 70%;
+  flex: 1;
+  min-width: 0;
   display: flex;
-  justify-content: space-around;
-  align-items: start;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(20px, 4vw, 64px);
+  padding: clamp(28px, 3.5vw, 52px) 0;
 }
 
 .almirantesLogo img {
-  width: 25%;
+  width: clamp(110px, 13vw, 190px);
   height: auto;
+  flex-shrink: 0;
 }
 
 .almirantesInfo {
-  width: 50%;
+  flex: 0 1 540px;
+  min-width: 0;
   display: flex;
-  justify-content: start;
-  align-items: center;
-  font-size: 40px;
   flex-direction: column;
-  gap: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(18px, 2vw, 28px);
 }
 
 @font-face {
@@ -890,9 +950,13 @@
 }
 
 .almirantesInfo h2 {
+  margin: 0;
   font-family: arialNova;
   font-weight: normal;
-  font-size: 47px;
+  font-size: clamp(30px, 3.2vw, 48px);
+  line-height: 1.1;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .almirantesInfo span {
@@ -901,21 +965,28 @@
 }
 
 .almirantesInfo p {
+  margin: 0;
+  max-width: 46ch;
   font-family: arialNova;
   font-weight: normal;
   color: #6dafe7;
-  font-size: 19px;
+  font-size: clamp(15px, 1.25vw, 19px);
+  line-height: 1.35;
   text-align: center;
+  text-wrap: pretty;
 }
 
 .almirantesInfoBtn {
+  display: inline-block;
+  padding: 12px 32px;
   background: #1b1b1d;
   color: white;
   border: 1px solid #555;
-  width: 40%;
-  padding: 12px;
   font-size: 14px;
+  line-height: 1.2;
+  white-space: nowrap;
   text-align: center;
+  transition: opacity 0.2s ease;
 }
 
 .almirantesInfoBtn:hover {
@@ -924,16 +995,17 @@
 }
 
 .almirantesFoto {
-  width: 30%;
-  height: 100%;
+  flex: 0 0 clamp(170px, 20%, 300px);
   display: flex;
-  justify-content: end;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-top: clamp(16px, 2vw, 28px);
 }
 
 .almirantesFoto img {
-  width: 60%;
+  width: 100%;
   height: auto;
+  display: block;
 }
 
 .almirantesInfoTxt {
@@ -1172,33 +1244,21 @@
 
   .almirantes {
     width: 100%;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-    padding: 24px;
+    /* Sin foto (oculta en este ancho) el texto necesita aire a la derecha */
+    padding-right: clamp(20px, 3vw, 48px);
   }
 
   .almirantesLogo {
-    width: 100%;
-    align-items: center;
-    justify-content: center;
     gap: 24px;
   }
 
   .almirantesLogo img {
     width: 120px;
-    flex-shrink: 0;
   }
 
   .almirantesInfo {
-    width: auto;
     flex: 1;
-    min-width: 0;
-    gap: 24px;
-  }
-
-  .almirantesInfo h2 {
-    font-size: 34px;
+    gap: 20px;
   }
 
   .almirantesFoto {
@@ -1383,14 +1443,14 @@
   }
 
   .almirantes {
-    gap: 18px;
-    padding: 28px 20px;
+    padding: 0 20px;
     text-align: center;
   }
 
   .almirantesLogo {
     flex-direction: column;
     gap: 18px;
+    padding: 28px 0;
   }
 
   .almirantesLogo img {
@@ -1413,7 +1473,6 @@
 
   .almirantesInfo h2 {
     font-size: 30px;
-    text-align: center;
   }
 
   .almirantesInfoBtn {

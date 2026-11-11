@@ -57,16 +57,16 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        title: 'Next Gen Sport Ecosystem | Futsal, torneos y academias',
+        title: 'Next Gen Venezuela | Torneos de futsal y academias',
         data: {
           description:
-            'Next Gen Sport Ecosystem (Next Gen Futsal): torneos de futsal, academias deportivas, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones en Venezuela.',
+            'Next Gen Venezuela: torneos de futsal, academias deportivas, partidos en vivo, resultados y estadísticas para atletas, clubes y organizaciones.',
         },
         loadComponent: () => import('./features/public/home/home').then((m) => m.Home),
       },
       {
         path: 'about-us',
-        title: 'Qué es Next Gen | Next Gen Sport Ecosystem',
+        title: 'Qué es Next Gen | Next Gen Venezuela',
         data: {
           description:
             'Next Gen Sport Ecosystem centraliza los servicios y herramientas que atletas, clubes y organizaciones necesitan para profesionalizar su gestión y proyectar su talento.',
@@ -74,8 +74,14 @@ export const routes: Routes = [
         loadComponent: () => import('./features/public/about-us/about-us').then((m) => m.AboutUs),
       },
       {
+        // URL anterior que Google todavía tiene indexada
+        path: 'about',
+        redirectTo: 'about-us',
+        pathMatch: 'full',
+      },
+      {
         path: 'academies',
-        title: 'Academias de futsal y fútbol | Next Gen Sport Ecosystem',
+        title: 'Academias de futsal y fútbol | Next Gen Venezuela',
         data: {
           description:
             'Conoce las academias de Next Gen en Venezuela: formación integral por etapas, desarrollo técnico y competencia para atletas en formación.',
@@ -85,7 +91,7 @@ export const routes: Routes = [
       },
       {
         path: 'academies/almirantes',
-        title: 'Academia Almirantes | Next Gen Sport Ecosystem',
+        title: 'Academia Almirantes de futsal | Next Gen Venezuela',
         data: {
           description:
             'Academia Almirantes de Next Gen: formación basada en el modelo noruego, desarrollo integral por etapas y máxima participación.',
@@ -95,7 +101,7 @@ export const routes: Routes = [
       },
       {
         path: 'events',
-        title: 'Torneos de futsal y eventos | Next Gen Sport Ecosystem',
+        title: 'Torneos de futsal y eventos | Next Gen Venezuela',
         data: {
           description:
             'Calendario de torneos de futsal y eventos deportivos de Next Gen en Venezuela: fechas, sedes, equipos, posiciones y resultados.',
@@ -104,7 +110,7 @@ export const routes: Routes = [
       },
       {
         path: 'events/:id',
-        title: 'Torneo | Next Gen Sport Ecosystem',
+        title: 'Torneo de futsal | Next Gen Venezuela',
         data: {
           description:
             'Detalle del evento: partidos, calendario, posiciones y equipos participantes del torneo Next Gen.',
@@ -114,7 +120,7 @@ export const routes: Routes = [
       },
       {
         path: 'match/:slug',
-        title: 'Partido | Next Gen Sport Ecosystem',
+        title: 'Partido de futsal | Next Gen Venezuela',
         data: {
           description:
             'Resultado, alineaciones, goles y sustituciones del partido en el torneo de futsal Next Gen.',

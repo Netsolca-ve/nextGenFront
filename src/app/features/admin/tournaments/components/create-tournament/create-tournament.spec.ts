@@ -124,4 +124,15 @@ describe('CreateTournament', () => {
     expect(component.formError()).toContain('Faltan datos obligatorios');
     expect(close).not.toHaveBeenCalled();
   });
+
+  it('envía la sede en su propio campo', () => {
+    component.form.patchValue({ name: 'Copa de prueba', status: 'PROXIMAMENTE', place: '  Club Bella Vista ', startDate: '' });
+    component.teamsByCategory.set({ 'SUB 9': [1, 2, 3, 4], 'SUB 12': [5, 6, 7, 8] });
+
+    component.submit();
+
+    const payload = createTournament.mock.calls[0][0];
+    expect(payload.sede).toBe('Club Bella Vista');
+    expect(payload.formato_config).not.toHaveProperty('place');
+  });
 });

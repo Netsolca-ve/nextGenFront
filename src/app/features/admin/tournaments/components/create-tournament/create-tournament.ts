@@ -510,6 +510,7 @@ export class CreateTournament {
     const payload: TournamentInput = {
       nombre: raw.name.trim(),
       categoria: this.selectedCategories().join(', '),
+      sede: raw.place.trim() || null,
       banner: this.bannerUrl(),
       // Sin fecha (p. ej. estado "Próximamente") se envía null, nunca vacío
       fechaInicio: toDateOnly(raw.startDate) || null,
@@ -523,7 +524,6 @@ export class CreateTournament {
       duracionDescansoMinutos: raw.duracionDescansoMinutos,
       formato_config: {
         organizer: raw.organizer,
-        place: raw.place,
         description: raw.description,
         tipoTorneo: raw.tipoTorneo,
         totalEquipos: raw.totalEquipos,
@@ -610,7 +610,8 @@ export class CreateTournament {
     this.form.patchValue({
       name: tournament.nombre ?? tournament.name ?? '',
       organizer: config.organizer ?? 'Next Gen',
-      place: config.place ?? '',
+      // Torneos guardados antes de la columna sede la tenían en formato_config
+      place: tournament.sede ?? config.place ?? '',
       startDate: toDateInput(tournament.fechaInicio ?? tournament.startDate ?? tournament.fecha_inicio),
       endDate: toDateInput(tournament.fechaFin ?? tournament.endDate ?? tournament.fecha_fin),
       status: tournament.status ?? 'PROGRAMADO',

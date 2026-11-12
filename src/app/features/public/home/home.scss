@@ -6,6 +6,8 @@
 
 .scoreboard {
   width: 100%;
+  /* Reserva el alto del marcador mientras llegan los partidos: evita que el hero salte (CLS) */
+  min-height: 42px;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -172,7 +174,7 @@
   position: absolute;
   inset: -30px;
 
-  background-image: url('/images/hero.jpg');
+  background-image: url('/images/hero.webp');
   background-size: cover;
   background-position: center;
 
@@ -911,7 +913,7 @@
   /* Sin relleno a la derecha: la foto de los niños va pegada al borde */
   padding-left: clamp(20px, 3vw, 48px);
   background-color: #0094dd;
-  background-image: url('/images/fondo.png');
+  background-image: url('/images/fondo.webp');
   background-size: cover;
   background-position: center;
   border-radius: 20px;
@@ -947,6 +949,7 @@
 @font-face {
   font-family: arialNova;
   src: url('/fonts/ArialNova.ttf') format('truetype');
+  font-display: swap;
 }
 
 .almirantesInfo h2 {

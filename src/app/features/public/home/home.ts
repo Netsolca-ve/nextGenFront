@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { scrollToSection } from '../../../@core/utils/scroll-to-section';
 import {
@@ -59,7 +60,7 @@ interface NextMatch {
 }
 
 // Logo provisional mientras se cargan los escudos reales de cada equipo.
-const TEAM_LOGO_PLACEHOLDER = '/images/almirantes.png';
+const TEAM_LOGO_PLACEHOLDER = '/images/almirantes.webp';
 
 @Component({
   imports: [
@@ -81,8 +82,11 @@ export class Home implements OnInit {
   private readonly teamsService = inject(Teams);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
 
   constructor() {
+    this.preloadHeroImage();
+
     // Al llegar con /#ecosystem o /#academies desde otra página. El pequeño
     // retraso deja que el router termine de llevar la página arriba primero.
     this.route.fragment.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fragment) => {
@@ -122,6 +126,24 @@ export class Home implements OnInit {
 
   private targetDate!: Date;
   private timerSubscription!: any;
+
+  /**
+   * El fondo del hero es el LCP del home. Al agregarlo al <head> durante el
+   * prerender, el navegador lo descarga antes de leer el CSS. Solo en el home
+   * para no bajar la imagen en las demás páginas.
+   */
+  private preloadHeroImage(): void {
+    const href = '/images/hero.webp';
+    if (this.document.head.querySelector(`link[rel="preload"][href="${href}"]`)) return;
+
+    const link = this.document.createElement('link');
+    // setAttribute: el DOM del prerender no serializa propiedades como `as`
+    link.setAttribute('rel', 'preload');
+    link.setAttribute('as', 'image');
+    link.setAttribute('href', href);
+    link.setAttribute('fetchpriority', 'high');
+    this.document.head.appendChild(link);
+  }
 
   ngOnInit(): void {
     this.tournamentService.getNearestTournament().subscribe({

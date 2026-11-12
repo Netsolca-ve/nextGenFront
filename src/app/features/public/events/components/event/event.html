@@ -111,7 +111,7 @@
                     @for (row of filteredStandings(); track row.idEquipo) {
                         <div class="publicStandingRow">
                             <b>{{ row.posicion }}</b>
-                            <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
+                            <span class="publicStandingTeam"><span class="publicTeamLogo"><img [src]="row.logo || '/images/almirantes.webp'" [alt]="'Logo de ' + row.nombre" /></span>{{ row.nombre }}</span>
                             <small>{{ row.partidosJugados }} PJ · {{ row.diferenciaGoles }} DG</small>
                             <strong>{{ row.puntos }} pts</strong>
                         </div>
@@ -135,7 +135,7 @@
                         <div class="publicStandingRow publicScorerRow">
                             <b>{{ row.posicion }}</b>
                             <span class="publicStandingTeam">
-                                <span class="publicTeamLogo"><img [src]="row.logoEquipo || '/images/almirantes.png'" [alt]="'Logo de ' + row.nombreEquipo" /></span>
+                                <span class="publicTeamLogo"><img [src]="row.logoEquipo || '/images/almirantes.webp'" [alt]="'Logo de ' + row.nombreEquipo" /></span>
                                 <span class="publicScorerName">{{ row.nombre }} {{ row.apellido }}<small>{{ row.nombreEquipo }}</small></span>
                             </span>
                             <strong>{{ row.goles }} {{ row.goles === 1 ? 'gol' : 'goles' }}</strong>

@@ -185,6 +185,13 @@
   z-index: 0;
 }
 
+// En móvil basta una versión de 768px: va desenfocada y bajo el overlay
+@media (max-width: 768px) {
+  .hero::before {
+    background-image: url('/images/hero-mobile.webp');
+  }
+}
+
 .hero::after {
   content: '';
   position: absolute;

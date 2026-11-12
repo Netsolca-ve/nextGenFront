@@ -8,7 +8,6 @@ import {
   MatDateFormats,
   NativeDateAdapter,
 } from '@angular/material/core';
-import { MatDatepickerIntl } from '@angular/material/datepicker';
 import { splitDate } from './datetime';
 
 /** Locale de la app: fechas dd/mm/aaaa y horas en 12 h ("8:30 a. m."). */
@@ -85,25 +84,6 @@ export class VeDateAdapter extends NativeDateAdapter {
   }
 }
 
-/** Textos del calendario en español (botones y lectores de pantalla). */
-@Injectable()
-export class VeDatepickerIntl extends MatDatepickerIntl {
-  override calendarLabel = 'Calendario';
-  override openCalendarLabel = 'Abrir calendario';
-  override closeCalendarLabel = 'Cerrar calendario';
-  override prevMonthLabel = 'Mes anterior';
-  override nextMonthLabel = 'Mes siguiente';
-  override prevYearLabel = 'Año anterior';
-  override nextYearLabel = 'Año siguiente';
-  override prevMultiYearLabel = '24 años anteriores';
-  override nextMultiYearLabel = '24 años siguientes';
-  override switchToMonthViewLabel = 'Elegir fecha';
-  override switchToMultiYearViewLabel = 'Elegir mes y año';
-  override startDateLabel = 'Fecha de inicio';
-  override endDateLabel = 'Fecha de cierre';
-  override comparisonDateLabel = 'Rango de comparación';
-}
-
 /** Locale, adaptador y formatos de fecha de la app (app.config.ts). */
 export function provideVenezuelaDates(): Provider[] {
   return [
@@ -111,6 +91,5 @@ export function provideVenezuelaDates(): Provider[] {
     { provide: MAT_DATE_LOCALE, useValue: VE_LOCALE },
     { provide: DateAdapter, useClass: VeDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: VE_DATE_FORMATS },
-    { provide: MatDatepickerIntl, useClass: VeDatepickerIntl },
   ];
 }

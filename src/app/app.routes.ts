@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './@core/guards/auth.guard';
-import { AdminLayout } from './layouts/admin-layout/admin-layout';
 import { PublicLayout } from './layouts/public-layout/public-layout';
 
 export const routes: Routes = [
@@ -19,7 +18,9 @@ export const routes: Routes = [
   {
     path: 'admin',
     title: 'Panel de administración | Next Gen',
-    component: AdminLayout,
+    // Lazy: el panel no debe pesar en el bundle inicial del sitio público
+    loadComponent: () =>
+      import('./layouts/admin-layout/admin-layout').then((m) => m.AdminLayout),
     canActivate: [authGuard],
     data: { noindex: true },
     children: [

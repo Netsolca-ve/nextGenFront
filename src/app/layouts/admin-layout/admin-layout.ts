@@ -16,6 +16,7 @@ import {
   LucideX,
 } from '@lucide/angular';
 import { Auth } from '../../@core/services/auth';
+import { provideVeDatepickerIntl } from '../../@core/utils/ve-datepicker-intl';
 
 interface AdminNavItem {
   label: string;
@@ -42,6 +43,8 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
 ];
 
 @Component({
+  // Textos del datepicker para todas las páginas del panel
+  providers: [provideVeDatepickerIntl()],
   imports: [
     RouterLink,
     RouterLinkActive,

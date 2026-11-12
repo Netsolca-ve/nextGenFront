@@ -60,7 +60,7 @@ interface NextMatch {
 }
 
 // Logo provisional mientras se cargan los escudos reales de cada equipo.
-const TEAM_LOGO_PLACEHOLDER = '/images/almirantes.webp';
+const TEAM_LOGO_PLACEHOLDER = '/images/almirantes-sm.webp';
 
 @Component({
   imports: [
@@ -133,7 +133,12 @@ export class Home implements OnInit {
    * para no bajar la imagen en las demás páginas.
    */
   private preloadHeroImage(): void {
-    const href = '/images/hero.webp';
+    // Mismo corte que el @media del hero en home.scss
+    this.preloadImage('/images/hero-mobile.webp', '(max-width: 768px)');
+    this.preloadImage('/images/hero.webp', '(min-width: 769px)');
+  }
+
+  private preloadImage(href: string, media: string): void {
     if (this.document.head.querySelector(`link[rel="preload"][href="${href}"]`)) return;
 
     const link = this.document.createElement('link');
@@ -141,6 +146,7 @@ export class Home implements OnInit {
     link.setAttribute('rel', 'preload');
     link.setAttribute('as', 'image');
     link.setAttribute('href', href);
+    link.setAttribute('media', media);
     link.setAttribute('fetchpriority', 'high');
     this.document.head.appendChild(link);
   }
